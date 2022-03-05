@@ -7,14 +7,21 @@ import { Ionicons,FontAwesome5,AntDesign   } from '@expo/vector-icons';
 import Logo from '../assets/mango_letter.png';
 import MangoStyles   from '../styles'
 import useWindowDimensions from 'react-native/Libraries/Utilities/useWindowDimensions';
+
+
+import { db, Create, Delete, Read, Update } from '../Core/Config';
+
 const Login = () => {
   const {height} = useWindowDimensions();
-    const [email, emailSetText] = useState('');
-    const [password, passwordSetText] = useState('');
-    const onChangeEmail = textValue => emailSetText(textValue);
-    const onChangePass = textValue => passwordSetText(textValue);
-    const onPressLogin = () => {}
-    const onPressRegister = () => {}
+  const [email, emailSetText] = useState('');
+  const [password, passwordSetText] = useState('');
+  const onChangeEmail = textValue => emailSetText(textValue);
+  const onChangePass = textValue => passwordSetText(textValue);
+  const onPressLogin = () => {}
+  const onPressRegister = () => {
+    Delete();
+  }
+
   return (
 
     <View style={styles.container} >
