@@ -3,15 +3,15 @@ import * as firebase from "firebase";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCBUSbj5U2McZ6k5z_4v9VM_0RzW4thwUI",
-  authDomain: "shopping-app-6a9a2.firebaseapp.com",
-  projectId: "shopping-app-6a9a2",
-  storageBucket: "shopping-app-6a9a2.appspot.com",
-  messagingSenderId: "93992005315",
-  appId: "1:93992005315:web:4f939caade442f4af17c76",
-  measurementId: "G-RK49BXMM1M"
-};
+// Your web app's Firebase configuration
+// const firebaseConfig = {
+//   apiKey: "AIzaSyCLA4vnLFaVow25ylLUkb57NhmnN6qk1vE",
+//   authDomain: "fir-auth-65294.firebaseapp.com",
+//   projectId: "fir-auth-65294",
+//   storageBucket: "fir-auth-65294.appspot.com",
+//   messagingSenderId: "105428798939",
+//   appId: "1:105428798939:web:49a9375f32ea94d4dfebfe"
+// };
 
 // Initialize Firebase
 let app;
