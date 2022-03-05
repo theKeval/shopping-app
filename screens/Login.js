@@ -8,8 +8,7 @@ import Logo from '../assets/mango_letter.png';
 import MangoStyles   from '../styles'
 import useWindowDimensions from 'react-native/Libraries/Utilities/useWindowDimensions';
 
-
-import { db, Create, Delete, Read, Update } from '../Core/Config';
+import { Create, Read, Update, Delete } from '../FirebaseConfig/FirebaseOperations';
 
 const Login = () => {
   const {height} = useWindowDimensions();
@@ -19,7 +18,7 @@ const Login = () => {
   const onChangePass = textValue => passwordSetText(textValue);
   const onPressLogin = () => {}
   const onPressRegister = () => {
-    Delete();
+    Create();
   }
 
   return (
