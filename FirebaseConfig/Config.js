@@ -1,20 +1,25 @@
-import { initializeApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore'
-// import { deleteDoc, doc, getDoc, setDoc } from 'firebase/firestore';
+import firebase from 'firebase/compat/app';
+import { getFirestore } from 'firebase/firestore';
+import 'firebase/compat/auth';
 
-// TODO: Replace the following with your app's Firebase project configuration
+import Constants from 'expo-constants';
+
+// Initialize Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyAloE0qKUioXJT9L6rKNGOvVMz3NvIWUxI",
-  authDomain: "shopping-app-8201a.firebaseapp.com",
-  projectId: "shopping-app-8201a",
-  storageBucket: "shopping-app-8201a.appspot.com",
-  messagingSenderId: "627486222674",
-  appId: "1:627486222674:web:e820279652d636c7d5728b"
+  apiKey: Constants.manifest.extra.apiKey,
+  authDomain: Constants.manifest.extra.authDomain,
+  projectId: Constants.manifest.extra.projectId,
+  storageBucket: Constants.manifest.extra.storageBucket,
+  messagingSenderId: Constants.manifest.extra.messagingSenderId,
+  appId: Constants.manifest.extra.appId
 };
 
-export const app = initializeApp(firebaseConfig);
+let Firebase;
+Firebase = firebase.initializeApp(firebaseConfig);
+export default Firebase;
+
 // MARK: Firestore Reference
-export const db = getFirestore(app);
+export const db = getFirestore(Firebase);
 
 
 
