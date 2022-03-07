@@ -1,20 +1,50 @@
-import { StyleSheet, Text } from 'react-native'
+import { StyleSheet, Text, Button, KeyboardAvoidingView, TextInput, TouchableOpacity, View, Image } from 'react-native'
 import React, { useEffect,useState } from 'react';
-
-import { Button, KeyboardAvoidingView, TextInput, TouchableOpacity, View,Image } from 'react-native'
 import { Ionicons,FontAwesome5,AntDesign   } from '@expo/vector-icons';
-
 import Logo from '../assets/mango_letter.png';
-import MangoStyles   from '../styles'
+import MangoStyles from '../styles'
 import useWindowDimensions from 'react-native/Libraries/Utilities/useWindowDimensions';
-const Login = () => {
+
+import { Create, Read, Update, Delete } from '../FirebaseConfig/FirebaseOperations';
+import Firebase from '../FirebaseConfig/Config';
+
+const auth = Firebase.auth();
+
+const LoginScreen = ({navigation}) => {
   const {height} = useWindowDimensions();
-    const [email, emailSetText] = useState('');
-    const [password, passwordSetText] = useState('');
-    const onChangeEmail = textValue => emailSetText(textValue);
-    const onChangePass = textValue => passwordSetText(textValue);
-    const onPressLogin = () => {}
-    const onPressRegister = () => {}
+  const [email, emailSetText] = useState('');
+  const [password, passwordSetText] = useState('');
+
+  const [passwordVisibility, setPasswordVisibility] = useState(true);
+  const [rightIcon, setRightIcon] = useState('eye');
+  const [loginError, setLoginError] = useState('');
+
+  const onChangeEmail = textValue => emailSetText(textValue);
+  const onChangePass = textValue => passwordSetText(textValue);
+  const onPressRegister = () => {
+    navigation.navigate('Signup');
+  }
+
+  const handlePasswordVisibility = () => {
+    if (rightIcon === 'eye') {
+      setRightIcon('eye-off');
+      setPasswordVisibility(!passwordVisibility);
+    } else if (rightIcon === 'eye-off') {
+      setRightIcon('eye');
+      setPasswordVisibility(!passwordVisibility);
+    }
+  };
+
+  const onLogin = async () => {
+    try {
+      if (email !== '' && password !== '') {
+        await auth.signInWithEmailAndPassword(email, password);
+      }
+    } catch (error) {
+      setLoginError(error.message);
+    }
+  };
+
   return (
 
     <View style={styles.container} >
@@ -36,7 +66,7 @@ const Login = () => {
       <View style={styles.buttonContainer}> 
 
       <TouchableOpacity
-            onPress={onPressLogin}
+            onPress={onLogin}
             style={styles.button}
           >
             <Text style={styles.buttonText}>Login</Text>
@@ -124,4 +154,4 @@ const styles = StyleSheet.create({
       },
 })
 
-export default Login
+export default LoginScreen
