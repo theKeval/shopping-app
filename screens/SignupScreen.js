@@ -39,6 +39,9 @@ export default function SignupScreen({ navigation }) {
       if (email !== '' && password !== '') {
         await auth.createUserWithEmailAndPassword(email, password);
       }
+      else {
+        setSignupError('Enter valid email address and password to signup!')
+      }
     } catch (error) {
       setSignupError(error.message);
     }

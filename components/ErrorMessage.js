@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
   errorText: {
     color: MangoStyles.mangoNegativeAction,
     fontSize: 20,
-    marginBottom: 10,
+    margin: 10,
     fontWeight: '600'
   }
 });
