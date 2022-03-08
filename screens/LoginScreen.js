@@ -1,6 +1,6 @@
 import { StyleSheet, Text, Button, KeyboardAvoidingView, TextInput, TouchableOpacity, View, Image } from 'react-native'
 import React, { useEffect,useState } from 'react';
-import { Ionicons,FontAwesome5,AntDesign   } from '@expo/vector-icons';
+import { Ionicons,FontAwesome5,AntDesign,Entypo} from '@expo/vector-icons';
 import Logo from '../assets/mango_letter.png';
 import MangoStyles from '../styles'
 import useWindowDimensions from 'react-native/Libraries/Utilities/useWindowDimensions';

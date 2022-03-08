@@ -78,7 +78,7 @@ export default function SignupScreen({ navigation }) {
       {signupError ? <ErrorMessage error={signupError} visible={true} /> : null}
       <Button
         onPress={onHandleSignup}
-        backgroundColor='#f57c00'
+        backgroundColor='#FFC44E'
         title='Signup'
         tileColor='#fff'
         titleSize={20}
@@ -87,9 +87,14 @@ export default function SignupScreen({ navigation }) {
         }}
       />
       <RNButton
-        onPress={() => navigation.navigate('Login')}
+        //onPress={() => navigation.navigate('Login')}
+        onPress={() => navigation.navigate('Welhome')}
         title='Go to Login'
-        color='#fff'
+        color='#FFF'
+        fontColor={MangoStyles.mangoOrangeYellow}
+        borderWidth={1}
+        borderColor={MangoStyles.mangoOrangeYellow}
+        
       />
     </View>
   );
@@ -98,14 +103,14 @@ export default function SignupScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#e93b81',
+    backgroundColor: MangoStyles.mangoPaleOrange,
     paddingTop: 50,
     paddingHorizontal: 12
   },
   title: {
     fontSize: 24,
-    fontWeight: '600',
-    color: '#fff',
+    fontWeight: 'bold',
+    color: '#FFC44E',
     alignSelf: 'center',
     paddingBottom: 24
   }
