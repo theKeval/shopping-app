@@ -4,12 +4,19 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import { IconButton } from '../components';
 import Firebase from '../FirebaseConfig/Config'
+import { Create, Update } from '../FirebaseConfig/FirebaseOperations';
 import { AuthenticatedUserContext } from '../navigation/AuthenticatedUserProvider';
 
 const auth = Firebase.auth();
 
 export default function HomeScreen() {
   const { user } = useContext(AuthenticatedUserContext);
+
+  // Create({
+  //   email: user.email,
+  //   id: user.uid,
+  // })
+
   const handleSignOut = async () => {
     try {
       await auth.signOut();

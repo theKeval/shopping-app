@@ -3,9 +3,10 @@ import React from 'react';
 import { useState } from 'react';
 import { StyleSheet, Text, View, Button as RNButton, Image, TouchableOpacity } from 'react-native';
 import Logo from '../assets/mango_letter.png';
+import SmallLogo from '../assets/mango_plane.png';
 import MangoStyles from '../styles'
 import useWindowDimensions from 'react-native/Libraries/Utilities/useWindowDimensions';
-import { Ionicons,FontAwesome5,AntDesign   } from '@expo/vector-icons';
+import { Ionicons, FontAwesome5, AntDesign, MaterialIcons } from '@expo/vector-icons';
 
 import { InputField, ErrorMessage } from '../components';
 import Firebase from '../FirebaseConfig/Config';
@@ -16,6 +17,9 @@ export default function SignupScreen({ navigation }) {
   const {height} = useWindowDimensions();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [userName, setUserName] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [address, setAddress] = useState('');
   const [passwordVisibility, setPasswordVisibility] = useState(true);
   const [rightIcon, setRightIcon] = useState('eye');
   const [signupError, setSignupError] = useState('');
@@ -51,8 +55,12 @@ export default function SignupScreen({ navigation }) {
 
     <View style={styles.container} >
 
-      <Image source={Logo}  style={[styles.logo, {height: height*0.3}]} resizeMode="contain" />
-      
+      {/* <Image source={Logo}  style={[styles.logo, {height: height*0.3}]} resizeMode="contain" /> */}
+      <View style={styles.signupHeader}>
+        <Text style={styles.headerText}>Join The Mango Place</Text>
+        {/* <Image source={SmallLogo} style={styles.smallLogo} resizeMode='contain' /> */}
+      </View>
+
       <View style={styles.inputContainer}>
           
           <View style={styles.inputIcon}>
@@ -60,11 +68,28 @@ export default function SignupScreen({ navigation }) {
           </View>
 
           <InputField 
-              placeholder='Enter Email'
+              placeholder='Name'
+              // autoCapitalize='none'
+              // keyboardType='default'
+              textContentType='name'
+              autoFocus={false}
+              value={userName}
+              onChangeText={text => setUserName(text)} />
+
+      </View>
+      
+      <View style={styles.inputContainer}>
+          
+          <View style={styles.inputIcon}>
+            <MaterialIcons name="email" size={20} color="black" />
+          </View>
+
+          <InputField 
+              placeholder='Email'
               autoCapitalize='none'
               keyboardType='email-address'
               textContentType='emailAddress'
-              autoFocus={true}
+              autoFocus={false}
               value={email}
               onChangeText={text => setEmail(text)} />
 
@@ -77,7 +102,7 @@ export default function SignupScreen({ navigation }) {
           </View>
 
           <InputField 
-            placeholder='Enter Password'
+            placeholder='Password'
             autoCapitalize='none'
             autoCorrect={false}
             secureTextEntry={passwordVisibility}
@@ -86,6 +111,41 @@ export default function SignupScreen({ navigation }) {
             value={password}
             onChangeText={text => setPassword(text)}
             handlePasswordVisibility={handlePasswordVisibility} />
+
+      </View>
+
+      <View style={styles.inputContainer}>
+          
+          <View style={styles.inputIcon}>
+            <FontAwesome5 name="phone-alt" size={20} color="black" />
+          </View>
+
+          <InputField 
+              placeholder='Phone #'
+              autoCapitalize='none'
+              keyboardType='phone-pad'
+              textContentType='telephoneNumber'
+              autoFocus={false}
+              value={phoneNumber}
+              onChangeText={text => setPhoneNumber(text)} />
+
+      </View>
+
+      <View style={styles.inputContainer}>
+          
+          <View style={styles.inputIcon}>
+            <FontAwesome5 name="address-card" size={20} color="black" />
+          </View>
+
+          <InputField multiline
+              inputStyle={{maxHeight: 60}}
+              placeholder='Address'
+              // autoCapitalize='none'
+              // keyboardType='phone-pad'
+              textContentType='fullStreetAddress'
+              autoFocus={false}
+              value={address}
+              onChangeText={text => setAddress(text)} />
 
       </View>
 
@@ -177,7 +237,8 @@ const styles = StyleSheet.create({
   container: {
     padding: 10,
     flex: 1,
-    justifyContent: 'center',
+    paddingTop: 75,
+    // justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: MangoStyles.mangoPaleOrange,
   },
@@ -186,6 +247,22 @@ const styles = StyleSheet.create({
     maxWidth: 500,
     maxHeight:150,
     marginBottom: 50,
+  },
+  smallLogo: {
+    height: 45,
+    width: 45,
+    // marginRight: 10,
+  },
+  signupHeader: {
+    flexDirection: 'row',
+    marginBottom: 50,
+    alignItems: 'center',
+  },
+  headerText: {
+    color: MangoStyles.mangoGreen,
+    fontSize: 25,
+    // marginLeft: 10,
+    fontWeight: 'bold',
   },
   inputContainer: {
     justifyContent: 'center',
