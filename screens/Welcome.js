@@ -46,12 +46,12 @@ export default class navigationBar extends React.Component{
                             <Fontisto name="shopping-basket" size={26} color={MangoStyles.mangoOrangeYellow} />
                         </Pressable>
 
-                        <Pressable onPress={() => this.changeText('Home')} style={styles.IconBehavior}
+                        <Pressable onPress={() => this.changeText('Search')} style={styles.IconBehavior}
                         android_ripple={{borderless:true, radius:50}}>
                             <Ionicons name="md-search" size={26} color={MangoStyles.mangoOrangeYellow} />
                         </Pressable>
 
-                        <Pressable onPress={() => this.changeText('Home')} style={styles.IconBehavior}
+                        <Pressable onPress={() => this.changeText('Account')} style={styles.IconBehavior}
                         android_ripple={{borderless:true, radius:50}}>
                             <MaterialIcons name="account-circle" size={26} color={MangoStyles.mangoOrangeYellow} />
                         </Pressable>
