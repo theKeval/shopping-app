@@ -2,10 +2,10 @@ import { deleteDoc, doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from './Config';
 
 
-export const Create = () => {
+export const Create = (value) => {
     // MARK: Creating New Doc in Firebase
     // Before that enable Firebase in Firebase Console
-    const myDoc = doc(db, "MyCollection", "AnotherDoc")
+    const myDoc = doc(db, "MyCollection", "Users")
   
     // Your Document Goes Here
     const docData = {
@@ -13,7 +13,7 @@ export const Create = () => {
       "bio": "Sr. Software Engineer"
     }
   
-    setDoc(myDoc, docData)
+    setDoc(myDoc, value)
       // Handling Promises
       .then(() => {
         // MARK: Success
@@ -58,7 +58,7 @@ export const Update = (value, merge) => {
       .then(() => {
         // MARK: Success
         alert("Updated Successfully!")
-        setText("")
+        // setText("")
       })
       .catch((error) => {
         // MARK: Failure

@@ -6,21 +6,22 @@ import MangoStyles from '../styles'
 import useWindowDimensions from 'react-native/Libraries/Utilities/useWindowDimensions';
 
 import { Create, Read, Update, Delete } from '../FirebaseConfig/FirebaseOperations';
+import { InputField, ErrorMessage } from '../components';
 import Firebase from '../FirebaseConfig/Config';
 
 const auth = Firebase.auth();
 
 const LoginScreen = ({navigation}) => {
   const {height} = useWindowDimensions();
-  const [email, emailSetText] = useState('');
-  const [password, passwordSetText] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const [passwordVisibility, setPasswordVisibility] = useState(true);
   const [rightIcon, setRightIcon] = useState('eye');
   const [loginError, setLoginError] = useState('');
 
-  const onChangeEmail = textValue => emailSetText(textValue);
-  const onChangePass = textValue => passwordSetText(textValue);
+  // const onChangeEmail = textValue => emailSetText(textValue);
+  // const onChangePass = textValue => passwordSetText(textValue);
   const onPressRegister = () => {
     navigation.navigate('Signup');
   }
@@ -54,16 +55,46 @@ const LoginScreen = ({navigation}) => {
           <View style={styles.inputIcon}>
             <FontAwesome5 name="user-circle" size={20} color="black" />
           </View>
-          <TextInput placeholder="Email" value={email} onChangeText={onChangeEmail} style={styles.input}/>
+          {/* <TextInput placeholder="Email" value={email} onChangeText={text => setEmail(text)} style={styles.input}/> */}
+
+          <InputField 
+              placeholder='Enter Email'
+              autoCapitalize='none'
+              keyboardType='email-address'
+              textContentType='emailAddress'
+              autoFocus={true}
+              value={email}
+              onChangeText={text => setEmail(text)} />
+
+              {/*
+                  inputStyle={styles.input}
+              */}
 
       </View>
       <View style={styles.inputContainer}> 
           <View style={styles.inputIcon}>
             <FontAwesome5 name="key" size={20} color="black" />
           </View>
-          <TextInput placeholder="Password" value={password} onChangeText={onChangePass } style={styles.input}/>
+          {/* <TextInput placeholder="Enter Password" value={password} onChangeText={text => setPassword(text)} style={styles.input}/> */}
+
+          <InputField 
+              placeholder='Enter Password'
+              autoCapitalize='none'
+              autoCorrect={false}
+              secureTextEntry={passwordVisibility}
+              textContentType='password'
+              rightIcon={rightIcon}
+              value={password}
+              onChangeText={text => setPassword(text)}
+              handlePasswordVisibility={handlePasswordVisibility} />
+              {/* 
+                inputStyle={styles.input}
+              */}
+
       </View>
       <View style={styles.buttonContainer}> 
+
+      {loginError ? <ErrorMessage error={loginError} visible={true} /> : null}
 
       <TouchableOpacity
             onPress={onLogin}

@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text } from 'react-native';
+import MangoStyles from '../styles';
 
 const ErrorMessage = ({ error, visible }) => {
   if (!error || !visible) {
@@ -11,9 +12,9 @@ const ErrorMessage = ({ error, visible }) => {
 
 const styles = StyleSheet.create({
   errorText: {
-    color: '#fdca40',
+    color: MangoStyles.mangoNegativeAction,
     fontSize: 20,
-    marginBottom: 10,
+    margin: 10,
     fontWeight: '600'
   }
 });
