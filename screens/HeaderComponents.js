@@ -11,10 +11,10 @@ import { StatusBar } from 'expo-status-bar';
 
 const auth = Firebase.auth();
 
-export default class navigationBar extends React.Component{
+export default class HeaderComponents extends React.Component{
 
     state = {
-        screenText: 'Press a button!'
+        screenText: 'Home'
     }
 
     changeText = (text) => {
@@ -30,15 +30,9 @@ export default class navigationBar extends React.Component{
                 <View style={styles.HeaderContainer}>
                     <View style={styles.HeaderBar}>
                         <View onPress={() => this.changeText('Home')}  style={styles.IconBehavior}>
-                            <Image source={Logo}  style={[styles.logo,{height: 24}]} resizeMode="contain"/>
-                            <Text style={{position: 'absolute', fontSize: 20, color:MangoStyles.mangoOrangeYellow}}>The mango place</Text>
+                        <Text style={{fontSize:20, color:MangoStyles.mangoOrangeYellow}}>{this.state.screenText}</Text>
                         </View>
                     </View>
-                </View>
-
-                <View>
-                    <Text style={{fontSize:30, color:MangoStyles.mangoOrangeYellow}}>{this.state.screenText}</Text>
-                <   StatusBar style="dark" />
                 </View>
 
                 <View style={styles.NavContainer}>

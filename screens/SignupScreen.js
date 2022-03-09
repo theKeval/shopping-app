@@ -35,8 +35,7 @@ export default function SignupScreen({ navigation }) {
   };
 
   const onPressLogin = () => {
-    //navigation.navigate('Login');
-    navigation.navigate('Welhome');
+    navigation.navigate('Login');
   }
 
   const onHandleSignup = async () => {
