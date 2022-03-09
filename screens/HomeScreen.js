@@ -8,6 +8,7 @@ import Firebase from '../FirebaseConfig/Config'
 import { Create, Update } from '../FirebaseConfig/FirebaseOperations';
 import { AuthenticatedUserContext } from '../navigation/AuthenticatedUserProvider';
 import  HeaderComponents from './HeaderComponents';
+import BottomComponents from './BottomComponents';
 
 const auth = Firebase.auth();
 
@@ -31,7 +32,7 @@ export default function HomeScreen() {
      return (
       
         <View style ={styles.container}>
-          <HeaderComponents>
+          <HeaderComponents/>
          <View style={styles.row}>
             <Text style={styles.title}>Welcome {user.email}!</Text>
             <IconButton
@@ -42,8 +43,7 @@ export default function HomeScreen() {
             />
           </View>
           <Text style={styles.text}>Your UID is: {user.uid} </Text>
-           
-          </HeaderComponents>   
+          <BottomComponents/>  
         </View>
         
     );

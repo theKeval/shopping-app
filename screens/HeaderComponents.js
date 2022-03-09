@@ -24,6 +24,7 @@ export default class HeaderComponents extends React.Component{
         })
     }
 
+
     render() 
         {return (
             <View style={styles.container}>
@@ -35,31 +36,6 @@ export default class HeaderComponents extends React.Component{
                     </View>
                 </View>
 
-                <View style={styles.NavContainer}>
-                    <View style={styles.NavBar}>
-                        <Pressable onPress={() => this.changeText('Home')} style={styles.IconBehavior}
-                        android_ripple={{borderless:true, radius:50}}>
-                            <Entypo name="home" size={26} color={MangoStyles.mangoOrangeYellow} />
-                        </Pressable>
-
-                        <Pressable onPress={() => this.changeText('Orders')} style={styles.IconBehavior}
-                        android_ripple={{borderless:true, radius:50}}>
-                            <Fontisto name="shopping-basket" size={26} color={MangoStyles.mangoOrangeYellow} />
-                        </Pressable>
-
-                        <Pressable onPress={() => this.changeText('Search')} style={styles.IconBehavior}
-                        android_ripple={{borderless:true, radius:50}}>
-                            <Ionicons name="md-search" size={26} color={MangoStyles.mangoOrangeYellow} />
-                        </Pressable>
-
-                        <Pressable onPress={() => this.changeText('Account')} style={styles.IconBehavior}
-                        android_ripple={{borderless:true, radius:50}}>
-                            <MaterialIcons name="account-circle" size={26} color={MangoStyles.mangoOrangeYellow} />
-                        </Pressable>
-
-                    </View>
-
-                </View>
             </View>
         );
     }
@@ -91,31 +67,9 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 5 },
         shadowOpacity: 0.8,
         shadowRadius: 40,
-        elevation: 3
+        elevation: 3,
+        height: 40
     },
-
-    NavContainer: {
-        position: 'absolute',
-        alignItems:  'center',
-        bottom: 0,
-    },
-
-    NavBar: {
-        flexDirection:'row',
-        backgroundColor: 'white',
-        width:'100%',
-        justifyContent: 'space-evenly',
-        borderRadius: 0,
-        shadowColor: 'black',
-        shadowOffset: { width: 0, height: 5 },
-        shadowOpacity: 0.8,
-        shadowRadius: 40,
-        elevation: 15
-    },
-
-    IconBehavior: {
-        padding: 12
-    }
 });
 
 
