@@ -43,9 +43,16 @@ const InputField = ({
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 4,
+    // borderRadius: 4,
     flexDirection: 'row',
-    padding: 12
+    // padding: 12,
+    width: '80%',
+    backgroundColor: 'white',
+    borderColor: MangoStyles.mangoOrangeYellow,
+    borderWidth: 2,
+    borderRadius: 5,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
   },
   leftIcon: {
     marginRight: 10
@@ -53,11 +60,12 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     width: '100%',
-    fontSize: 18
+    // fontSize: 18
   },
   rightIcon: {
     alignSelf: 'center',
-    marginLeft: 10
+    marginLeft: 10,
+    marginTop: 3
   }
 });
 

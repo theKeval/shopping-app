@@ -18,6 +18,7 @@
     "dotenv": "^16.0.0",
     "expo": "~44.0.0",
     "expo-constants": "~13.0.1",
+    "expo-navigation-bar": "^1.1.2",
     "expo-status-bar": "~1.2.0",
     "firebase": "^9.6.7",
     "react": "17.0.1",
