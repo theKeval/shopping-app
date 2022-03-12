@@ -32,7 +32,6 @@ export default function HomeScreen() {
      return (
       
         <View style ={styles.container}>
-          <HeaderComponents/>
          <View style={styles.row}>
             <Text style={styles.title}>Welcome {user.email}!</Text>
             <IconButton
@@ -43,7 +42,6 @@ export default function HomeScreen() {
             />
           </View>
           <Text style={styles.text}>Your UID is: {user.uid} </Text>
-          <BottomComponents/>  
         </View>
         
     );
