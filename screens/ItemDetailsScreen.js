@@ -1,10 +1,10 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
-const ItemDetailsScreen = () => {
+const ItemDetailsScreen = (navigation , route) => {
   return (
     <View>
-      <Text>ItemDetailsScreen</Text>
+      <Text>ItemDetailsScreen {route.params}</Text>
     </View>
   )
 }
