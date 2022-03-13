@@ -20,21 +20,35 @@ function SettingsScreen() {
 
 const Stack = createStackNavigator();
 
+function ModalScreen({ navigation }) {
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text style={{ fontSize: 30 }}>This is a modal!</Text>
+      <Button onPress={() => navigation.goBack()} title="Dismiss" />
+    </View>
+  );
+}
 
 function HomeStackScreen() {
   return (
     <Stack.Navigator >
+      <Stack.Group>
+
       <Stack.Screen name="HomeScreen" component={HomeScreen}  options={{
-              headerTitleAlign: 'center',
-              headerStyle: {
-                backgroundColor: MangoStyles.mangoOrangeYellow
-              },
-              headerTitleStyle: {
-                color: 'white'
-              },
-              title : 'Products'
+        headerTitleAlign: 'center',
+        headerStyle: {
+          backgroundColor: MangoStyles.mangoOrangeYellow
+        },
+        headerTitleStyle: {
+          color: 'white'
+        },
+        title : 'Products'
       }}/>
-      <Stack.Screen name="ItemDetailsScreen" component={ItemDetailsScreen} />
+        <Stack.Screen name="ItemDetailsScreen" component={ItemDetailsScreen} />
+      </Stack.Group>
+      <Stack.Group>
+        <Stack.Screen name="MyModal" component={ModalScreen} />
+      </Stack.Group>
     </Stack.Navigator>
   );
 }
@@ -47,8 +61,17 @@ function OrdersStackScreen() {
 }
 function AccountStackScreen() {
   return (
-    <Stack.Navigator>
-      <Stack.Screen name="AccountScreen" component={AccountScreen} />
+    <Stack.Navigator >
+      <Stack.Screen name="AccountScreen" component={AccountScreen} options={{
+        headerTitleAlign: 'center',
+        headerStyle: {
+          backgroundColor: MangoStyles.mangoOrangeYellow
+        },
+        headerTitleStyle: {
+          color: 'white'
+        },
+        title : 'Account'
+      }}/>
     </Stack.Navigator>
   );
 }

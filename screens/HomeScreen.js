@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { render } from 'react-dom';
-import { StyleSheet, View, FlatList,  Text,StatusBar } from 'react-native';
+import { StyleSheet, View, FlatList,  Text,StatusBar,Button,TouchableOpacity } from 'react-native';
+import { Ionicons,FontAwesome5,AntDesign,Entypo,Fontisto,MaterialIcons} from '@expo/vector-icons';
 
 import { IconButton } from '../components';
 import Firebase from '../FirebaseConfig/Config'
@@ -15,7 +16,17 @@ const auth = Firebase.auth();
 export default function HomeScreen({navigation}) {
   const { user } = useContext(AuthenticatedUserContext);
   const [selectedId, setSelectedId] = useState(null);
-
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity onPress={() => navigation.navigate('MyModal')}>
+          <Text style={styles.searchBtn}>
+            <Ionicons name='search' size={20} color='white' />;
+          </Text>
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation]);
   const selectItem = (item) =>{
     setSelectedId(item.id);
     navigation.navigate('ItemDetailsScreen', {
@@ -31,19 +42,22 @@ export default function HomeScreen({navigation}) {
       id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
       name: 'Mango Cake',
       description: '4 layers mango cake',
-      price: 12.75
+      price: 12.75,
+      category: 'food'
     },
     {
       id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
       name: 'Mango Tea',
       description: 'Cool mango tea, no sugar',
-      price: 7.58
+      price: 7.58,
+      category: 'food'
     },
     {
       id: '58694a0f-3da1-471f-bd96-145571e29d72',
       name: 'Mango Coffee',
       description: 'Mango Frappe',
-      price: 10.34
+      price: 10.34,
+      category: 'food'
     },
   ];
   const handleSignOut = async () => {
@@ -104,5 +118,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'normal',
     color: '#000'
+  },
+  searchBtn: {
+    marginRight: 10,
+    padding: 5
   }
 });
