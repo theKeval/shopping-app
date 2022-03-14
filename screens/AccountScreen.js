@@ -13,6 +13,7 @@ return (
   <View style={styles.container}>
     <View>
       <Text style={styles.label}>User</Text>
+      
     </View>
     <View>
       <Text style={styles.label}>Email</Text>
