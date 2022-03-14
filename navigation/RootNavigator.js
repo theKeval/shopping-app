@@ -17,7 +17,9 @@ export default function RootNavigator() {
     // onAuthStateChanged returns an unsubscriber
     const unsubscribeAuth = auth.onAuthStateChanged(async authenticatedUser => {
       try {
-        await (authenticatedUser ? setUser(authenticatedUser) : setUser(null));
+        // await (authenticatedUser ? setUser(authenticatedUser) : setUser(null));
+        console.log("RootNavigator: authStateChanged");
+        // console.log(authenticatedUser);
         setIsLoading(false);
       } catch (error) {
         console.log(error);

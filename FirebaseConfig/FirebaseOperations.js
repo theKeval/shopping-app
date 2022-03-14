@@ -2,22 +2,33 @@ import { deleteDoc, doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from './Config';
 
 
-export const Create = (value) => {
+const collectionNames = {
+  users: "Users",
+  productCategories: "ProductCategories",
+  products: "Products",
+  orders: "Orders",
+  productsInOrder: "ProductsInOrder"
+}
+
+export const Create = (collectionName, documentName, value) => {
+    console.log("Create called");
+
     // MARK: Creating New Doc in Firebase
     // Before that enable Firebase in Firebase Console
-    const myDoc = doc(db, "MyCollection", "Users")
+    const myDoc = doc(db, collectionName, documentName);
   
     // Your Document Goes Here
     const docData = {
       "name": "Keval",
       "bio": "Sr. Software Engineer"
-    }
+    };
   
     setDoc(myDoc, value)
       // Handling Promises
       .then(() => {
         // MARK: Success
-        alert("Document Created!")
+        // alert("Document Created!")
+        console.log("user added");
       })
       .catch((error) => {
         // MARK: Failure
@@ -83,3 +94,12 @@ export const Delete = () => {
   
 }
 
+
+// #region Users related operations
+
+export const Signup = (emailAddress, user) => {
+  console.log("signup called");
+  Create(collectionNames.users, emailAddress, user);
+}
+
+// #endregion
