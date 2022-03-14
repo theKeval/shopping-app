@@ -5,7 +5,7 @@ const FilterModalScreen = () => {
     const [selectedItems , selectedItemsSet] = useState([]);
   return (
     <View style={{ flex: 1 }}>
-    <MultiSelect
+    {/* <MultiSelect
       hideTags
       items={items}
       uniqueKey="id"
@@ -29,7 +29,7 @@ const FilterModalScreen = () => {
     />
     <View>
       {this.multiSelect.getSelectedItemsExt(selectedItems)}
-    </View>
+    </View> */}
   </View>
   )
 }
