@@ -6,7 +6,9 @@ import { ButtonMain } from '../components';
 
 const ItemDetailsScreen = ({ navigation, route }) => {
   const [qty, qtySet] = useState(1);
-
+  React.useLayoutEffect(() => {
+    navigation.setOptions({tabBarStyle: {display: 'none'}, title : route.params.item.name});
+  })
   const onPressAdd = () => {
     // #TODO: Add Functionality to add
   } 
