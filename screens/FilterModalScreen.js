@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import MultiSelect from 'react-native-multiple-select';
 const FilterModalScreen = () => {
-    const [selectedItems , selectedItemsSet] = useState([]);
+    // const [selectedItems , selectedItemsSet] = useState([]);
   return (
     <View style={{ flex: 1 }}>
     {/* <MultiSelect
