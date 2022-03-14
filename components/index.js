@@ -1,6 +1,6 @@
 import IconButton from './IconButton';
-import Button from './Button';
+import ButtonMain from './ButtonMain';
 import ErrorMessage from './ErrorMessage';
 import InputField from './InputField';
 
-export { IconButton, Button, ErrorMessage, InputField };
+export { IconButton, ButtonMain, ErrorMessage, InputField };

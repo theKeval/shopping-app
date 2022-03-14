@@ -13,10 +13,10 @@ const ProductListItem = ({ item, onPress, backgroundColor }) => {
       />
         <View style={styles.itemDesc}>
             <Text style={[styles.title]}>{item.name}</Text>
-            <Text style={[styles.description]}>{item.description}</Text>
+            <Text >{item.description}</Text>
             <View style={[styles.lastRow]}>
-                <Text style={[styles.category]}>{item.category}</Text>
-                <Text style={[styles.price]}>{'$' + item.price.toString()}</Text>
+                <Text style={[styles.category]}>#{item.category}</Text>
+                <Text style={[styles.price]}>{'$ ' + item.price.toString()}</Text>
             </View>
         </View>
     </TouchableOpacity>
@@ -49,9 +49,12 @@ const styles = StyleSheet.create({
         flexDirection : 'row',
         justifyContent: 'space-between'
     },
+    category:{
+        flexDirection: 'column',
+    },  
     price : {
-        width: '50%',
-        marginTop: 20,
+        fontSize: 20,
+        flexDirection: 'column',
         textAlign: 'right'
     },
 })

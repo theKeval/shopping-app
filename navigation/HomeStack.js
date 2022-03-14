@@ -10,6 +10,16 @@ import ItemDetailsScreen from '../screens/ItemDetailsScreen';
 import OrdersScreen from '../screens/OrdersScreen';
 import AccountScreen from '../screens/AccountScreen';
 
+const headerStyleMango = {
+  headerTitleAlign: 'center',
+  headerStyle: {
+    backgroundColor: MangoStyles.mangoOrangeYellow
+  },
+  headerTitleStyle: {
+    color: 'white'
+  }
+}
+
 function SettingsScreen() {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -35,16 +45,13 @@ function HomeStackScreen() {
       <Stack.Group>
 
       <Stack.Screen name="HomeScreen" component={HomeScreen}  options={{
-        headerTitleAlign: 'center',
-        headerStyle: {
-          backgroundColor: MangoStyles.mangoOrangeYellow
-        },
-        headerTitleStyle: {
-          color: 'white'
-        },
+        ...headerStyleMango,
         title : 'Products'
       }}/>
-        <Stack.Screen name="ItemDetailsScreen" component={ItemDetailsScreen} />
+      <Stack.Screen name="ItemDetailsScreen" component={ItemDetailsScreen} options={{
+        ...headerStyleMango,
+        headerTintColor: 'white'
+      }}/>
       </Stack.Group>
       <Stack.Group>
         <Stack.Screen name="MyModal" component={ModalScreen} />
@@ -63,13 +70,7 @@ function AccountStackScreen() {
   return (
     <Stack.Navigator >
       <Stack.Screen name="AccountScreen" component={AccountScreen} options={{
-        headerTitleAlign: 'center',
-        headerStyle: {
-          backgroundColor: MangoStyles.mangoOrangeYellow
-        },
-        headerTitleStyle: {
-          color: 'white'
-        },
+        ...headerStyleMango,
         title : 'Account'
       }}/>
     </Stack.Navigator>
@@ -97,7 +98,7 @@ export default function HomeStack() {
         return <Ionicons name={iconName} size={size} color={MangoStyles.mangoOrangeYellow} />;
       },
       tabBarActiveTintColor: MangoStyles.mangoOrangeYellow,
-      tabBarInactiveTintColor: 'gray',
+      tabBarInactiveTintColor: 'black',
       headerShown: false,
 
     })}
