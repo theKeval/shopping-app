@@ -1,9 +1,11 @@
 import React from "react";
 import { StyleSheet, Pressable, Text } from "react-native";
+import MangoStyles from '../styles'
 
-const Button = ({
+const ButtonMain = ({
   title,
-  backgroundColor = "#000",
+  borderColor = MangoStyles.mangoOrangeYellow,
+  backgroundColor = MangoStyles.mangoOrangeYellow,
   titleColor = "#fff",
   titleSize = 14,
   onPress,
@@ -20,6 +22,7 @@ const Button = ({
             {
               opacity: 0.5,
               backgroundColor,
+              borderColor,
               width,
             },
             containerStyle,
@@ -31,6 +34,7 @@ const Button = ({
           {
             opacity: 1,
             backgroundColor,
+            borderColor,
             width,
           },
           containerStyle,
@@ -55,6 +59,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     paddingHorizontal: 12,
   },
+
 });
 
-export default Button;
+export default ButtonMain;

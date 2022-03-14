@@ -9,46 +9,63 @@ import { Ionicons,FontAwesome5,AntDesign,Entypo,Fontisto,MaterialIcons} from '@e
 import ItemDetailsScreen from '../screens/ItemDetailsScreen';
 import OrdersScreen from '../screens/OrdersScreen';
 import AccountScreen from '../screens/AccountScreen';
+import OrderDetailsScreen from '../screens/OrderDetailsScreen';
+import FilterModalScreen from '../screens/FilterModalScreen';
 
-function SettingsScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Settings!</Text>
-    </View>
-  );
+const headerStyleMango = {
+  headerTitleAlign: 'center',
+  headerStyle: {
+    backgroundColor: MangoStyles.mangoOrangeYellow
+  },
+  headerTitleStyle: {
+    color: 'white'
+  }
 }
 
-const Stack = createStackNavigator();
 
+const Stack = createStackNavigator();
 
 function HomeStackScreen() {
   return (
     <Stack.Navigator >
+      <Stack.Group>
+
       <Stack.Screen name="HomeScreen" component={HomeScreen}  options={{
-              headerTitleAlign: 'center',
-              headerStyle: {
-                backgroundColor: MangoStyles.mangoOrangeYellow
-              },
-              headerTitleStyle: {
-                color: 'white'
-              },
-              title : 'Products'
+        ...headerStyleMango,
+        title : 'Products'
       }}/>
-      <Stack.Screen name="ItemDetailsScreen" component={ItemDetailsScreen} />
+      <Stack.Screen name="ItemDetailsScreen" component={ItemDetailsScreen} options={{
+        ...headerStyleMango,
+        headerTintColor: 'white'
+      }}/>
+      </Stack.Group>
+      <Stack.Group>
+        <Stack.Screen name="MyModal" component={FilterModalScreen} />
+      </Stack.Group>
     </Stack.Navigator>
   );
 }
 function OrdersStackScreen() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="OrdersScreen" component={OrdersScreen} />
+      <Stack.Screen name="OrdersScreen" component={OrdersScreen}  options={{
+        ...headerStyleMango,
+        title : 'Orders'
+      }} />
+      <Stack.Screen name="OrderDetailsScreen" component={OrderDetailsScreen} options={{
+        ...headerStyleMango,
+        headerTintColor: 'white'
+      }}/>
     </Stack.Navigator>
   );
 }
 function AccountStackScreen() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="AccountScreen" component={AccountScreen} />
+      <Stack.Screen name="AccountScreen" component={AccountScreen} options={{
+        ...headerStyleMango,
+        title : 'Account'
+      }}/>
     </Stack.Navigator>
   );
 }
@@ -59,6 +76,7 @@ export default function HomeStack() {
     <Tab.Navigator 
     screenOptions={({ route }) => ({
       tabBarIcon: ({ focused, color, size }) => {
+        let iconColor;
         let iconName;
         if (route.name === 'Home') {
           iconName = focused ? 'home' : 'home-outline';
@@ -69,19 +87,20 @@ export default function HomeStack() {
         }else if (route.name === 'Account') {
           iconName = focused ? 'person' : 'person-outline';
         }
-
+        console.log(route.name)
+        iconColor = focused ? MangoStyles.mangoOrangeYellow : 'black';
         // You can return any component that you like here!
-        return <Ionicons name={iconName} size={size} color={MangoStyles.mangoOrangeYellow} />;
+        return <Ionicons name={iconName} size={size} color={iconColor} />;
       },
-      tabBarActiveTintColor: MangoStyles.mangoOrangeYellow,
-      tabBarInactiveTintColor: 'gray',
+      tabBarActiveTintColor: 'gray',
+      tabBarInactiveTintColor: 'black',
       headerShown: false,
-
+      tabBarHidden : true
+      
     })}
   >
       <Tab.Screen name="Home" component={HomeStackScreen} />
       <Tab.Screen name="Orders" component={OrdersStackScreen} />
-      <Tab.Screen name="Search" component={SettingsScreen} />
       <Tab.Screen name="Account" component={AccountStackScreen} />
     </Tab.Navigator>
 
