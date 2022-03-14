@@ -61,7 +61,7 @@ function OrdersStackScreen() {
 }
 function AccountStackScreen() {
   return (
-    <Stack.Navigator >
+    <Stack.Navigator>
       <Stack.Screen name="AccountScreen" component={AccountScreen} options={{
         ...headerStyleMango,
         title : 'Account'
