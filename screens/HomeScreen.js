@@ -5,7 +5,7 @@ import { Ionicons,FontAwesome5,AntDesign,Entypo,Fontisto,MaterialIcons} from '@e
 
 import { IconButton } from '../components';
 import Firebase from '../FirebaseConfig/Config'
-import { Create, Update } from '../FirebaseConfig/FirebaseOperations';
+import { Create, getAllProducts, Update } from '../FirebaseConfig/FirebaseOperations';
 import { AuthenticatedUserContext } from '../navigation/AuthenticatedUserProvider';
 import  HeaderComponents from './HeaderComponents';
 import BottomComponents from './BottomComponents';
@@ -16,12 +16,15 @@ const auth = Firebase.auth();
 export default function HomeScreen({navigation}) {
   const { user } = useContext(AuthenticatedUserContext);
   const [selectedId, setSelectedId] = useState(null);
+
+  var products = getAllProducts();
+
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
         <TouchableOpacity onPress={() => navigation.navigate('MyModal')}>
           <Text style={styles.searchBtn}>
-            <Ionicons name='search' size={20} color='white' />;
+            <Ionicons name='search' size={20} color='white' />
           </Text>
         </TouchableOpacity>
       ),

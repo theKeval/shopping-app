@@ -25,34 +25,11 @@ export default function SignupScreen({ navigation }) {
   const [rightIcon, setRightIcon] = useState('eye');
   const [signupError, setSignupError] = useState('');
 
-  useEffect(() => {
-    // onAuthStateChanged returns an unsubscriber
-    const unsubscribeAuth = auth.onAuthStateChanged(async authenticatedUser => {
-      try {
-        // await (authenticatedUser ? setUser(authenticatedUser) : setUser(null));
-        console.log("SignupScreen: authStateChanged");
-        // console.log(authenticatedUser);
-        
-        // save the user in firestore
-        // console.log(authenticatedUser);
-        if(authenticatedUser != null) {
-          Signup(authenticatedUser.email, createUserObj(authenticatedUser));
-        }
-
-      } catch (error) {
-        console.log(error);
-      }
-    });
-
-    // unsubscribe auth listener on unmount
-    return unsubscribeAuth;
-  }, []);
-
   // * had to keep the user obj creation outside of onAuthStateChanged due to 
   // * const variables such as email, userName, address... was not accessible in onAuthStateChanged.
-  function createUserObj(authenticatedUser) {
+  function createUserObj(user) {
     return {
-      id: authenticatedUser.uid,
+      id: user.uid,
       name: userName,
       email: email,
       password: password,
@@ -78,7 +55,10 @@ export default function SignupScreen({ navigation }) {
   const onHandleSignup = async () => {
     try {
       if (email !== '' && password !== '') {
-        await auth.createUserWithEmailAndPassword(email, password);
+        var userCredential = await auth.createUserWithEmailAndPassword(email, password);
+        console.log(`data from firebase: ${userCredential.user.email}, ${userCredential.user.uid}`);
+        console.log(`filled up data: email=${email}, user=${userName}`);
+        Signup(userCredential.user.email, createUserObj(userCredential.user));
       }
       else {
         setSignupError('Enter valid email address and password to signup!')

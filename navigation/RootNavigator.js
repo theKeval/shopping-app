@@ -9,6 +9,8 @@ import HomeStack from './HomeStack';
 
 const auth = Firebase.auth();
 
+// export const { user, setUser } = useState({});
+
 export default function RootNavigator() {
   const { user, setUser } = useContext(AuthenticatedUserContext);
   const [isLoading, setIsLoading] = useState(true);
@@ -17,7 +19,7 @@ export default function RootNavigator() {
     // onAuthStateChanged returns an unsubscriber
     const unsubscribeAuth = auth.onAuthStateChanged(async authenticatedUser => {
       try {
-        // await (authenticatedUser ? setUser(authenticatedUser) : setUser(null));
+        await (authenticatedUser ? setUser(authenticatedUser) : setUser(null));
         console.log("RootNavigator: authStateChanged");
         // console.log(authenticatedUser);
         setIsLoading(false);

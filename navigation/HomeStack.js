@@ -87,7 +87,7 @@ export default function HomeStack() {
         }else if (route.name === 'Account') {
           iconName = focused ? 'person' : 'person-outline';
         }
-        console.log(route.name)
+        // console.log(route.name)
         iconColor = focused ? MangoStyles.mangoOrangeYellow : 'black';
         // You can return any component that you like here!
         return <Ionicons name={iconName} size={size} color={iconColor} />;

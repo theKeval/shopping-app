@@ -1,4 +1,4 @@
-import { deleteDoc, doc, getDoc, setDoc } from 'firebase/firestore';
+import { deleteDoc, doc, getDoc, setDoc, collection, getDocs } from 'firebase/firestore';
 import { db } from './Config';
 
 
@@ -36,20 +36,22 @@ export const Create = (collectionName, documentName, value) => {
       })
 }
   
-export const Read = () => {
+export const Read = (collectionName, documentName) => {
     // MARK: Reading Doc
     // You can read what ever document by changing the collection and document path here
-    const myDoc = doc(db, "MyCollection", "MyDocument")
+    const myDoc = doc(db, collectionName, documentName)
   
     getDoc(myDoc)
       // Handling Promises
       .then((snapshot) => {
         // MARK: Success
         if (snapshot.exists) {
-          setUserDoc(snapshot.data())
+          console.log(snapshot.data());
+          // setUserDoc(snapshot.data())
+          // return snapshot.data();
         }
         else {
-          alert("No Doc Found")
+          alert("No data Found")
         }
       })
       .catch((error) => {
@@ -100,6 +102,29 @@ export const Delete = () => {
 export const Signup = (emailAddress, user) => {
   console.log("signup called");
   Create(collectionNames.users, emailAddress, user);
+}
+
+export const GetUserInfo = (emailAddress) => {
+  console.log("getting user: " + emailAddress);
+  return Read(collectionNames.users, emailAddress);
+}
+
+// #endregion
+
+// #region Products related operations
+
+export const getAllProducts = async () => {
+  console.log("getting all products");
+  var products = [];
+
+  const querySnapshot = await getDocs(collection(db, collectionNames.products));
+  querySnapshot.forEach((doc) => {
+    // console.log(doc.id, " => ", doc.data());
+    products.push(doc.data());
+  });
+  
+  console.log(products);
+  return products;
 }
 
 // #endregion
