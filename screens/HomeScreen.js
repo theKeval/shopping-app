@@ -19,7 +19,7 @@ export default function HomeScreen({navigation}) {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <TouchableOpacity onPress={() => navigation.navigate('MyModal')}>
+        <TouchableOpacity onPress={() => navigation.navigate('FilterModalScreen')}>
           <Text style={styles.searchBtn}>
             <Ionicons name='search' size={20} color='white' />;
           </Text>

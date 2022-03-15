@@ -39,8 +39,9 @@ function HomeStackScreen() {
         headerTintColor: 'white'
       }}/>
       </Stack.Group>
-      <Stack.Group>
-        <Stack.Screen name="MyModal" component={FilterModalScreen} />
+      <Stack.Group  screenOptions={{...headerStyleMango, presentation: 'modal',
+        title : 'Search' }}>
+        <Stack.Screen name="FilterModalScreen" component={FilterModalScreen} />
       </Stack.Group>
     </Stack.Navigator>
   );
