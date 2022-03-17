@@ -17,7 +17,7 @@ export default function HomeScreen({navigation}) {
   const { user } = useContext(AuthenticatedUserContext);
   const [selectedId, setSelectedId] = useState(null);
 
-  var products = getAllProducts();
+  // var products = getAllProducts();
 
   React.useLayoutEffect(() => {
     navigation.setOptions({

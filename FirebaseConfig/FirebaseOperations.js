@@ -36,29 +36,26 @@ export const Create = (collectionName, documentName, value) => {
       })
 }
   
-export const Read = (collectionName, documentName) => {
-    // MARK: Reading Doc
-    // You can read what ever document by changing the collection and document path here
-    const myDoc = doc(db, collectionName, documentName)
+export const Read = async (collectionName, documentName) => {
+
+  try {
+    const docRef = doc(db, collectionName, documentName);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      console.log("Document data:", docSnap.data());
+      return docSnap.data();
+    } else {
+      // doc.data() will be undefined in this case
+      console.log("No such document!");
+      return null;
+    }
+
+  } catch (error) {
+    console.log(error.message);
+  }
   
-    getDoc(myDoc)
-      // Handling Promises
-      .then((snapshot) => {
-        // MARK: Success
-        if (snapshot.exists) {
-          console.log(snapshot.data());
-          // setUserDoc(snapshot.data())
-          // return snapshot.data();
-        }
-        else {
-          alert("No data Found")
-        }
-      })
-      .catch((error) => {
-        // MARK: Failure
-        alert(error.message)
-      })
-  
+
 }
   
 export const Update = (value, merge) => {
@@ -104,7 +101,7 @@ export const Signup = (emailAddress, user) => {
   Create(collectionNames.users, emailAddress, user);
 }
 
-export const GetUserInfo = (emailAddress) => {
+export const GetUserInfo = async (emailAddress) => {
   console.log("getting user: " + emailAddress);
   return Read(collectionNames.users, emailAddress);
 }

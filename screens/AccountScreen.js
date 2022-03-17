@@ -25,14 +25,10 @@ const AccountScreen = ({navigation, route}) => {
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
-      // tabBarStyle: {display: 'none'},
       headerRight: () =>(
-        <TouchableOpacity onPress={() => navigation.navigate('MyModal')}>
-          <Text style={styles.searchBtn}>
-            {/* <Ionicons name='search' size={20} color='white' /> */}
-            <IconButton name='logout' size={20} onPress={handleSignout} color='#fff' />
-          </Text>
-        </TouchableOpacity>
+        <View style={styles.logoutBtn}>
+          <IconButton name='logout' size={20} onPress={handleSignout} color='#fff' />
+        </View>
       ),
     });
   })
@@ -130,7 +126,7 @@ const styles = StyleSheet.create({
     fontWeight:'700'
   },
 
-  searchBtn: {
+  logoutBtn: {
     marginRight: 10,
     padding: 5
   }

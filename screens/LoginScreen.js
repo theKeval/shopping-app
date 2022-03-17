@@ -47,8 +47,12 @@ const LoginScreen = ({navigation}) => {
       // todo: https://firebase.google.com/docs/firestore/query-data/get-data
       console.log("sign in successfull!");
       console.log("LoginScreen: email=" + email);
-      var _user = GetUserInfo(email);
-      console.log("LoginScreen: _user=" + _user);
+      GetUserInfo(email)
+        .then((user) => {
+          console.log("LoginScreen: user=" + JSON.stringify(user));
+        })
+      // var _user = GetUserInfo(email);
+      // console.log("LoginScreen: _user=" + _user);
 
     } catch (error) {
       setLoginError(error.message);
