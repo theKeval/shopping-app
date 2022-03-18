@@ -12,7 +12,6 @@ import AccountScreen from '../screens/AccountScreen';
 import OrderDetailsScreen from '../screens/OrderDetailsScreen';
 import FilterModalScreen from '../screens/FilterModalScreen';
 import EditProductScreen from '../screens/EditProductScreen';
-import AuthStack from './AuthStack';
 import LoginScreen from '../screens/LoginScreen';
 import SignupScreen from '../screens/SignupScreen';
 
