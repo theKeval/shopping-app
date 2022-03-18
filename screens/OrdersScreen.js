@@ -42,7 +42,6 @@ const OrdersScreen = ({navigation}) => {
   const showMenu = () => setVisible(true);
   React.useLayoutEffect(() => {
     navigation.setOptions({
-      tabBarStyle: {display: 'none'},
       
       headerRight: () => {
         return (

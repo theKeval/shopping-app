@@ -3,7 +3,7 @@ import React from 'react'
 
 const OrderDetailsScreen =  ({ navigation, route })  => {
     React.useLayoutEffect(() => {
-        navigation.setOptions({tabBarStyle: {display: 'none'}, title : route.params.order.title});
+        navigation.setOptions({ title : route.params.order.title});
       })
   return (
     <View style={styles.container}>

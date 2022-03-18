@@ -9,7 +9,11 @@ import { GetUserInfo } from '../FirebaseConfig/FirebaseOperations';
 const auth = Firebase.auth();
 
 const AccountScreen = ({navigation, route}) => {
-  const { user } = useContext(AuthenticatedUserContext);
+  const user = {
+      "name" : "",
+      "email" : "",
+      "address" : "",
+  };
   console.log(user.email);
   // const [userInfo, setUserInfo] = useState({});
   // setUserInfo(GetUserInfo(user.email));

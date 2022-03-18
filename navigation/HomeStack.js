@@ -1,9 +1,9 @@
-import React from 'react';
+import React , {useContext} from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { StyleSheet, Text, Button, KeyboardAvoidingView, TextInput, TouchableOpacity, View, Image, Pressable } from 'react-native'
 import HomeScreen from '../screens/HomeScreen';
 import MangoStyles from '../styles'
-
+import { AuthenticatedUserContext } from './AuthenticatedUserProvider';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons,FontAwesome5,AntDesign,Entypo,Fontisto,MaterialIcons} from '@expo/vector-icons';
 import ItemDetailsScreen from '../screens/ItemDetailsScreen';
@@ -25,90 +25,99 @@ const headerStyleMango = {
 
 
 const Stack = createStackNavigator();
+const TabsScreen = () => {
+  const { user } = useContext(AuthenticatedUserContext) ;
 
-function HomeStackScreen() {
-  return (
-    <Stack.Navigator >
-      <Stack.Group>
 
-      <Stack.Screen name="HomeScreen" component={HomeScreen}  options={{
-        ...headerStyleMango,
-        title : 'Products'
-      }}/>
-      <Stack.Screen name="ItemDetailsScreen" component={ItemDetailsScreen} options={{
-        ...headerStyleMango,
-        headerTintColor: 'white'
-      }}/>
-      <Stack.Screen name="EditProductScreen" component={EditProductScreen} options={{
-        ...headerStyleMango,
-        headerTintColor: 'white'
-      }} />
-      </Stack.Group>
-      <Stack.Group  screenOptions={{...headerStyleMango, presentation: 'modal',
-        title : 'Search' }}>
-        <Stack.Screen name="FilterModalScreen" component={FilterModalScreen} />
-      </Stack.Group>
-    </Stack.Navigator>
-  );
+  
+
+  return (    
+      <Tab.Navigator 
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconColor;
+            let iconName;
+            if (route.name === 'HomeScreen') {
+              iconName = focused ? 'home' : 'home-outline';
+            } else if (route.name === 'OrdersScreen') {
+              iconName = focused ? 'cart' : 'cart-outline';
+            } else if (route.name === 'Search') {
+              iconName = focused ? 'search' : 'search-outline';
+            }else if (route.name === 'AccountScreen') {
+              iconName = focused ? 'person' : 'person-outline';
+            }
+            // console.log(route.name)
+            iconColor = focused ? MangoStyles.mangoOrangeYellow : 'black';
+            // You can return any component that you like here!
+            return <Ionicons name={iconName} size={size} color={iconColor} />;
+          },
+          tabBarActiveTintColor: 'gray',
+          tabBarInactiveTintColor: 'black',
+          ...headerStyleMango,
+          headerTintColor: 'white',
+
+          
+        })}>
+
+          <Tab.Screen name="HomeScreen" component={HomeScreen}  options={{ title : 'Products'}}/>
+          {/* { user ? <Tab.Screen name="OrdersScreen" component={OrdersScreen}  options={{title : 'Orders'}} /> : <></>} */}
+          <Tab.Screen name="OrdersScreen" component={OrdersScreen}  options={{title : 'Orders'}} />
+          <Tab.Screen name="AccountScreen" component={AccountScreen} options={{title : 'Account'}} />
+        </Tab.Navigator>
+  )
 }
-function OrdersStackScreen() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen name="OrdersScreen" component={OrdersScreen}  options={{
-        ...headerStyleMango,
-        title : 'Orders'
-      }} />
-      <Stack.Screen name="OrderDetailsScreen" component={OrderDetailsScreen} options={{
-        ...headerStyleMango,
-        headerTintColor: 'white'
-      }}/>
-    </Stack.Navigator>
-  );
-}
-function AccountStackScreen() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen name="AccountScreen" component={AccountScreen} options={{
-        ...headerStyleMango,
-        title : 'Account'
-      }}/>
-    </Stack.Navigator>
-  );
-}
+
 const Tab = createBottomTabNavigator();
 
 export default function HomeStack() {
   return (
-    <Tab.Navigator 
-    screenOptions={({ route }) => ({
-      tabBarIcon: ({ focused, color, size }) => {
-        let iconColor;
-        let iconName;
-        if (route.name === 'Home') {
-          iconName = focused ? 'home' : 'home-outline';
-        } else if (route.name === 'Orders') {
-          iconName = focused ? 'cart' : 'cart-outline';
-        } else if (route.name === 'Search') {
-          iconName = focused ? 'search' : 'search-outline';
-        }else if (route.name === 'Account') {
-          iconName = focused ? 'person' : 'person-outline';
-        }
-        // console.log(route.name)
-        iconColor = focused ? MangoStyles.mangoOrangeYellow : 'black';
-        // You can return any component that you like here!
-        return <Ionicons name={iconName} size={size} color={iconColor} />;
-      },
-      tabBarActiveTintColor: 'gray',
-      tabBarInactiveTintColor: 'black',
-      headerShown: false,
-      tabBarHidden : true
-      
-    })}
-  >
-      <Tab.Screen name="Home" component={HomeStackScreen} />
-      <Tab.Screen name="Orders" component={OrdersStackScreen} />
-      <Tab.Screen name="Account" component={AccountStackScreen} />
-    </Tab.Navigator>
-
+    <Stack.Navigator screenOptions={{
+      ...headerStyleMango,
+      headerTintColor: 'white'
+    }}  >
+      <Stack.Group >
+        <Stack.Screen  name="Home" component={TabsScreen} options={{
+          headerShown: false,
+        }}/>
+      </Stack.Group>
+      <Stack.Group >
+        <Stack.Group >
+          <Stack.Screen name="ItemDetailsScreen" component={ItemDetailsScreen} options={{}}/>
+          <Stack.Screen name="EditProductScreen" component={EditProductScreen} options={{...headerStyleMango,
+            headerTintColor: 'white'
+          }} />
+        </Stack.Group>
+        <Stack.Group  screenOptions={{...headerStyleMango, presentation: 'modal', 
+          title : 'Search' }}>
+          <Stack.Screen name="FilterModalScreen" component={FilterModalScreen} />
+        </Stack.Group>
+      </Stack.Group>
+      <Stack.Group screenOptions={{...headerStyleMango,headerTintColor: 'white'}} >
+        <Stack.Screen name="OrderDetailsScreen" component={OrderDetailsScreen} options={{}}/>
+      </Stack.Group>
+    </Stack.Navigator>
   );
+
+
+
+  // function HomeTabs() {
+  //   return (
+  //     <Tab.Navigator>
+  //       <Tab.Screen name="Home" component={Home} />
+  //       <Tab.Screen name="Feed" component={Feed} />
+  //       <Tab.Screen name="Notifications" component={Notifications} />
+  //     </Tab.Navigator>
+  //   );
+  // }
+  
+  // function App() {
+  //   return (
+  //     <Stack.Navigator>
+  //       <Stack.Screen name="Home" component={HomeTabs} />
+  //       <Stack.Screen name="Profile" component={Profile} />
+  //       <Stack.Screen name="Settings" component={Settings} />
+  //     </Stack.Navigator>
+  //   );
+  // }
+
 }
