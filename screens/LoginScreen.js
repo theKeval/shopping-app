@@ -5,7 +5,7 @@ import Logo from '../assets/mango_letter.png';
 import MangoStyles from '../styles'
 import useWindowDimensions from 'react-native/Libraries/Utilities/useWindowDimensions';
 
-import { Create, Read, Update, Delete, GetUserInfo } from '../FirebaseConfig/FirebaseOperations';
+import {  GetUserInfo } from '../FirebaseConfig/FirebaseOperations';
 import { InputField, ErrorMessage } from '../components';
 import Firebase from '../FirebaseConfig/Config';
 
@@ -45,8 +45,8 @@ const LoginScreen = ({navigation}) => {
       // todo: not printing _user info yet
       // todo: need to refactor CRUD functions from
       // todo: https://firebase.google.com/docs/firestore/query-data/get-data
-      console.log("sign in successfull!");
-      console.log("LoginScreen: email=" + email);
+      // console.log("sign in successfull!");
+      // console.log("LoginScreen: email=" + email);
       GetUserInfo(email)
         .then((user) => {
           console.log("LoginScreen: user=" + JSON.stringify(user));

@@ -1,50 +1,53 @@
-import React, { useContext, useState } from 'react';
-import { render } from 'react-dom';
-import { StyleSheet, View, FlatList,  Text,StatusBar,Button,TouchableOpacity } from 'react-native';
-import { Ionicons,FontAwesome5,AntDesign,Entypo,Fontisto,MaterialIcons} from '@expo/vector-icons';
+import React, { useContext, useState,useEffect } from 'react';
+import { StyleSheet, View, FlatList,  Text,TouchableOpacity } from 'react-native';
+import { Ionicons} from '@expo/vector-icons';
+import MangoStyles from '../styles';
 
-import { IconButton } from '../components';
 import Firebase from '../FirebaseConfig/Config'
-import { Create, getAllProducts, Update } from '../FirebaseConfig/FirebaseOperations';
 import { AuthenticatedUserContext } from '../navigation/AuthenticatedUserProvider';
-import  HeaderComponents from './HeaderComponents';
-import BottomComponents from './BottomComponents';
 import ProductListItem from '../components/ProductListItem';
+import { getAllProducts } from '../FirebaseConfig/FirebaseOperations';
 
 const auth = Firebase.auth();
 
 export default function HomeScreen({navigation, route}) {
   const { user } = useContext(AuthenticatedUserContext);
   const [selectedId, setSelectedId] = useState(null);
+  const [products, productsSet] = useState([]);
   let filters = {
     selectedItems: [],
     searchText: '',
     maxPrice: 0,
     minPrice: 100,
   };
-  if(route.params && route.params.filters){
-    filters =  {
-        selectedItems:route.params.filters.selectedItems,
-        searchText:route.params.filters.searchText,
-        maxPrice:route.params.filters.maxPrice,
-        minPrice:route.params.filters.minPrice,
-    };
 
-  }
+  
+  useEffect(() => {
+    if(route.params && route.params.filters){
+      filters =  {
+          selectedItems:route.params.filters.selectedItems,
+          searchText:route.params.filters.searchText,
+          maxPrice:route.params.filters.maxPrice,
+          minPrice:route.params.filters.minPrice,
+      };
+  
+    }
+    getAllProducts().then(response => {
+      productsSet(response) 
+    })
 
-
-  // var products = getAllProducts();
-
+  }, [])
+  
   React.useLayoutEffect(() => {
     navigation.setOptions({
-      headerRight: () => (
+      headerRight: () => ( 
         <TouchableOpacity onPress={() => navigation.navigate('FilterModalScreen', filters)}>
           <Text style={styles.searchBtn}>
             <Ionicons name='search' size={20} color='white' />
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> 
       ),
-      headerLeft: () => (
+      headerLeft: () => ( user  ?
         <TouchableOpacity onPress={() => {
             navigation.navigate('EditProductScreen', { id: null , 
               productName:null,
@@ -55,7 +58,7 @@ export default function HomeScreen({navigation, route}) {
           <Text style={styles.searchBtn}>
             <Ionicons name='add-circle-outline' size={24} color='white' />;
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> : <View />
       ),
     });
   }, [navigation]);
@@ -65,33 +68,7 @@ export default function HomeScreen({navigation, route}) {
       item : item
     })     
   }
-  // Create({
-  //   email: user.email,
-  //   id: user.uid,
-  // })
-  const DATA = [
-    {
-      id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-      name: 'Mango Cake',
-      description: '4 layers mango cake',
-      price: 12.75,
-      category: 'food'
-    },
-    {
-      id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-      name: 'Mango Tea',
-      description: 'Cool mango tea, no sugar',
-      price: 7.58,
-      category: 'food'
-    },
-    {
-      id: '58694a0f-3da1-471f-bd96-145571e29d72',
-      name: 'Mango Coffee',
-      description: 'Mango Frappe',
-      price: 10.34,
-      category: 'food'
-    },
-  ];
+
   const handleSignOut = async () => {
     try {
       await auth.signOut();
@@ -106,21 +83,12 @@ export default function HomeScreen({navigation, route}) {
      return (
       
         <View style ={styles.container}>
-         {/* <View style={styles.row}>
-            <Text style={styles.title}>Welcome {user.email}!</Text>
-            <IconButton
-            name='logout'
-            size={24}
-            color='#fff'
-            onPress={handleSignOut}
-            />
-          </View> */}
+
           <FlatList
-            data={DATA}
+            data={products}
             renderItem={renderItem}
             keyExtractor={item => item.id}
           />
-          {/* <Text style={styles.text}>Your UID is: {user.uid} </Text> */}
         </View>
         
     );

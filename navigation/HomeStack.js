@@ -1,6 +1,5 @@
 import React , {useContext} from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { StyleSheet, Text, Button, KeyboardAvoidingView, TextInput, TouchableOpacity, View, Image, Pressable } from 'react-native'
 import HomeScreen from '../screens/HomeScreen';
 import MangoStyles from '../styles'
 import { AuthenticatedUserContext } from './AuthenticatedUserProvider';
@@ -45,7 +44,7 @@ const TabNavigator = () => {
               iconName = focused ? 'cart' : 'cart-outline';
             } else if (route.name === 'Search') {
               iconName = focused ? 'search' : 'search-outline';
-            }else if (route.name === 'AccountScreen') {
+            }else if (route.name === 'AccountScreen' ||  route.name === 'LoginScreen') {
               iconName = focused ? 'person' : 'person-outline';
             }
             // console.log(route.name)
@@ -62,9 +61,10 @@ const TabNavigator = () => {
         })}>
 
           <Tab.Screen name="HomeScreen" component={HomeScreen}  options={{ title : 'Products'}}/>
-          {/* { user ? <Tab.Screen name="OrdersScreen" component={OrdersScreen}  options={{title : 'Orders'}} /> : <></>} */}
-          <Tab.Screen name="OrdersScreen" component={OrdersScreen}  options={{title : 'Orders'}} />
+          { user ? <Tab.Screen name="OrdersScreen" component={OrdersScreen}  options={{title : 'Orders'}} /> : <></>}
+          { user ?
           <Tab.Screen name="AccountScreen" component={AccountScreen} options={{title : 'Account'}} />
+          : <Tab.Screen name='LoginScreen' component={LoginScreen} options={{title : 'Login' ,headerShown: false}}/>}
         </Tab.Navigator>
   )
 }
@@ -105,7 +105,6 @@ export default function HomeStack() {
 
       {/* AUTH GROUP */}
       <Stack.Group screenOptions={{headerShown: false}}>
-        <Stack.Screen name='Login' component={LoginScreen} />
         <Stack.Screen name='Signup' component={SignupScreen} />
       </Stack.Group>
 

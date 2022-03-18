@@ -105,7 +105,7 @@ export const GetUserInfo = async (emailAddress) => {
   return Read(collectionNames.users, emailAddress);
 }
 export const getAllUsers = async () => {
-  console.log("getting all users");
+  // console.log("getting all users");
   var users = [];
 
   const querySnapshot = await getDocs(collection(db, collectionNames.users));
@@ -131,7 +131,7 @@ export const getAllProducts = async () => {
     products.push(doc.data());
   });
   
-  console.log(products);
+  // console.log(products);
   return products;
 }
 

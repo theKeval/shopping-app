@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-
+import MangoStyles from '../styles';
 const InputField = ({
   leftIcon,
   iconColor = '#000',

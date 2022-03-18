@@ -4,6 +4,7 @@ import React,{useState} from 'react'
 import { Picker } from '@react-native-picker/picker';
 import { CommonActions } from '@react-navigation/native';
 import { ButtonMain } from '../components';
+import MangoStyles from '../styles';
 
 const EditProductScreen = ({navigation,route}) => {
     const productId =  route.params && route.params.id !== null ?  route.params.id : null;
@@ -24,7 +25,7 @@ const EditProductScreen = ({navigation,route}) => {
                     <Ionicons name='trash' size={24} color='white' />
                   </Text>
                 </TouchableOpacity> 
-              ): (<View></View>)},
+              ): (<View />)},
         });
     }, [navigation]);
     const categories = [{

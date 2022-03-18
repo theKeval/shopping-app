@@ -1,17 +1,19 @@
 import { StyleSheet, Text, View , Image,TouchableOpacity} from 'react-native'
-import React, {useState} from 'react'
+import React, {useState,useContext} from 'react'
 import Logo from '../assets/mango_letter.png';
 import MangoStyles from '../styles'
 import { ButtonMain } from '../components';
 import { Ionicons,FontAwesome5,AntDesign,Entypo,Fontisto,MaterialIcons} from '@expo/vector-icons';
+import { AuthenticatedUserContext } from '../navigation/AuthenticatedUserProvider';
 
 const ItemDetailsScreen = ({ navigation, route }) => {
+  const { user } = useContext(AuthenticatedUserContext) ;
   const [qty, qtySet] = useState(1);
   React.useLayoutEffect(() => {
     navigation.setOptions({
       title : route.params.item.name,
       
-      headerRight: () => (
+      headerRight: () => user ? (
         <TouchableOpacity onPress={() => {
             navigation.navigate('EditProductScreen', { 
               id: route.params.item.id ,
@@ -26,12 +28,35 @@ const ItemDetailsScreen = ({ navigation, route }) => {
             <Ionicons name='pencil' size={24} color='white' />;
           </Text>
         </TouchableOpacity>
-      ),
+      ) : (<></>),
     });
   })
   const onPressAdd = () => {
     // #TODO: Add Functionality to add
   } 
+
+  const productAddOption = () => {
+    return user ? 
+    <View>
+      <View>
+        <Text style={styles.label}>Quantity</Text>
+
+      </View>
+      <View style={styles.twoColumns}>
+        <ButtonMain width='20%' title='-' backgroundColor={MangoStyles.mangoNegativeAction} onPress={()=> { qtySet(qty > 1 ? parseInt(qty) - 1 : 0) }}></ButtonMain>
+        <Text style={styles.qtyLabel}>{qty}</Text>
+        <ButtonMain width='20%' title='+' backgroundColor={MangoStyles.mangoPositiveAction} onPress={()=> { qtySet(parseInt(qty) + 1) }}></ButtonMain>
+
+      </View>
+      <View style={styles.btnAdd2Cart}>
+        <ButtonMain  title='Add Item'></ButtonMain>
+      </View>   
+    </View> 
+
+    : <View />
+
+
+  }
   return (
     <View style={styles.container}>
         <Image resizeMode="contain"
@@ -52,20 +77,8 @@ const ItemDetailsScreen = ({ navigation, route }) => {
         <Text style={styles.price}>$ {route.params.item.price}</Text>
       </View>
 
+      {productAddOption()}
 
-      <View>
-        <Text style={styles.label}>Quantity</Text>
-
-      </View>
-      <View style={styles.twoColumns}>
-        <ButtonMain width='20%' title='-' backgroundColor={MangoStyles.mangoNegativeAction} onPress={()=> { qtySet(qty > 1 ? parseInt(qty) - 1 : 0) }}></ButtonMain>
-        <Text style={styles.qtyLabel}>{qty}</Text>
-        <ButtonMain width='20%' title='+' backgroundColor={MangoStyles.mangoPositiveAction} onPress={()=> { qtySet(parseInt(qty) + 1) }}></ButtonMain>
-
-      </View>
-      <View style={styles.btnAdd2Cart}>
-        <ButtonMain  title='Add Item'></ButtonMain>
-      </View>
     </View>
   )
 }

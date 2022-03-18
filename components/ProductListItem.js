@@ -14,10 +14,8 @@ const ProductListItem = ({ item, onPress, backgroundColor }) => {
         <View style={styles.itemDesc}>
             <Text style={[styles.title]}>{item.name}</Text>
             <Text >{item.description}</Text>
-            <View style={[styles.lastRow]}>
-                <Text style={[styles.category]}>#{item.category}</Text>
-                <Text style={[styles.price]}>{'$ ' + item.price.toString()}</Text>
-            </View>
+            <Text style={[styles.price]}>{'$ ' + item.price.toString()}</Text>
+
         </View>
     </TouchableOpacity>
   )

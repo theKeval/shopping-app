@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View ,TouchableOpacity, TextInput,ScrollView } from 'react-native'
-import React, {useState} from 'react'
+import React, {useState,useEffect} from 'react'
 import { InputField } from '../components';
 import { Ionicons,FontAwesome5,AntDesign,Entypo,Fontisto,MaterialIcons} from '@expo/vector-icons';
 import MangoStyles from '../styles'
@@ -11,18 +11,21 @@ const FilterModalScreen = ({navigation, route}) => {
     const [searchText , searchTextSet] = useState("");
     const [maxPrice , maxPriceSet] = useState("");
     const [minPrice , minPriceSet] = useState("");
+    useEffect(() => {
+      if(route.params && route.params.filter ){
+        selectedCategorySet(route.params.filter['selectedCategory']);
+        searchTextSet(route.params.filter['searchText']);
+        maxPriceSet(route.params.filter['maxPrice']);
+        minPriceSet(route.params.filter['minPrice']);
+      }
+    })
+    
 
-    if(route.params && route.params.filter ){
-      selectedCategorySet(route.params.filter['selectedCategory']);
-      searchTextSet(route.params.filter['searchText']);
-      maxPriceSet(route.params.filter['maxPrice']);
-      minPriceSet(route.params.filter['minPrice']);
-    }
     React.useLayoutEffect(() => {
       navigation.setOptions({
         headerRight: () => (
           <TouchableOpacity onPress={() => {
-              console.log('submit',minPrice)
+              // console.log('submit',minPrice)
               if(minPrice !== "" && maxPrice !== "" && parseFloat(minPrice) > parseFloat(maxPrice)){
                 alert('Min. Price is greater than the Max. Price')
               }else if(selectedCategory.length === 0){

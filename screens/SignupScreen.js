@@ -35,6 +35,7 @@ export default function SignupScreen({ navigation }) {
       password: password,
       phoneNumber: phoneNumber,
       address: address,
+      isAdmin: false,
     }
   }
 
@@ -49,7 +50,7 @@ export default function SignupScreen({ navigation }) {
   };
 
   const onPressLogin = () => {
-    navigation.navigate('Login');
+    navigation.navigate('LoginScreen');
   }
 
   const onHandleSignup = async () => {
@@ -59,6 +60,7 @@ export default function SignupScreen({ navigation }) {
         console.log(`data from firebase: ${userCredential.user.email}, ${userCredential.user.uid}`);
         console.log(`filled up data: email=${email}, user=${userName}`);
         Signup(userCredential.user.email, createUserObj(userCredential.user));
+        navigation.navigate('HomeScreen');
       }
       else {
         setSignupError('Enter valid email address and password to signup!')

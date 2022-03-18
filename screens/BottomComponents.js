@@ -15,7 +15,7 @@ export default class BottomComponents extends React.Component{
 
 
     changeText = (text) => {
-        console.log(text + ' has been pressed')
+        // console.log(text + ' has been pressed')
         this.setState({
             screenText: text
         })

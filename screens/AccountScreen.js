@@ -1,23 +1,24 @@
-import React, { useContext, useState, useLayoutEffect } from 'react';
+import React, { useContext, useState, useEffect,useLayoutEffect  } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Pressable } from 'react-native'
 import MangoStyles from '../styles'
 import Firebase from '../FirebaseConfig/Config'
 import { AuthenticatedUserContext } from '../navigation/AuthenticatedUserProvider';
 import { IconButton } from '../components';
 import { GetUserInfo } from '../FirebaseConfig/FirebaseOperations';
+import { LogBox } from 'react-native';
 
+LogBox.ignoreLogs(['Setting a timer']);
 const auth = Firebase.auth();
 
 const AccountScreen = ({navigation, route}) => {
-  const user = {
-      "name" : "",
-      "email" : "",
-      "address" : "",
-  };
-  console.log(user.email);
-  // const [userInfo, setUserInfo] = useState({});
-  // setUserInfo(GetUserInfo(user.email));
-  // console.log(userInfo);
+  const { user } = useContext(AuthenticatedUserContext);
+  const [userInfo, setUserInfo] = useState({});
+  useEffect(() => {
+    setUserInfo(GetUserInfo(user.email)); 
+    console.log(userInfo , JSON.stringify(userInfo));
+    return  userInfo;
+  },[])
+  
 
   const handleSignout = async () => {
     try {
@@ -41,15 +42,15 @@ const AccountScreen = ({navigation, route}) => {
     <View style={styles.container}>
       <View>
         <Text style={styles.label}>User</Text>
-        <Text style={styles.content}>{user.name}</Text>
+        <Text style={styles.content}>{userInfo.name}</Text>
       </View>
       <View>
         <Text style={styles.label}>Email</Text>
-        <Text style={styles.content}>{user.email}</Text>
+        <Text style={styles.content}>{userInfo.email}</Text>
       </View>
       <View>
         <Text style={styles.label}>Address</Text>
-        <Text style={styles.content}>{user.address}M3N 5P9 Laland Road</Text>
+        <Text style={styles.content}>{userInfo.address}</Text>
       </View>
         <View style={styles.section}>
           <TouchableOpacity onPress={() => this} style={styles.button}>

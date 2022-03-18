@@ -1,5 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import MangoStyles from '../styles';
 
 const OrderDetailsScreen =  ({ navigation, route })  => {
     React.useLayoutEffect(() => {
