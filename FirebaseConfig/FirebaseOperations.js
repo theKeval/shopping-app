@@ -1,4 +1,4 @@
-import { deleteDoc, doc, getDoc, setDoc, collection, getDocs } from 'firebase/firestore';
+import { deleteDoc, doc, getDoc, setDoc, collection, getDocs, refEqual } from 'firebase/firestore';
 import { db } from './Config';
 
 
@@ -9,7 +9,6 @@ const collectionNames = {
   orders: "Orders",
   productsInOrder: "ProductsInOrder"
 }
-
 export const Create = (collectionName, documentName, value) => {
     console.log("Create called");
 
@@ -58,9 +57,9 @@ export const Read = async (collectionName, documentName) => {
 
 }
   
-export const Update = (value, merge) => {
+export const Update = (value, merge, collectionName, documentName) => {
     // MARK: Updating Doc
-    const myDoc = doc(db, "MyCollection", "MyDocument")
+    const myDoc = doc(db, collectionName, documentName)
   
     // If you set merge true then it will merge with existing doc otherwise it will be a fresh one
     setDoc(myDoc, value, { merge: merge })
@@ -76,9 +75,9 @@ export const Update = (value, merge) => {
       })
 }
   
-export const Delete = () => {
+export const Delete = (collectionName, documentName) => {
     // MARK: Deleting Doc
-    const myDoc = doc(db, "MyCollection", "MyDocument")
+    const myDoc = doc(db, collectionName, documentName)
   
     deleteDoc(myDoc)
       // Handling Promises
