@@ -4,7 +4,7 @@ import MangoStyles from '../styles'
 import Firebase from '../FirebaseConfig/Config'
 import { AuthenticatedUserContext } from '../navigation/AuthenticatedUserProvider';
 import { IconButton } from '../components';
-import { GetUserInfo } from '../FirebaseConfig/FirebaseOperations';
+import { GetUserInfo,getAsyncUser,removeAsyncUser } from '../FirebaseConfig/FirebaseOperations';
 import { LogBox } from 'react-native';
 
 LogBox.ignoreLogs(['Setting a timer']);
@@ -13,23 +13,33 @@ const auth = Firebase.auth();
 const AccountScreen = ({navigation, route}) => {
   const { user } = useContext(AuthenticatedUserContext);
   const [userInfo, setUserInfo] = useState({});
+
   useEffect(() => {
-    setUserInfo(GetUserInfo(user.email)); 
-    console.log(userInfo , JSON.stringify(userInfo));
-    return  userInfo;
-  },[])
+    getAsyncUser().then(response => {
+      console.log(response)
+      if(response && response !== {}){
+        setUserInfo(response)
+      }
+    })
+  
+    return () => {
+    }
+  }, [])
   
 
   const handleSignout = async () => {
     try {
       await auth.signOut();
+      removeAsyncUser()
     } catch (error) {
       console.log(error);
     }
   };
 
   React.useLayoutEffect(() => {
+    console.log(userInfo)
     navigation.setOptions({
+      
       headerRight: () =>(
         <View style={styles.logoutBtn}>
           <IconButton name='logout' size={20} onPress={handleSignout} color='#fff' />

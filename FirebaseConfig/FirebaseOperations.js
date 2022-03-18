@@ -1,6 +1,6 @@
 import { deleteDoc, doc, getDoc, setDoc, collection, getDocs, refEqual } from 'firebase/firestore';
 import { db } from './Config';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const collectionNames = {
   users: "Users",
@@ -97,9 +97,49 @@ export const Delete = (collectionName, documentName) => {
 
 export const Signup = (emailAddress, user) => {
   console.log("signup called");
+  
   Create(collectionNames.users, emailAddress, user);
+  saveAsyncUser(user)
 }
 
+
+export const saveAsyncUser = async (user)=>{
+  try {
+    const jsonValue = JSON.stringify(user)
+
+      await AsyncStorage.setItem('userObj',jsonValue);        
+  } catch (error) {
+
+  }
+}
+export const getAsyncUser = async ()=>{
+  try {
+    const jsonValue  = await AsyncStorage.getItem('userObj')
+      return jsonValue != null ? JSON.parse(jsonValue) : null;
+
+  } catch(e) {
+    console.log(error)
+  }
+  return {}
+}
+
+export const getIsAdmin = () =>{
+  getAsyncUser().then((user)=>{
+    return user.isAdmin;
+  }).catch(()=>{
+    return false;
+  })
+}
+
+export const removeAsyncUser= async () => {
+  try {
+    await AsyncStorage.removeItem('userObj')
+  } catch(e) {
+    console.log(error)
+  }
+
+  console.log('Done.')
+}
 export const GetUserInfo = async (emailAddress) => {
   console.log("getting user: " + emailAddress);
   return Read(collectionNames.users, emailAddress);

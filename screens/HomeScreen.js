@@ -6,13 +6,14 @@ import MangoStyles from '../styles';
 import Firebase from '../FirebaseConfig/Config'
 import { AuthenticatedUserContext } from '../navigation/AuthenticatedUserProvider';
 import ProductListItem from '../components/ProductListItem';
-import { getAllProducts } from '../FirebaseConfig/FirebaseOperations';
+import { getAllProducts, GetUserInfo } from '../FirebaseConfig/FirebaseOperations';
 
 const auth = Firebase.auth();
 
 export default function HomeScreen({navigation, route}) {
   const { user } = useContext(AuthenticatedUserContext);
   const [selectedId, setSelectedId] = useState(null);
+  const [isAdmin, isAdminSet] = useState(false)
   const [products, productsSet] = useState([]);
   let filters = {
     selectedItems: [],
@@ -34,10 +35,20 @@ export default function HomeScreen({navigation, route}) {
     }
     getAllProducts().then(response => {
       productsSet(response) 
+      
     })
 
+  // if(user && user.email){
+  //   GetUserInfo(user.email)
+  //   .then((user) => {
+  //     isAdminSet(user.isAdmin)
+  //     console.log("LoginScreen: user=" + JSON.stringify(user.isAdmin));
+  //   }).catch(error => {
+  //   })
+
+  // }
   }, [])
-  
+
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => ( 

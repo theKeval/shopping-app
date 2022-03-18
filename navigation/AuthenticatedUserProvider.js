@@ -17,7 +17,7 @@ export const AuthenticatedUserProvider = ({ children }) => {
       }
       // getUser();
     } catch (error) {
-      setUser(null)
+
     }
   })
 

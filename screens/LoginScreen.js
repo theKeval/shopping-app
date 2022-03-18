@@ -5,10 +5,10 @@ import Logo from '../assets/mango_letter.png';
 import MangoStyles from '../styles'
 import useWindowDimensions from 'react-native/Libraries/Utilities/useWindowDimensions';
 
-import {  GetUserInfo } from '../FirebaseConfig/FirebaseOperations';
+import {  GetUserInfo, saveAsyncUser } from '../FirebaseConfig/FirebaseOperations';
 import { InputField, ErrorMessage } from '../components';
 import Firebase from '../FirebaseConfig/Config';
-
+import Toast from 'react-native-root-toast';
 const auth = Firebase.auth();
 
 const LoginScreen = ({navigation}) => {
@@ -18,7 +18,7 @@ const LoginScreen = ({navigation}) => {
 
   const [passwordVisibility, setPasswordVisibility] = useState(true);
   const [rightIcon, setRightIcon] = useState('eye');
-  const [loginError, setLoginError] = useState('');
+  const [loginError, setLoginError] = useState(null);
 
   // const onChangeEmail = textValue => emailSetText(textValue);
   // const onChangePass = textValue => passwordSetText(textValue);
@@ -38,8 +38,20 @@ const LoginScreen = ({navigation}) => {
 
   const onLogin = async () => {
     try {
-      if (email !== '' && password !== '') {
+      if (email === '') {
+        setLoginError('Please type an email address')
+      } else if  (password === ''){
+        setLoginError('Please type your passowrd')
+      } else {
         await auth.signInWithEmailAndPassword(email, password);
+        GetUserInfo(email)
+        .then((user) => {
+          // console.log("LoginScreen: user=" + JSON.stringify(user));
+          saveAsyncUser(user)
+          setLoginError(null);
+        }).catch(error => {
+          setLoginError(error.message);
+        })
       }
 
       // todo: not printing _user info yet
@@ -47,10 +59,7 @@ const LoginScreen = ({navigation}) => {
       // todo: https://firebase.google.com/docs/firestore/query-data/get-data
       // console.log("sign in successfull!");
       // console.log("LoginScreen: email=" + email);
-      GetUserInfo(email)
-        .then((user) => {
-          console.log("LoginScreen: user=" + JSON.stringify(user));
-        })
+
       // var _user = GetUserInfo(email);
       // console.log("LoginScreen: _user=" + _user);
 
@@ -107,8 +116,17 @@ const LoginScreen = ({navigation}) => {
       </View>
       <View style={styles.buttonContainer}> 
 
-      {loginError ? <ErrorMessage error={loginError} visible={true} /> : null}
+      <Toast
 
+            visible={loginError !== null}
+            position={Toast.positions.BOTTOM}
+            duration={Toast.durations.LONG}
+            shadow={false}
+            opacity={0.9}
+            backgroundColor={'red'}
+            animation={true}
+            hideOnPress={true}
+        >{loginError}</Toast> 
       <TouchableOpacity
             onPress={onLogin}
             style={styles.button}
