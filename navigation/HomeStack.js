@@ -12,6 +12,9 @@ import AccountScreen from '../screens/AccountScreen';
 import OrderDetailsScreen from '../screens/OrderDetailsScreen';
 import FilterModalScreen from '../screens/FilterModalScreen';
 import EditProductScreen from '../screens/EditProductScreen';
+import AuthStack from './AuthStack';
+import LoginScreen from '../screens/LoginScreen';
+import SignupScreen from '../screens/SignupScreen';
 
 const headerStyleMango = {
   headerTitleAlign: 'center',
@@ -25,7 +28,7 @@ const headerStyleMango = {
 
 
 const Stack = createStackNavigator();
-const TabsScreen = () => {
+const TabNavigator = () => {
   const { user } = useContext(AuthenticatedUserContext) ;
 
 
@@ -75,26 +78,38 @@ export default function HomeStack() {
       ...headerStyleMango,
       headerTintColor: 'white'
     }}  >
+
+      {/* TABS GROUP */}
       <Stack.Group >
-        <Stack.Screen  name="Home" component={TabsScreen} options={{
+        <Stack.Screen  name="Home" component={TabNavigator} options={{
           headerShown: false,
         }}/>
       </Stack.Group>
+
+      {/* ITEMS GROUP */}
       <Stack.Group >
+        {/* ITEMS DETAIL AND EDIT SUBGROUP */}
         <Stack.Group >
           <Stack.Screen name="ItemDetailsScreen" component={ItemDetailsScreen} options={{}}/>
-          <Stack.Screen name="EditProductScreen" component={EditProductScreen} options={{...headerStyleMango,
-            headerTintColor: 'white'
-          }} />
+          <Stack.Screen name="EditProductScreen" component={EditProductScreen} options={{...headerStyleMango, headerTintColor: 'white' }} />
         </Stack.Group>
-        <Stack.Group  screenOptions={{...headerStyleMango, presentation: 'modal', 
-          title : 'Search' }}>
+         {/* ITEMS SEARCH MODAL FILTER SUBGROUP */}
+        <Stack.Group  screenOptions={{...headerStyleMango, presentation: 'modal', title : 'Search' }}>
           <Stack.Screen name="FilterModalScreen" component={FilterModalScreen} />
         </Stack.Group>
       </Stack.Group>
+
+      {/* ORDERS GROUP */}
       <Stack.Group screenOptions={{...headerStyleMango,headerTintColor: 'white'}} >
         <Stack.Screen name="OrderDetailsScreen" component={OrderDetailsScreen} options={{}}/>
       </Stack.Group>
+
+      {/* AUTH GROUP */}
+      <Stack.Group screenOptions={{headerShown: false}}>
+        <Stack.Screen name='Login' component={LoginScreen} />
+        <Stack.Screen name='Signup' component={SignupScreen} />
+      </Stack.Group>
+
     </Stack.Navigator>
   );
 
