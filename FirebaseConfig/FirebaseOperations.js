@@ -105,7 +105,19 @@ export const GetUserInfo = async (emailAddress) => {
   console.log("getting user: " + emailAddress);
   return Read(collectionNames.users, emailAddress);
 }
+export const getAllUsers = async () => {
+  console.log("getting all users");
+  var users = [];
 
+  const querySnapshot = await getDocs(collection(db, collectionNames.users));
+  querySnapshot.forEach((doc) => {
+    // console.log(doc.id, " => ", doc.data());
+    users.push(doc.data());
+  });
+  
+  console.log(users);
+  return users;
+}
 // #endregion
 
 // #region Products related operations
@@ -122,6 +134,43 @@ export const getAllProducts = async () => {
   
   console.log(products);
   return products;
+}
+
+// #endregion
+
+
+// #region Categories related operations
+
+export const getAllCategories = async () => {
+  console.log("getting all Categories");
+  var categories = [];
+
+  const querySnapshot = await getDocs(collection(db, collectionNames.productCategories));
+  querySnapshot.forEach((doc) => {
+    // console.log(doc.id, " => ", doc.data());
+    categories.push(doc.data());
+  });
+  
+  console.log(categories);
+  return categories;
+}
+
+// #endregion
+
+// #region Orders related operations
+
+export const getAllOrders = async () => {
+  console.log("getting all Orders");
+  var orders = [];
+
+  const querySnapshot = await getDocs(collection(db, collectionNames.orders));
+  querySnapshot.forEach((doc) => {
+    // console.log(doc.id, " => ", doc.data());
+    orders.push(doc.data());
+  });
+  
+  console.log(orders);
+  return orders;
 }
 
 // #endregion
