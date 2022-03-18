@@ -1,7 +1,7 @@
 import { deleteDoc, doc, getDoc, setDoc, collection, getDocs, refEqual } from 'firebase/firestore';
 import { db } from './Config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import uuid from 'react-native-uuid';
 const collectionNames = {
   users: "Users",
   productCategories: "ProductCategories",
@@ -42,7 +42,7 @@ export const Read = async (collectionName, documentName) => {
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-      console.log("Document data:", docSnap.data());
+      // console.log("Document data:", docSnap.data());
       return docSnap.data();
     } else {
       // doc.data() will be undefined in this case
@@ -174,6 +174,23 @@ export const getAllProducts = async () => {
   // console.log(products);
   return products;
 }
+export const createProduct = (product) => {
+  const id =  product.id = uuid.v4();
+  Create(collectionNames.products,id , product);
+}
+export const updateProduct = (id, product) => {
+  console.log(id, product)
+  Update(product, false,collectionNames.products, id);
+}
+
+export const getProduct = (id) => {
+  return Read(collectionNames.products, id)
+  
+}
+export const removeProduct = (id) => {
+  return Delete(collectionNames.products, id)
+  
+}
 
 // #endregion
 
@@ -190,7 +207,7 @@ export const getAllCategories = async () => {
     categories.push(doc.data());
   });
   
-  console.log(categories);
+  // console.log(categories);
   return categories;
 }
 

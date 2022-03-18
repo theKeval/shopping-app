@@ -12,6 +12,7 @@ const auth = Firebase.auth();
 
 export default function HomeScreen({navigation, route}) {
   const { user } = useContext(AuthenticatedUserContext);
+  const [userInfo, userInfoSet] = useState(null);
   const [selectedId, setSelectedId] = useState(null);
   const [isAdmin, isAdminSet] = useState(false)
   const [products, productsSet] = useState([]);
@@ -24,32 +25,26 @@ export default function HomeScreen({navigation, route}) {
 
   
   useEffect(() => {
-    if(route.params && route.params.filters){
-      filters =  {
-          selectedItems:route.params.filters.selectedItems,
-          searchText:route.params.filters.searchText,
-          maxPrice:route.params.filters.maxPrice,
-          minPrice:route.params.filters.minPrice,
-      };
+    // if(route.params && route.params.filters){
+    //   filters =  {
+    //       selectedItems:route.params.filters.selectedItems,
+    //       searchText:route.params.filters.searchText,
+    //       maxPrice:route.params.filters.maxPrice,
+    //       minPrice:route.params.filters.minPrice,
+    //   };
   
-    }
+    // }
     getAllProducts().then(response => {
       productsSet(response) 
       
     })
+    
 
-  // if(user && user.email){
-  //   GetUserInfo(user.email)
-  //   .then((user) => {
-  //     isAdminSet(user.isAdmin)
-  //     console.log("LoginScreen: user=" + JSON.stringify(user.isAdmin));
-  //   }).catch(error => {
-  //   })
 
-  // }
   }, [])
 
   React.useLayoutEffect(() => {
+
     navigation.setOptions({
       headerRight: () => ( 
         <TouchableOpacity onPress={() => navigation.navigate('FilterModalScreen', filters)}>
@@ -58,12 +53,9 @@ export default function HomeScreen({navigation, route}) {
           </Text>
         </TouchableOpacity> 
       ),
-      headerLeft: () => ( user  ?
+      headerLeft: () => ( true  ?
         <TouchableOpacity onPress={() => {
-            navigation.navigate('EditProductScreen', { id: null , 
-              productName:null,
-              productDescription:null,
-              productPrice:null,})
+            navigation.navigate('EditProductScreen', { id: null })
           }
         }>
           <Text style={styles.searchBtn}>
@@ -75,29 +67,22 @@ export default function HomeScreen({navigation, route}) {
   }, [navigation]);
   const selectItem = (item) =>{
     setSelectedId(item.id);
+    console.log(item)
     navigation.navigate('ItemDetailsScreen', {
-      item : item
+      id : item.id
     })     
   }
 
-  const handleSignOut = async () => {
-    try {
-      await auth.signOut();
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
-  const renderItem = ({ item }) => (
-    <ProductListItem item={item} onPress={() => {selectItem(item)}}></ProductListItem>
-  );
      return (
       
         <View style ={styles.container}>
 
           <FlatList
             data={products}
-            renderItem={renderItem}
+            renderItem={({ item }) => (
+              <ProductListItem item={item} onPress={() => {selectItem(item)}}></ProductListItem>
+            )}
             keyExtractor={item => item.id}
           />
         </View>

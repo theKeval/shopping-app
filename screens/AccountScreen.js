@@ -15,7 +15,7 @@ const AccountScreen = ({navigation, route}) => {
   const [userInfo, setUserInfo] = useState({});
 
   useEffect(() => {
-    getAsyncUser().then(response => {
+    GetUserInfo(user.email).then(response => {
       console.log(response)
       if(response && response !== {}){
         setUserInfo(response)
@@ -24,7 +24,7 @@ const AccountScreen = ({navigation, route}) => {
   
     return () => {
     }
-  }, [])
+  }, [user])
   
 
   const handleSignout = async () => {

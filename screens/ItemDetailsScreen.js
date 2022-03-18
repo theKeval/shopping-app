@@ -1,26 +1,41 @@
 import { StyleSheet, Text, View , Image,TouchableOpacity} from 'react-native'
-import React, {useState,useContext} from 'react'
+import React, {useState,useContext,useEffect} from 'react'
 import Logo from '../assets/mango_letter.png';
 import MangoStyles from '../styles'
 import { ButtonMain } from '../components';
 import { Ionicons,FontAwesome5,AntDesign,Entypo,Fontisto,MaterialIcons} from '@expo/vector-icons';
 import { AuthenticatedUserContext } from '../navigation/AuthenticatedUserProvider';
+import { GetUserInfo , getProduct} from '../FirebaseConfig/FirebaseOperations';
 
 const ItemDetailsScreen = ({ navigation, route }) => {
   const { user } = useContext(AuthenticatedUserContext) ;
   const [qty, qtySet] = useState(1);
+  const [userInfo, userInfoSet] = useState(null)
+  const [product, productSet] = useState({})
+  const productId =  route.params && route.params.id !== null ?  route.params.id : null;
+
+  useEffect(() => {
+    if(user & user.email){
+        GetUserInfo(user.email).then(userResponse =>{
+          userInfoSet(userResponse); 
+          console.log(user.email)
+        })
+    }
+    getProduct(productId).then(productFound => {
+      productSet({...productFound})
+    }).catch()
+    return () => {
+    }
+  }, [user])
+  
   React.useLayoutEffect(() => {
     navigation.setOptions({
-      title : route.params.item.name,
+      title : product.name,
       
       headerRight: () => user ? (
         <TouchableOpacity onPress={() => {
             navigation.navigate('EditProductScreen', { 
-              id: route.params.item.id ,
-              productName: route.params.item.name,
-              productDescription: route.params.item.description,
-              productPrice: route.params.item.price,
-              // productCategory: route.params.item.category
+              id: productId
             })
           }
         }>
@@ -28,7 +43,7 @@ const ItemDetailsScreen = ({ navigation, route }) => {
             <Ionicons name='pencil' size={24} color='white' />;
           </Text>
         </TouchableOpacity>
-      ) : (<></>),
+      ) : (<View/>),
     });
   })
   const onPressAdd = () => {
@@ -36,7 +51,7 @@ const ItemDetailsScreen = ({ navigation, route }) => {
   } 
 
   const productAddOption = () => {
-    return user ? 
+    return (user ? 
     <View>
       <View>
         <Text style={styles.label}>Quantity</Text>
@@ -53,7 +68,7 @@ const ItemDetailsScreen = ({ navigation, route }) => {
       </View>   
     </View> 
 
-    : <View />
+    : <View />)
 
 
   }
@@ -65,19 +80,19 @@ const ItemDetailsScreen = ({ navigation, route }) => {
       />
       <View>
         <Text style={styles.label}>Category</Text>
-        <Text>{route.params.item.category}</Text>
+        <Text>{product.categoryName}</Text>
 
       </View>
       <View>
         <Text style={styles.label}>Description</Text>
-        <Text>{route.params.item.description}</Text>
+        <Text>{product.description}</Text>
       </View>
       <View style={styles.twoColumns}>
         <Text style={styles.label}>Price</Text>
-        <Text style={styles.price}>$ {route.params.item.price}</Text>
+        <Text style={styles.price}>$ {parseFloat(product.price).toString()}</Text>
       </View>
 
-      {productAddOption()}
+      {productAddOption}
 
     </View>
   )
