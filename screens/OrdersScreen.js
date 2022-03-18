@@ -1,8 +1,9 @@
 import { StyleSheet, View, FlatList,  Text,StatusBar,Button,TouchableOpacity } from 'react-native';
 import { Ionicons,FontAwesome5,AntDesign,Entypo,Fontisto,MaterialIcons} from '@expo/vector-icons';
-import React from 'react'
+import React, {useState} from 'react'
 import MangoStyles from '../styles'
 import OrderListitem from '../components/OrderListitem'
+import { Menu, MenuItem, MenuDivider } from 'react-native-material-menu';
 
 
 const OrdersScreen = ({navigation}) => {
@@ -11,6 +12,8 @@ const OrdersScreen = ({navigation}) => {
       order : order
     })     
   }
+  const [visible, setVisible] = useState(false);
+  const [filterOrders, filterOrdersSet] = useState('all');
   const DATA = [
     {
       id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
@@ -34,6 +37,33 @@ const OrdersScreen = ({navigation}) => {
       total: 12.75,
     },
   ];
+  const hideMenu = () => setVisible(false);
+
+  const showMenu = () => setVisible(true);
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      tabBarStyle: {display: 'none'},
+      
+      headerRight: () => {
+        return (
+          <View style={{ height: '100%', alignItems: 'center', justifyContent: 'center' }}>
+            <Menu
+              visible={visible}
+              anchor={<Text style={styles.searchBtn} onPress={showMenu}><Ionicons name='ellipsis-vertical' size={24} color='white' /></Text>}
+              onRequestClose={hideMenu}
+            >
+              <MenuItem style={[{backgroundColor : filterOrders === 'all' ? MangoStyles.mangoOrangeYellow : 'white'}]} 
+              textStyle={[{color : filterOrders === 'all' ? 'white' : 'black'}]} onPress={ () => {filterOrdersSet('all');hideMenu();}}>All</MenuItem>
+              <MenuItem style={[{backgroundColor : filterOrders === 'pending' ? MangoStyles.mangoOrangeYellow : 'white'}]}
+                textStyle={[{color : filterOrders === 'pending' ? 'white' : 'black'}]} onPress={ () => {filterOrdersSet('pending');hideMenu();}}>Pending</MenuItem>
+              <MenuItem style={[{backgroundColor : filterOrders === 'completed' ? MangoStyles.mangoOrangeYellow : 'white'}]} 
+              textStyle={[{color : filterOrders === 'completed' ? 'white' : 'black'}]}
+              onPress={ () => {filterOrdersSet('completed');hideMenu();}}>Completed</MenuItem>
+            </Menu>
+          </View>
+      )},
+    })
+  })
   const renderItem = ({ item }) => (
     <OrderListitem item={item} onPress={() => {selectOrder(item)}}></OrderListitem>
   );

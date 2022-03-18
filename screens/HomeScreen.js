@@ -13,15 +13,43 @@ import ProductListItem from '../components/ProductListItem';
 
 const auth = Firebase.auth();
 
-export default function HomeScreen({navigation}) {
+export default function HomeScreen({navigation, route}) {
   const { user } = useContext(AuthenticatedUserContext);
   const [selectedId, setSelectedId] = useState(null);
+  let filters = {
+    selectedItems: [],
+    searchText: '',
+    maxPrice: 0,
+    minPrice: 100,
+  };
+  if(route.params && route.params.filters){
+    filters =  {
+        selectedItems:route.params.filters.selectedItems,
+        searchText:route.params.filters.searchText,
+        maxPrice:route.params.filters.maxPrice,
+        minPrice:route.params.filters.minPrice,
+    };
+
+  }
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <TouchableOpacity onPress={() => navigation.navigate('FilterModalScreen')}>
+        <TouchableOpacity onPress={() => navigation.navigate('FilterModalScreen', filters)}>
           <Text style={styles.searchBtn}>
             <Ionicons name='search' size={20} color='white' />;
+          </Text>
+        </TouchableOpacity>
+      ),
+      headerLeft: () => (
+        <TouchableOpacity onPress={() => {
+            navigation.navigate('EditProductScreen', { id: null , 
+              productName:null,
+              productDescription:null,
+              productPrice:null,})
+          }
+        }>
+          <Text style={styles.searchBtn}>
+            <Ionicons name='add-circle-outline' size={24} color='white' />;
           </Text>
         </TouchableOpacity>
       ),
@@ -120,7 +148,7 @@ const styles = StyleSheet.create({
     color: '#000'
   },
   searchBtn: {
-    marginRight: 10,
+    marginHorizontal: 10,
     padding: 5
   }
 });

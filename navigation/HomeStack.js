@@ -11,6 +11,7 @@ import OrdersScreen from '../screens/OrdersScreen';
 import AccountScreen from '../screens/AccountScreen';
 import OrderDetailsScreen from '../screens/OrderDetailsScreen';
 import FilterModalScreen from '../screens/FilterModalScreen';
+import EditProductScreen from '../screens/EditProductScreen';
 
 const headerStyleMango = {
   headerTitleAlign: 'center',
@@ -38,6 +39,10 @@ function HomeStackScreen() {
         ...headerStyleMango,
         headerTintColor: 'white'
       }}/>
+      <Stack.Screen name="EditProductScreen" component={EditProductScreen} options={{
+        ...headerStyleMango,
+        headerTintColor: 'white'
+      }} />
       </Stack.Group>
       <Stack.Group  screenOptions={{...headerStyleMango, presentation: 'modal',
         title : 'Search' }}>
@@ -88,7 +93,7 @@ export default function HomeStack() {
         }else if (route.name === 'Account') {
           iconName = focused ? 'person' : 'person-outline';
         }
-        console.log(route.name)
+        // console.log(route.name)
         iconColor = focused ? MangoStyles.mangoOrangeYellow : 'black';
         // You can return any component that you like here!
         return <Ionicons name={iconName} size={size} color={iconColor} />;

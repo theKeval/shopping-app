@@ -3,11 +3,32 @@ import React, {useState} from 'react'
 import Logo from '../assets/mango_letter.png';
 import MangoStyles from '../styles'
 import { ButtonMain } from '../components';
+import { Ionicons,FontAwesome5,AntDesign,Entypo,Fontisto,MaterialIcons} from '@expo/vector-icons';
 
 const ItemDetailsScreen = ({ navigation, route }) => {
   const [qty, qtySet] = useState(1);
   React.useLayoutEffect(() => {
-    navigation.setOptions({tabBarStyle: {display: 'none'}, title : route.params.item.name});
+    navigation.setOptions({
+      tabBarStyle: {display: 'none'}, 
+      title : route.params.item.name,
+      
+      headerRight: () => (
+        <TouchableOpacity onPress={() => {
+            navigation.navigate('EditProductScreen', { 
+              id: route.params.item.id ,
+              productName: route.params.item.name,
+              productDescription: route.params.item.description,
+              productPrice: route.params.item.price,
+              // productCategory: route.params.item.category
+            })
+          }
+        }>
+          <Text style={styles.searchBtn}>
+            <Ionicons name='pencil' size={24} color='white' />;
+          </Text>
+        </TouchableOpacity>
+      ),
+    });
   })
   const onPressAdd = () => {
     // #TODO: Add Functionality to add
@@ -91,5 +112,9 @@ const styles = StyleSheet.create({
   btnAdd2Cart:{
     marginTop: 40,
     
+  },
+  searchBtn: {
+    marginHorizontal: 10,
+    padding: 5
   }
 })

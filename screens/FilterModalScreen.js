@@ -5,41 +5,56 @@ import { Ionicons,FontAwesome5,AntDesign,Entypo,Fontisto,MaterialIcons} from '@e
 import MangoStyles from '../styles'
 import { backgroundColor } from 'react-native/Libraries/Components/View/ReactNativeStyleAttributes';
 
-const FilterModalScreen = ({navigation}) => {
+const FilterModalScreen = ({navigation, route}) => {
   let multiSelect;
-    const [selectedItems , selectedItemsSet] = useState([]);
+    const [selectedCategory , selectedCategorySet] = useState([]);
     const [searchText , searchTextSet] = useState("");
-    const [maxPrice , maxPriceSet] = useState(100);
-    const [minPrice , minPriceSet] = useState(0);
+    const [maxPrice , maxPriceSet] = useState("");
+    const [minPrice , minPriceSet] = useState("");
+
+    if(route.params && route.params.filter ){
+      selectedCategorySet(route.params.filter['selectedCategory']);
+      searchTextSet(route.params.filter['searchText']);
+      maxPriceSet(route.params.filter['maxPrice']);
+      minPriceSet(route.params.filter['minPrice']);
+    }
     React.useLayoutEffect(() => {
       navigation.setOptions({
         headerRight: () => (
-          <TouchableOpacity onPress={() => navigation.navigate('HomeStack', {
-            selectedItems,
-            searchText,
-            maxPrice,
-            minPrice,
-          })}>
+          <TouchableOpacity onPress={() => {
+              console.log('submit',minPrice)
+              if(minPrice !== "" && maxPrice !== "" && parseFloat(minPrice) > parseFloat(maxPrice)){
+                alert('Min. Price is greater than the Max. Price')
+              }else if(selectedCategory.length === 0){
+                alert('Please select at least 1 category')
+              }else{
+                  navigation.navigate('HomeScreen', { 
+                    filters: { selectedCategory,searchText,maxPrice,minPrice}
+                  })
+              }
+            }
+          }>
             <Text style={styles.searchBtn}>
-              <Ionicons name='checkmark' size={24} color='white' />;
+              <Ionicons name='checkmark' size={24} color='white' />
             </Text>
           </TouchableOpacity>
         ),
+
       });
     }, [navigation]);
   const toggleCategory = (item)=>{
-    let selectedItemsVar = [...selectedItems]
-    if(selectedItemsVar.includes(item)){
-      selectedItemsVar.splice(selectedItemsVar.indexOf(item),1)
+    let selectedCategoryVar = [...selectedCategory]
+    if(selectedCategoryVar.includes(item)){
+      selectedCategoryVar.splice(selectedCategoryVar.indexOf(item),1)
     }else{
-      selectedItemsVar.push(item)
+      selectedCategoryVar.push(item)
     }
-    selectedItemsSet(selectedItemsVar)
+    selectedCategorySet(selectedCategoryVar)
   }
   const renderCategories = ()=>{
     return items.map((item, index) => {
       return (
-        <TouchableOpacity style={styles.category} onPress={() => toggleCategory(item)}>
+        <TouchableOpacity style={styles.category} key={item.id} onPress={() => toggleCategory(item)}>
           <Text >{item.name}</Text>
         </TouchableOpacity>
       );
@@ -59,27 +74,29 @@ const FilterModalScreen = ({navigation}) => {
       </View>
       <View  style={styles.row}>
           <Text style={styles.label}>Category</Text>
+
+      </View>
           <ScrollView style={[styles.scrollView]}>
             {renderCategories()}
           </ScrollView>
-          <Text >{JSON.stringify(selectedItems)}</Text>
-
-      </View>
+          <Text >{JSON.stringify(selectedCategory)}</Text>
       <View  style={styles.row}>
-        <Text style={styles.label}>Max Price:</Text>
+        <Text style={styles.label}>Max Price($):</Text>
 
-        <TextInput
+        <TextInput keyboardType="numeric"
+         placeholder='Ex: $15.00'
           value={maxPrice}
-          onChangeText={text => maxPriceSet(parseFloat(text))}
+          onChangeText={text => maxPriceSet((text))}
           style={[styles.searchTextBar]}
         />
       </View>
       <View  style={styles.row}>
-        <Text style={styles.label}>Min Price:</Text>
+        <Text style={styles.label}>Min Price($):</Text>
 
-        <TextInput
+        <TextInput keyboardType="numeric"
+         placeholder='Ex: $0.00'
           value={minPrice}
-          onChangeText={text => minPriceSet(parseFloat(text))}
+          onChangeText={text => minPriceSet((text))}
           style={[styles.searchTextBar]}
         />
       </View>
@@ -133,10 +150,14 @@ const styles = StyleSheet.create({
   },
   scrollView:{
     maxHeight: 150,
-    flexWrap:'wrap'
+    alignContent: 'flex-start',
+    flexDirection: 'row',
+    backgroundColor: MangoStyles.mangoGray,
   },
   category:{
-    backgroundColor: 'gray',
+    // width: '50%',
+    backgroundColor: MangoStyles.mangoGreen,
+    flexDirection: 'column',
     margin: 5,
     padding: 5
   }
