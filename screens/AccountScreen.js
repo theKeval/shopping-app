@@ -1,23 +1,43 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useLayoutEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Pressable } from 'react-native'
 import MangoStyles from '../styles'
 import Firebase from '../FirebaseConfig/Config'
 import { AuthenticatedUserContext } from '../navigation/AuthenticatedUserProvider';
+import { IconButton } from '../components';
+import { GetUserInfo } from '../FirebaseConfig/FirebaseOperations';
 
 const auth = Firebase.auth();
 
 const AccountScreen = ({navigation, route}) => {
   const { user } = useContext(AuthenticatedUserContext);
+  console.log(user.email);
+  // const [userInfo, setUserInfo] = useState({});
+  // setUserInfo(GetUserInfo(user.email));
+  // console.log(userInfo);
+
+  const handleSignout = async () => {
+    try {
+      await auth.signOut();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   React.useLayoutEffect(() => {
-    navigation.setOptions({tabBarStyle: {display: 'none'}});
+    navigation.setOptions({
+      headerRight: () =>(
+        <View style={styles.logoutBtn}>
+          <IconButton name='logout' size={20} onPress={handleSignout} color='#fff' />
+        </View>
+      ),
+    });
   })
 
   return (
     <View style={styles.container}>
       <View>
         <Text style={styles.label}>User</Text>
-        <Text style={styles.content}>{user.userName}Lino</Text>
+        <Text style={styles.content}>{user.name}</Text>
       </View>
       <View>
         <Text style={styles.label}>Email</Text>
@@ -104,5 +124,10 @@ const styles = StyleSheet.create({
     fontSize:25,
     color: 'white',
     fontWeight:'700'
+  },
+
+  logoutBtn: {
+    marginRight: 10,
+    padding: 5
   }
 })

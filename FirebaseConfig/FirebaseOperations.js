@@ -1,23 +1,34 @@
-import { deleteDoc, doc, getDoc, setDoc } from 'firebase/firestore';
+import { deleteDoc, doc, getDoc, setDoc, collection, getDocs } from 'firebase/firestore';
 import { db } from './Config';
 
 
-export const Create = (value) => {
+const collectionNames = {
+  users: "Users",
+  productCategories: "ProductCategories",
+  products: "Products",
+  orders: "Orders",
+  productsInOrder: "ProductsInOrder"
+}
+
+export const Create = (collectionName, documentName, value) => {
+    console.log("Create called");
+
     // MARK: Creating New Doc in Firebase
     // Before that enable Firebase in Firebase Console
-    const myDoc = doc(db, "MyCollection", "Users")
+    const myDoc = doc(db, collectionName, documentName);
   
     // Your Document Goes Here
     const docData = {
       "name": "Keval",
       "bio": "Sr. Software Engineer"
-    }
+    };
   
     setDoc(myDoc, value)
       // Handling Promises
       .then(() => {
         // MARK: Success
-        alert("Document Created!")
+        // alert("Document Created!")
+        console.log("user added");
       })
       .catch((error) => {
         // MARK: Failure
@@ -25,27 +36,26 @@ export const Create = (value) => {
       })
 }
   
-export const Read = () => {
-    // MARK: Reading Doc
-    // You can read what ever document by changing the collection and document path here
-    const myDoc = doc(db, "MyCollection", "MyDocument")
+export const Read = async (collectionName, documentName) => {
+
+  try {
+    const docRef = doc(db, collectionName, documentName);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      console.log("Document data:", docSnap.data());
+      return docSnap.data();
+    } else {
+      // doc.data() will be undefined in this case
+      console.log("No such document!");
+      return null;
+    }
+
+  } catch (error) {
+    console.log(error.message);
+  }
   
-    getDoc(myDoc)
-      // Handling Promises
-      .then((snapshot) => {
-        // MARK: Success
-        if (snapshot.exists) {
-          setUserDoc(snapshot.data())
-        }
-        else {
-          alert("No Doc Found")
-        }
-      })
-      .catch((error) => {
-        // MARK: Failure
-        alert(error.message)
-      })
-  
+
 }
   
 export const Update = (value, merge) => {
@@ -83,3 +93,35 @@ export const Delete = () => {
   
 }
 
+
+// #region Users related operations
+
+export const Signup = (emailAddress, user) => {
+  console.log("signup called");
+  Create(collectionNames.users, emailAddress, user);
+}
+
+export const GetUserInfo = async (emailAddress) => {
+  console.log("getting user: " + emailAddress);
+  return Read(collectionNames.users, emailAddress);
+}
+
+// #endregion
+
+// #region Products related operations
+
+export const getAllProducts = async () => {
+  console.log("getting all products");
+  var products = [];
+
+  const querySnapshot = await getDocs(collection(db, collectionNames.products));
+  querySnapshot.forEach((doc) => {
+    // console.log(doc.id, " => ", doc.data());
+    products.push(doc.data());
+  });
+  
+  console.log(products);
+  return products;
+}
+
+// #endregion

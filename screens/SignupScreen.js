@@ -1,6 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Button as RNButton, Image, TouchableOpacity } from 'react-native';
 import Logo from '../assets/mango_letter.png';
 import SmallLogo from '../assets/mango_plane.png';
@@ -10,6 +9,8 @@ import { Ionicons, FontAwesome5, AntDesign, MaterialIcons } from '@expo/vector-i
 
 import { InputField, ErrorMessage } from '../components';
 import Firebase from '../FirebaseConfig/Config';
+import { AuthenticatedUserContext } from '../navigation/AuthenticatedUserProvider';
+import { Signup } from '../FirebaseConfig/FirebaseOperations';
 
 const auth = Firebase.auth();
 
@@ -23,6 +24,19 @@ export default function SignupScreen({ navigation }) {
   const [passwordVisibility, setPasswordVisibility] = useState(true);
   const [rightIcon, setRightIcon] = useState('eye');
   const [signupError, setSignupError] = useState('');
+
+  // * had to keep the user obj creation outside of onAuthStateChanged due to 
+  // * const variables such as email, userName, address... was not accessible in onAuthStateChanged.
+  function createUserObj(user) {
+    return {
+      id: user.uid,
+      name: userName,
+      email: email,
+      password: password,
+      phoneNumber: phoneNumber,
+      address: address,
+    }
+  }
 
   const handlePasswordVisibility = () => {
     if (rightIcon === 'eye') {
@@ -41,7 +55,10 @@ export default function SignupScreen({ navigation }) {
   const onHandleSignup = async () => {
     try {
       if (email !== '' && password !== '') {
-        await auth.createUserWithEmailAndPassword(email, password);
+        var userCredential = await auth.createUserWithEmailAndPassword(email, password);
+        console.log(`data from firebase: ${userCredential.user.email}, ${userCredential.user.uid}`);
+        console.log(`filled up data: email=${email}, user=${userName}`);
+        Signup(userCredential.user.email, createUserObj(userCredential.user));
       }
       else {
         setSignupError('Enter valid email address and password to signup!')

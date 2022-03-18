@@ -5,7 +5,7 @@ import Logo from '../assets/mango_letter.png';
 import MangoStyles from '../styles'
 import useWindowDimensions from 'react-native/Libraries/Utilities/useWindowDimensions';
 
-import { Create, Read, Update, Delete } from '../FirebaseConfig/FirebaseOperations';
+import { Create, Read, Update, Delete, GetUserInfo } from '../FirebaseConfig/FirebaseOperations';
 import { InputField, ErrorMessage } from '../components';
 import Firebase from '../FirebaseConfig/Config';
 
@@ -41,6 +41,19 @@ const LoginScreen = ({navigation}) => {
       if (email !== '' && password !== '') {
         await auth.signInWithEmailAndPassword(email, password);
       }
+
+      // todo: not printing _user info yet
+      // todo: need to refactor CRUD functions from
+      // todo: https://firebase.google.com/docs/firestore/query-data/get-data
+      console.log("sign in successfull!");
+      console.log("LoginScreen: email=" + email);
+      GetUserInfo(email)
+        .then((user) => {
+          console.log("LoginScreen: user=" + JSON.stringify(user));
+        })
+      // var _user = GetUserInfo(email);
+      // console.log("LoginScreen: _user=" + _user);
+
     } catch (error) {
       setLoginError(error.message);
     }
