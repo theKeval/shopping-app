@@ -22,7 +22,25 @@ export default function HomeScreen({navigation, route}) {
     maxPrice: 0,
     minPrice: 100,
   };
-
+  useEffect(() => {
+    console.log('executo1 ' , user !=null)
+    if(user && user.email && user.email  != ''){
+      console.log('executo3 ' , user.email)
+      
+        GetUserInfo(user.email).then(userResponse =>{
+          userInfoSet(userResponse); 
+          console.log('got user')
+        })
+    }
+    getAllProducts().then(response => {
+      productsSet(response) 
+      console.log('got products')
+    })
+    
+    return () => {
+      console.log('executo2')
+    }
+  }, [user])
   
   useEffect(() => {
     // if(route.params && route.params.filters){
@@ -34,10 +52,7 @@ export default function HomeScreen({navigation, route}) {
     //   };
   
     // }
-    getAllProducts().then(response => {
-      productsSet(response) 
-      
-    })
+
     
 
 
@@ -53,7 +68,7 @@ export default function HomeScreen({navigation, route}) {
           </Text>
         </TouchableOpacity> 
       ),
-      headerLeft: () => ( true  ?
+      headerLeft: () => ( user && userInfo && userInfo.isAdmin   ?
         <TouchableOpacity onPress={() => {
             navigation.navigate('EditProductScreen', { id: null })
           }
@@ -67,7 +82,6 @@ export default function HomeScreen({navigation, route}) {
   }, [navigation]);
   const selectItem = (item) =>{
     setSelectedId(item.id);
-    console.log(item)
     navigation.navigate('ItemDetailsScreen', {
       id : item.id
     })     

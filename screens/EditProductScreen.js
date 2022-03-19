@@ -31,9 +31,7 @@ const EditProductScreen = ({navigation,route}) => {
         }
 
       }).catch()
-      console.log('executo1 ' , productId)
       return () =>   {
-        console.log('executo2')
       }
     }, [])
     

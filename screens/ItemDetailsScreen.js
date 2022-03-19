@@ -15,24 +15,27 @@ const ItemDetailsScreen = ({ navigation, route }) => {
   const productId =  route.params && route.params.id !== null ?  route.params.id : null;
 
   useEffect(() => {
-    if(user & user.email){
+    console.log(user && user.email )
+    if(user && user.email && user.email  != ''){
+      
         GetUserInfo(user.email).then(userResponse =>{
           userInfoSet(userResponse); 
-          console.log(user.email)
         })
     }
     getProduct(productId).then(productFound => {
       productSet({...productFound})
     }).catch()
+    
     return () => {
     }
   }, [user])
+  
   
   React.useLayoutEffect(() => {
     navigation.setOptions({
       title : product.name,
       
-      headerRight: () => user ? (
+      headerRight: () => userInfo && userInfo.isAdmin ? (
         <TouchableOpacity onPress={() => {
             navigation.navigate('EditProductScreen', { 
               id: productId
@@ -50,28 +53,7 @@ const ItemDetailsScreen = ({ navigation, route }) => {
     // #TODO: Add Functionality to add
   } 
 
-  const productAddOption = () => {
-    return (user ? 
-    <View>
-      <View>
-        <Text style={styles.label}>Quantity</Text>
 
-      </View>
-      <View style={styles.twoColumns}>
-        <ButtonMain width='20%' title='-' backgroundColor={MangoStyles.mangoNegativeAction} onPress={()=> { qtySet(qty > 1 ? parseInt(qty) - 1 : 0) }}></ButtonMain>
-        <Text style={styles.qtyLabel}>{qty}</Text>
-        <ButtonMain width='20%' title='+' backgroundColor={MangoStyles.mangoPositiveAction} onPress={()=> { qtySet(parseInt(qty) + 1) }}></ButtonMain>
-
-      </View>
-      <View style={styles.btnAdd2Cart}>
-        <ButtonMain  title='Add Item'></ButtonMain>
-      </View>   
-    </View> 
-
-    : <View />)
-
-
-  }
   return (
     <View style={styles.container}>
         <Image resizeMode="contain"
@@ -92,7 +74,24 @@ const ItemDetailsScreen = ({ navigation, route }) => {
         <Text style={styles.price}>$ {parseFloat(product.price).toString()}</Text>
       </View>
 
-      {productAddOption}
+      {user ? 
+        <View>
+          <View>
+            <Text style={styles.label}>Quantity</Text>
+
+          </View>
+          <View style={styles.twoColumns}>
+            <ButtonMain width='20%' title='-' backgroundColor={MangoStyles.mangoNegativeAction} onPress={()=> { qtySet(qty > 1 ? parseInt(qty) - 1 : 0) }}></ButtonMain>
+            <Text style={styles.qtyLabel}>{qty}</Text>
+            <ButtonMain width='20%' title='+' backgroundColor={MangoStyles.mangoPositiveAction} onPress={()=> { qtySet(parseInt(qty) + 1) }}></ButtonMain>
+
+          </View>
+          <View style={styles.btnAdd2Cart}>
+            <ButtonMain  title='Add Item'></ButtonMain>
+          </View>   
+        </View> 
+
+      : <View />}
 
     </View>
   )

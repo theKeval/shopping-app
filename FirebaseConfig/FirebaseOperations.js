@@ -141,7 +141,7 @@ export const removeAsyncUser= async () => {
   console.log('Done.')
 }
 export const GetUserInfo = async (emailAddress) => {
-  console.log("getting user: " + emailAddress);
+  // console.log("getting user: " + emailAddress);
   return Read(collectionNames.users, emailAddress);
 }
 export const getAllUsers = async () => {
