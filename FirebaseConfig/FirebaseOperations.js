@@ -27,7 +27,7 @@ export const Create = (collectionName, documentName, value) => {
       .then(() => {
         // MARK: Success
         // alert("Document Created!")
-        console.log("user added");
+        // console.log("user added");
       })
       .catch((error) => {
         // MARK: Failure
