@@ -210,7 +210,22 @@ export const getAllCategories = async () => {
   // console.log(categories);
   return categories;
 }
+export const createCategory = (category) => {
+  const id =  category.id = uuid.v4();
+  Create(collectionNames.productCategories,id , category);
+}
+export const updateCategory = (id, category) => {
+  Update(category, false,collectionNames.productCategories, id);
+}
 
+export const getCategory = (id) => {
+  return Read(collectionNames.productCategories, id)
+  
+}
+export const removeCategory = (id) => {
+  return Delete(collectionNames.productCategories, id)
+  
+}
 // #endregion
 
 // #region Orders related operations

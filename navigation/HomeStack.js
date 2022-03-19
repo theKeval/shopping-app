@@ -13,6 +13,7 @@ import FilterModalScreen from '../screens/FilterModalScreen';
 import EditProductScreen from '../screens/EditProductScreen';
 import LoginScreen from '../screens/LoginScreen';
 import SignupScreen from '../screens/SignupScreen';
+import CategoriesScreen from '../screens/CategoriesScreen';
 
 const headerStyleMango = {
   headerTitleAlign: 'center',
@@ -42,8 +43,8 @@ const TabNavigator = () => {
               iconName = focused ? 'home' : 'home-outline';
             } else if (route.name === 'OrdersScreen') {
               iconName = focused ? 'cart' : 'cart-outline';
-            } else if (route.name === 'Search') {
-              iconName = focused ? 'search' : 'search-outline';
+            } else if (route.name === 'CategoriesScreen') {
+              iconName = focused ? 'grid' : 'grid-outline';
             }else if (route.name === 'AccountScreen' ||  route.name === 'LoginScreen') {
               iconName = focused ? 'person' : 'person-outline';
             }
@@ -59,6 +60,7 @@ const TabNavigator = () => {
 
           
         })}>
+          <Tab.Screen name="CategoriesScreen" component={CategoriesScreen}  options={{ title : 'Categories'}}/>
 
           <Tab.Screen name="HomeScreen" component={HomeScreen}  options={{ title : 'Products'}}/>
           { user ? <Tab.Screen name="OrdersScreen" component={OrdersScreen}  options={{title : 'Orders'}} /> : <></>}
@@ -85,6 +87,7 @@ export default function HomeStack() {
         }}/>
       </Stack.Group>
 
+
       {/* ITEMS GROUP */}
       <Stack.Group >
         {/* ITEMS DETAIL AND EDIT SUBGROUP */}
@@ -110,27 +113,5 @@ export default function HomeStack() {
 
     </Stack.Navigator>
   );
-
-
-
-  // function HomeTabs() {
-  //   return (
-  //     <Tab.Navigator>
-  //       <Tab.Screen name="Home" component={Home} />
-  //       <Tab.Screen name="Feed" component={Feed} />
-  //       <Tab.Screen name="Notifications" component={Notifications} />
-  //     </Tab.Navigator>
-  //   );
-  // }
-  
-  // function App() {
-  //   return (
-  //     <Stack.Navigator>
-  //       <Stack.Screen name="Home" component={HomeTabs} />
-  //       <Stack.Screen name="Profile" component={Profile} />
-  //       <Stack.Screen name="Settings" component={Settings} />
-  //     </Stack.Navigator>
-  //   );
-  // }
 
 }
