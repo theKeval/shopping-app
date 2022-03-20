@@ -9,11 +9,11 @@ import ItemDetailsScreen from '../screens/ItemDetailsScreen';
 import OrdersScreen from '../screens/OrdersScreen';
 import AccountScreen from '../screens/AccountScreen';
 import OrderDetailsScreen from '../screens/OrderDetailsScreen';
-// import FilterModalScreen from '../screens/FilterModalScreen';
 import EditProductScreen from '../screens/EditProductScreen';
 import LoginScreen from '../screens/LoginScreen';
 import SignupScreen from '../screens/SignupScreen';
 import CategoriesScreen from '../screens/CategoriesScreen';
+import ShoppingCartScreen from '../screens/ShoppingCartScreen';
 
 const headerStyleMango = {
   headerTitleAlign: 'center',
@@ -50,9 +50,11 @@ const TabNavigator = () => {
             let iconName;
             if (route.name === 'HomeProdStack') {
               iconName = focused ? 'home' : 'home-outline';
-            } else if (route.name === 'OrdersScreen') {
+            } else if (route.name === 'ShoppingCartScreen') {
               iconName = focused ? 'cart' : 'cart-outline';
-            } else if (route.name === 'CategoriesScreen') {
+            } else if (route.name === 'OrdersScreen') {
+              iconName = focused ? 'list' : 'list-outline';
+            }else if (route.name === 'CategoriesScreen') {
               iconName = focused ? 'grid' : 'grid-outline';
             }else if (route.name === 'AccountScreen' ||  route.name === 'LoginScreen') {
               iconName = focused ? 'person' : 'person-outline';
@@ -71,7 +73,8 @@ const TabNavigator = () => {
         })}>
 
           <Tab.Screen name="HomeProdStack" component={HomeProdStack}  options={{headerShown: false, title:'Products'}}/>
-          { user ? <Tab.Screen name="OrdersScreen" component={OrdersScreen}  options={{title : 'Orders'}} /> : <></>}
+          { user ? <Tab.Screen name="ShoppingCartScreen" component={ShoppingCartScreen}  options={{title : 'My shopping Cart'}} /> : <></>}
+          { user ? <Tab.Screen name="OrdersScreen" component={OrdersScreen}  options={{title : 'My Orders'}} /> : <></>}
           { user ?
           <Tab.Screen name="AccountScreen" component={AccountScreen} options={{title : 'Account'}} />
           : <Tab.Screen name='LoginScreen' component={LoginScreen} options={{title : 'Login' ,headerShown: false}}/>}
@@ -104,10 +107,6 @@ export default function HomeStack() {
           <Stack.Screen name="ItemDetailsScreen" component={ItemDetailsScreen} options={{}}/>
           <Stack.Screen name="EditProductScreen" component={EditProductScreen} options={{...headerStyleMango, headerTintColor: 'white' }} />
         </Stack.Group>
-         {/* ITEMS SEARCH MODAL FILTER SUBGROUP */}
-        {/* <Stack.Group  screenOptions={{...headerStyleMango, presentation: 'modal', title : 'Search' }}>
-          <Stack.Screen name="FilterModalScreen" component={FilterModalScreen} />
-        </Stack.Group> */}
       </Stack.Group>
 
       {/* ORDERS GROUP */}

@@ -2,6 +2,7 @@ import { deleteDoc, doc, getDoc, setDoc, collection, getDocs, refEqual } from 'f
 import { db } from './Config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import uuid from 'react-native-uuid';
+import moment from 'moment';
 const collectionNames = {
   users: "Users",
   productCategories: "ProductCategories",
@@ -66,7 +67,9 @@ export const Update = (value, merge, collectionName, documentName) => {
       // Handling Promises
       .then(() => {
         // MARK: Success
-        alert("Updated Successfully!")
+        // if(showAlert){
+        //   alert("Updated Successfully!")
+        // }
         // setText("")
       })
       .catch((error) => {
@@ -237,4 +240,110 @@ export const getAllOrders = async () => {
   return orders;
 }
 
+export const getNextConsecutive = async () => {
+  console.log("getting all Orders");
+  var ordersTotal = 1;
+
+  const querySnapshot = await getDocs(collection(db, collectionNames.orders));
+  querySnapshot.forEach((doc) => {
+    // console.log(doc.id, " => ", doc.data());
+    ordersTotal+=1;
+  });
+  
+  
+  return ordersTotal.toString().padStart(6, '0');
+}
+
+export const getUserOrders = async (userID) => {
+  console.log("getting all Orders");
+  var orders = [];
+  const querySnapshot = await getDocs(collection(db, collectionNames.orders));
+  querySnapshot.forEach((doc) => {
+      const itobj= doc.data()
+
+     if(itobj.userID === userID && itobj.status !== 'shopping'){
+       orders.push(doc.data())
+     }
+  });
+  
+  return orders;
+}
+
+
+export const getShopListDoc = async (userID) => {
+  console.log("getShopListDoc");
+  
+  var shopListDoc = null;
+
+  const querySnapshot = await getDocs(collection(db, collectionNames.orders));
+  querySnapshot.forEach((doc,i) => {
+    const itobj= doc.data()
+    console.log('itobj',itobj.userID === userID && itobj.status === 'shopping',userID)
+    if(itobj.userID === userID && itobj.status === 'shopping'){
+      shopListDoc = (itobj)
+    }
+ });
+    return shopListDoc;
+}
+export const createOrder = (order) => {
+  const id =  order.id = uuid.v4();
+  Create(collectionNames.orders,id , order);
+}
+export const updateOrder = (id, order) => {
+  Update(order, false,collectionNames.orders, id);
+}
+
+export const getOrder = (id) => {
+  return Read(collectionNames.orders, id)
+  
+}
+
+export const removeOrder = (id) => {
+  return Delete(collectionNames.orders, id)
+  
+}
+export const addItemToShoppingCart = async ( item , quantity, userID) => {
+  console.log(userID,'userID')
+  getShopListDoc(userID).then(async (obj) =>{
+    console.log(obj)
+    
+    const totalItem = parseFloat(item.price) * parseFloat(quantity)
+    const newItem = {...item,quantity : parseInt(quantity), totalItem : totalItem}
+    if(obj === null){
+      getNextConsecutive().then(consecutive => {
+        createOrder({
+          userID: userID,
+          title: consecutive,
+          status: 'shopping',
+          date: moment().toString(),
+          total: totalItem,
+          items: [newItem]
+        })
+      })
+    }else{
+      obj.items.push(newItem);
+      obj.total = parseFloat(obj.total) + parseFloat(totalItem);
+      updateOrder(obj.id,obj);
+    }
+  })
+
+  
+}
+
+export const removeItemShoppingCart = async ( index,userID) => {
+  console.log('removeItemShoppingCart',userID)
+  getShopListDoc(userID).then(async (obj) =>{
+    if(obj !== null){
+      if(obj.items.length > 1){
+        const objItem = obj.items[index]
+        obj.total = parseFloat(obj.total) - (parseFloat(objItem.price) * parseFloat(objItem.quantity));
+        obj.items.splice(index,1);
+        updateOrder(obj.id,obj);
+      }else{
+        removeOrder(obj.id)
+      }
+
+    }
+  })
+}
 // #endregion

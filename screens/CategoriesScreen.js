@@ -67,12 +67,11 @@ const CategoriesScreen = ({navigation}) => {
         }).catch()
       }
 
-      const getUserPermissions = async () =>{
-        console.log('Screen was focused');
+      const getUserPermissions = async () => {
 
         try {
           getAsyncUser().then((userResponse)=>{
-            console.log('userResponse',userResponse && userResponse.isAdmin)
+            // console.log('userResponse',userResponse && userResponse.isAdmin)
               setHeaderLayout(userResponse && userResponse.isAdmin)
               isAdminSet(userResponse && userResponse.isAdmin)
 

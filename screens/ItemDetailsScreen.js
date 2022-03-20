@@ -5,7 +5,7 @@ import MangoStyles from '../styles'
 import { ButtonMain } from '../components';
 import { Ionicons,FontAwesome5,AntDesign,Entypo,Fontisto,MaterialIcons} from '@expo/vector-icons';
 import { AuthenticatedUserContext } from '../navigation/AuthenticatedUserProvider';
-import { GetUserInfo , getProduct} from '../FirebaseConfig/FirebaseOperations';
+import { GetUserInfo , getProduct,addItemToShoppingCart} from '../FirebaseConfig/FirebaseOperations';
 
 const ItemDetailsScreen = ({ navigation, route }) => {
   const { user } = useContext(AuthenticatedUserContext) ;
@@ -49,7 +49,7 @@ const ItemDetailsScreen = ({ navigation, route }) => {
     });
   })
   const onPressAdd = () => {
-    // #TODO: Add Functionality to add
+    addItemToShoppingCart(product,qty,userInfo.id)
   } 
 
 
@@ -80,14 +80,19 @@ const ItemDetailsScreen = ({ navigation, route }) => {
 
           </View>
           <View style={styles.twoColumns}>
-            <ButtonMain width='20%' title='-' backgroundColor={MangoStyles.mangoNegativeAction} onPress={()=> { qtySet(qty > 1 ? parseInt(qty) - 1 : 0) }}></ButtonMain>
+            <ButtonMain width='20%' title='-' backgroundColor={MangoStyles.mangoNegativeAction} onPress={()=> { qtySet(qty > 1 ? parseInt(qty) - 1 : 1) }}></ButtonMain>
             <Text style={styles.qtyLabel}>{qty}</Text>
             <ButtonMain width='20%' title='+' backgroundColor={MangoStyles.mangoPositiveAction} onPress={()=> { qtySet(parseInt(qty) + 1) }}></ButtonMain>
 
           </View>
+          <View style={styles.twoColumns}>
+            <Text style={styles.label}>Total</Text>
+            <Text style={styles.price}>$ {(parseFloat(product.price)* qty).toString()}</Text>
+          </View>
           <View style={styles.btnAdd2Cart}>
-            <ButtonMain  title='Add Item'></ButtonMain>
-          </View>   
+            <ButtonMain  onPress={onPressAdd} title='Add Item'></ButtonMain>
+          </View> 
+
         </View> 
 
       : <View />}
@@ -135,7 +140,7 @@ const styles = StyleSheet.create({
 
   },
   btnAdd2Cart:{
-    marginTop: 40,
+    marginTop: 10,
     
   },
   searchBtn: {

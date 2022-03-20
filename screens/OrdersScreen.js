@@ -4,6 +4,7 @@ import React, {useState} from 'react'
 import MangoStyles from '../styles'
 import OrderListitem from '../components/OrderListitem'
 import { Menu, MenuItem, MenuDivider } from 'react-native-material-menu';
+import { createCategory,updateCategory,getAllCategories,getAsyncUser,removeCategory } from '../FirebaseConfig/FirebaseOperations';
 
 
 const OrdersScreen = ({navigation}) => {
@@ -38,7 +39,29 @@ const OrdersScreen = ({navigation}) => {
     },
   ];
   const hideMenu = () => setVisible(false);
+  // React.useEffect(() => {
+  //   const unsubscribe = navigation.addListener('focus', () => {
 
+  //       try {
+  //           getAsyncUser().then((userResponse)=>{
+  //           // console.log('userResponse',userResponse && userResponse.isAdmin)
+  //           getUserOrders(userResponse.id).then((order)=>{
+
+  //            })
+  //               setHeaderLayout(userResponse && userResponse.isAdmin)
+  //               isAdminSet(userResponse && userResponse.isAdmin)
+
+  //           })
+  //       } catch (error) {
+  //           console.log(error)
+  //           setHeaderLayout(false)
+
+  //       }
+        
+  //   });
+
+  //   return unsubscribe;
+  // }, [navigation]);
   const showMenu = () => setVisible(true);
   React.useLayoutEffect(() => {
     navigation.setOptions({
