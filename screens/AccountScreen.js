@@ -6,6 +6,7 @@ import { AuthenticatedUserContext } from '../navigation/AuthenticatedUserProvide
 import { IconButton } from '../components';
 import { GetUserInfo,getAsyncUser,removeAsyncUser } from '../FirebaseConfig/FirebaseOperations';
 import { LogBox } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 LogBox.ignoreLogs(['Setting a timer']);
 const auth = Firebase.auth();
@@ -16,7 +17,6 @@ const AccountScreen = ({navigation, route}) => {
 
   useEffect(() => {
     GetUserInfo(user.email).then(response => {
-      console.log(response)
       if(response && response !== {}){
         setUserInfo(response)
       }
@@ -29,8 +29,10 @@ const AccountScreen = ({navigation, route}) => {
 
   const handleSignout = async () => {
     try {
+      await AsyncStorage.removeItem('userObj')
       await auth.signOut();
-      removeAsyncUser()
+      navigation.navigate('LoginScreen');
+
     } catch (error) {
       console.log(error);
     }
@@ -63,20 +65,15 @@ const AccountScreen = ({navigation, route}) => {
         <Text style={styles.content}>{userInfo.address}</Text>
       </View>
         <View style={styles.section}>
-          <TouchableOpacity onPress={() => this} style={styles.button}>
-          <Text style={styles.buttonText}>Change password</Text></TouchableOpacity>
 
           <TouchableOpacity onPress={() => this} style={styles.button}>
-          <Text style={styles.buttonText}>Change address</Text></TouchableOpacity>
+            <Text style={styles.buttonText}>Edit Info</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => this} style={styles.button}>
+            <Text style={styles.buttonText}>Change password</Text>
+          </TouchableOpacity>
         </View>
 
-        <View style={styles.adminSection}>
-          <TouchableOpacity onPress={() => this} style={styles.button}>
-          <Text style={styles.buttonText}>Check orders</Text></TouchableOpacity>
-
-          <TouchableOpacity onPress={() => this} style={styles.button}>
-          <Text style={styles.buttonText}>Add item</Text></TouchableOpacity>
-        </View>
     </View>
     
       

@@ -49,6 +49,7 @@ const LoginScreen = ({navigation}) => {
           // console.log("LoginScreen: user=" + JSON.stringify(user));
           saveAsyncUser(user)
           setLoginError(null);
+          navigation.navigate('CategoriesScreen');
         }).catch(error => {
           setLoginError(error.message);
         })

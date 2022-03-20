@@ -74,7 +74,7 @@ const EditProductScreen = ({navigation,route}) => {
             'categoryName': productCategory['name'],
          }
             if(productId){
-              updateProduct(productId,product)
+              updateProduct(productId,{...product,id:productId})
                 navigation.navigate('HomeScreen')
               
               
@@ -98,7 +98,7 @@ const EditProductScreen = ({navigation,route}) => {
 
   return (
     <View  style ={styles.container}>
-      {/* <View  style={styles.row}>
+      <View  style={styles.row}>
         <Text style={styles.label}>Product Name:</Text>
         <TextInput
           placeholder='Ex: tea'
@@ -145,7 +145,7 @@ const EditProductScreen = ({navigation,route}) => {
             >
             <Text style={styles.buttonText}>Save Item</Text>
           </TouchableOpacity>
-            </View> */}
+            </View>
     </View>
   )
 }

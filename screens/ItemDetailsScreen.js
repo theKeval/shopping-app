@@ -15,7 +15,6 @@ const ItemDetailsScreen = ({ navigation, route }) => {
   const productId =  route.params && route.params.id !== null ?  route.params.id : null;
 
   useEffect(() => {
-    console.log(user && user.email )
     if(user && user.email && user.email  != ''){
       
         GetUserInfo(user.email).then(userResponse =>{
@@ -43,7 +42,7 @@ const ItemDetailsScreen = ({ navigation, route }) => {
           }
         }>
           <Text style={styles.searchBtn}>
-            <Ionicons name='pencil' size={24} color='white' />;
+            <Ionicons name='pencil' size={24} color='white' />
           </Text>
         </TouchableOpacity>
       ) : (<View/>),

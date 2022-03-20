@@ -123,13 +123,6 @@ export const getAsyncUser = async ()=>{
   return {}
 }
 
-export const getIsAdmin = () =>{
-  getAsyncUser().then((user)=>{
-    return user.isAdmin;
-  }).catch(()=>{
-    return false;
-  })
-}
 
 export const removeAsyncUser= async () => {
   try {
