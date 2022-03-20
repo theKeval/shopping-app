@@ -61,9 +61,9 @@ export default function HomeScreen({navigation, route}) {
     getAllProducts().then(response => {
       console.log('categoryId',categoryId)
       productsSet(response.filter(prod => { 
-        if(promptText !== ''){
+        if(searchTerm !== ''){
           return prod.categoryId === route.params.catId && 
-          (prod.name.indexOf(promptText) > -1 || prod.description.indexOf(promptText) > -1)
+          (prod.name.indexOf(searchTerm) > -1 || prod.description.indexOf(searchTerm) > -1)
         }else{
           return prod.categoryId === route.params.catId
         }

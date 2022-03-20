@@ -15,7 +15,6 @@ const ItemDetailsScreen = ({ navigation, route }) => {
   const productId =  route.params && route.params.id !== null ?  route.params.id : null;
 
   useEffect(() => {
-    console.log(user && user.email )
     if(user && user.email && user.email  != ''){
       
         GetUserInfo(user.email).then(userResponse =>{
