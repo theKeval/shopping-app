@@ -39,7 +39,11 @@ const AccountScreen = ({navigation, route}) => {
   };
 
   const onPressInfoChange = () => {
-    navigation.navigate('ChangeInfoScreen');
+    navigation.navigate('Account Information');
+  }
+
+  const onPressAccInfoChange = () => {
+    navigation.navigate('Password information');
   }
 
   React.useLayoutEffect(() => {
@@ -73,7 +77,7 @@ const AccountScreen = ({navigation, route}) => {
           <TouchableOpacity onPress={onPressInfoChange} style={styles.button}>
             <Text style={styles.buttonText}>Edit Info</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => this} style={styles.button}>
+          <TouchableOpacity onPress={onPressAccInfoChange} style={styles.button}>
             <Text style={styles.buttonText}>Change password</Text>
           </TouchableOpacity>
         </View>

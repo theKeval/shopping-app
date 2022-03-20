@@ -9,6 +9,7 @@ import ItemDetailsScreen from '../screens/ItemDetailsScreen';
 import OrdersScreen from '../screens/OrdersScreen';
 import AccountScreen from '../screens/AccountScreen';
 import ChangeInfoScreen from '../screens/ChangeInfoScreen';
+import ChangePassScreen from '../screens/ChangePassScreen';
 import OrderDetailsScreen from '../screens/OrderDetailsScreen';
 // import FilterModalScreen from '../screens/FilterModalScreen';
 import EditProductScreen from '../screens/EditProductScreen';
@@ -123,7 +124,8 @@ export default function HomeStack() {
 
       {/* INFO GROUP*/}
       <Stack.Group screenOptions={{...headerStyleMango,headerTintColor: 'white'}}>
-        <Stack.Screen name='Information' component={ChangeInfoScreen} />
+        <Stack.Screen name='Account Information' component={ChangeInfoScreen} />
+        <Stack.Screen name='Password information' component={ChangePassScreen} />
       </Stack.Group>
 
     </Stack.Navigator>

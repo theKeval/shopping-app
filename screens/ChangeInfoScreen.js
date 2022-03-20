@@ -1,21 +1,14 @@
-import { StatusBar } from 'expo-status-bar';
 import React, { useContext, useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Button as RNButton, Image, TouchableOpacity } from 'react-native';
-import Logo from '../assets/mango_letter.png';
-import SmallLogo from '../assets/mango_plane.png';
-import MangoStyles from '../styles'
-import useWindowDimensions from 'react-native/Libraries/Utilities/useWindowDimensions';
+import MangoStyles from '../styles';
 import { Ionicons, FontAwesome5, AntDesign, MaterialIcons } from '@expo/vector-icons';
 
 import { InputField, ErrorMessage } from '../components';
 import Firebase from '../FirebaseConfig/Config';
-import { AuthenticatedUserContext } from '../navigation/AuthenticatedUserProvider';
-import { Signup } from '../FirebaseConfig/FirebaseOperations';
 
 const auth = Firebase.auth();
 
-export default function SignupScreen({ navigation }) {
-  const {height} = useWindowDimensions();
+export default function ChangeInfoScreen({ navigation }) {
   const [userName, setUserName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [address, setAddress] = useState('');
@@ -25,13 +18,17 @@ export default function SignupScreen({ navigation }) {
     navigation.navigate('AccountScreen');
   }
 
+  const onPressCancel = () => {
+    navigation.navigate('AccountScreen');
+  }
+
   return (
 
     <View style={styles.container} >
 
       
       <View style={styles.signupHeader}>
-        <Text style={styles.headerText}>Edit your information</Text>
+        <Text style={styles.headerText}>Edit your information here!</Text>
       </View>
 
       <View style={styles.inputContainer}>
@@ -42,8 +39,6 @@ export default function SignupScreen({ navigation }) {
 
           <InputField 
               placeholder='Name'
-              // autoCapitalize='none'
-              // keyboardType='default'
               textContentType='name'
               autoFocus={false}
               value={userName}
@@ -77,8 +72,6 @@ export default function SignupScreen({ navigation }) {
           <InputField multiline
               inputStyle={{maxHeight: 60}}
               placeholder='Address'
-              // autoCapitalize='none'
-              // keyboardType='phone-pad'
               textContentType='fullStreetAddress'
               autoFocus={false}
               value={address}
@@ -94,8 +87,15 @@ export default function SignupScreen({ navigation }) {
             onPress={onPressChange}
             style={[styles.button, styles.buttonOutline]}>
 
-              <Text style={styles.buttonOutlineText}>Cancel changes</Text>
+              <Text style={styles.buttonOutlineText}>Confirm</Text>
 
+        </TouchableOpacity>
+
+        <TouchableOpacity
+            onPress={onPressCancel}
+            style={styles.button}>
+
+            <Text style={styles.buttonText}>Cancel changes</Text>
         </TouchableOpacity>
 
       </View>
@@ -172,6 +172,7 @@ const styles = StyleSheet.create({
       padding: 15,
       borderRadius: 10,
       alignItems: 'center',
+      margin: 5
     },
     buttonOutline: {
       backgroundColor: 'white',
