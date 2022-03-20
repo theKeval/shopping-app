@@ -9,7 +9,7 @@ import ItemDetailsScreen from '../screens/ItemDetailsScreen';
 import OrdersScreen from '../screens/OrdersScreen';
 import AccountScreen from '../screens/AccountScreen';
 import OrderDetailsScreen from '../screens/OrderDetailsScreen';
-import FilterModalScreen from '../screens/FilterModalScreen';
+// import FilterModalScreen from '../screens/FilterModalScreen';
 import EditProductScreen from '../screens/EditProductScreen';
 import LoginScreen from '../screens/LoginScreen';
 import SignupScreen from '../screens/SignupScreen';
@@ -27,6 +27,15 @@ const headerStyleMango = {
 
 
 const Stack = createStackNavigator();
+
+const HomeProdStack = () => {
+  return (
+    <Stack.Navigator  screenOptions={{...headerStyleMango,headerTintColor: 'white',}} >
+          <Stack.Screen name="CategoriesScreen" component={CategoriesScreen} options={{ title : 'Categories'}} />
+          <Stack.Screen name="HomeScreen" component={HomeScreen} options={{...headerStyleMango, headerTintColor: 'white',title : 'Products' }} />
+        </Stack.Navigator>
+  )
+}
 const TabNavigator = () => {
   const { user } = useContext(AuthenticatedUserContext) ;
 
@@ -39,7 +48,7 @@ const TabNavigator = () => {
           tabBarIcon: ({ focused, color, size }) => {
             let iconColor;
             let iconName;
-            if (route.name === 'HomeScreen') {
+            if (route.name === 'HomeProdStack') {
               iconName = focused ? 'home' : 'home-outline';
             } else if (route.name === 'OrdersScreen') {
               iconName = focused ? 'cart' : 'cart-outline';
@@ -60,9 +69,8 @@ const TabNavigator = () => {
 
           
         })}>
-          <Tab.Screen name="CategoriesScreen" component={CategoriesScreen}  options={{ title : 'Categories'}}/>
 
-          <Tab.Screen name="HomeScreen" component={HomeScreen}  options={{ title : 'Products'}}/>
+          <Tab.Screen name="HomeProdStack" component={HomeProdStack}  options={{headerShown: false, title:'Products'}}/>
           { user ? <Tab.Screen name="OrdersScreen" component={OrdersScreen}  options={{title : 'Orders'}} /> : <></>}
           { user ?
           <Tab.Screen name="AccountScreen" component={AccountScreen} options={{title : 'Account'}} />
@@ -90,15 +98,16 @@ export default function HomeStack() {
 
       {/* ITEMS GROUP */}
       <Stack.Group >
+
         {/* ITEMS DETAIL AND EDIT SUBGROUP */}
         <Stack.Group >
           <Stack.Screen name="ItemDetailsScreen" component={ItemDetailsScreen} options={{}}/>
           <Stack.Screen name="EditProductScreen" component={EditProductScreen} options={{...headerStyleMango, headerTintColor: 'white' }} />
         </Stack.Group>
          {/* ITEMS SEARCH MODAL FILTER SUBGROUP */}
-        <Stack.Group  screenOptions={{...headerStyleMango, presentation: 'modal', title : 'Search' }}>
+        {/* <Stack.Group  screenOptions={{...headerStyleMango, presentation: 'modal', title : 'Search' }}>
           <Stack.Screen name="FilterModalScreen" component={FilterModalScreen} />
-        </Stack.Group>
+        </Stack.Group> */}
       </Stack.Group>
 
       {/* ORDERS GROUP */}

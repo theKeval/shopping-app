@@ -16,9 +16,11 @@ const CategoriesScreen = ({navigation}) => {
     const [isAdmin,isAdminSet] = useState(false)
     const [promptVisible,promptVisibleSet] = useState(false)
     const [promptText,promptTextSet] = useState('')
-    const [selectedCategory,selectedCategorySet] = useState(null)
+    const [selectedCategory,selectedCategorySet] = useState(null);
+    
     const selectCategory = (item) =>{
-        selectedCategorySet(item)
+        // selectedCategorySet(item)
+        navigation.navigate('HomeScreen', {catId:item.id});
         console.log('selectCategory')
     }
     const editCategory = (item) =>{
@@ -67,6 +69,7 @@ const CategoriesScreen = ({navigation}) => {
 
       const getUserPermissions = async () =>{
         console.log('Screen was focused');
+
         try {
           getAsyncUser().then((userResponse)=>{
             console.log('userResponse',userResponse && userResponse.isAdmin)

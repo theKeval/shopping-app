@@ -43,7 +43,7 @@ const ItemDetailsScreen = ({ navigation, route }) => {
           }
         }>
           <Text style={styles.searchBtn}>
-            <Ionicons name='pencil' size={24} color='white' />;
+            <Ionicons name='pencil' size={24} color='white' />
           </Text>
         </TouchableOpacity>
       ) : (<View/>),
