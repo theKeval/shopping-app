@@ -8,6 +8,7 @@ import { Ionicons,FontAwesome5,AntDesign,Entypo,Fontisto,MaterialIcons} from '@e
 import ItemDetailsScreen from '../screens/ItemDetailsScreen';
 import OrdersScreen from '../screens/OrdersScreen';
 import AccountScreen from '../screens/AccountScreen';
+import ChangeInfoScreen from '../screens/ChangeInfoScreen';
 import OrderDetailsScreen from '../screens/OrderDetailsScreen';
 // import FilterModalScreen from '../screens/FilterModalScreen';
 import EditProductScreen from '../screens/EditProductScreen';
@@ -118,6 +119,11 @@ export default function HomeStack() {
       {/* AUTH GROUP */}
       <Stack.Group screenOptions={{headerShown: false}}>
         <Stack.Screen name='Signup' component={SignupScreen} />
+      </Stack.Group>
+
+      {/* INFO GROUP*/}
+      <Stack.Group screenOptions={{headerShown: false}}>
+        <Stack.Screen name='Information' component={ChangeInfoScreen} />
       </Stack.Group>
 
     </Stack.Navigator>

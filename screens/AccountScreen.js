@@ -38,6 +38,10 @@ const AccountScreen = ({navigation, route}) => {
     }
   };
 
+  const onPressInfoChange = () => {
+    navigation.navigate('ChangeInfoScreen');
+  }
+
   React.useLayoutEffect(() => {
     console.log(userInfo)
     navigation.setOptions({
@@ -66,7 +70,7 @@ const AccountScreen = ({navigation, route}) => {
       </View>
         <View style={styles.section}>
 
-          <TouchableOpacity onPress={() => this} style={styles.button}>
+          <TouchableOpacity onPress={onPressInfoChange} style={styles.button}>
             <Text style={styles.buttonText}>Edit Info</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => this} style={styles.button}>
