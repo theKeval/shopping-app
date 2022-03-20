@@ -122,7 +122,7 @@ export default function HomeStack() {
       </Stack.Group>
 
       {/* INFO GROUP*/}
-      <Stack.Group screenOptions={{headerShown: false}}>
+      <Stack.Group screenOptions={{...headerStyleMango,headerTintColor: 'white'}}>
         <Stack.Screen name='Information' component={ChangeInfoScreen} />
       </Stack.Group>
 
