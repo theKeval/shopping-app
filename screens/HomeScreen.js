@@ -6,15 +6,13 @@ import MangoStyles from '../styles';
 import Firebase from '../FirebaseConfig/Config'
 import { AuthenticatedUserContext } from '../navigation/AuthenticatedUserProvider';
 import ProductListItem from '../components/ProductListItem';
-import { getAllProducts, GetUserInfo } from '../FirebaseConfig/FirebaseOperations';
+import { getAllProducts, GetUserInfo,getAsyncUser } from '../FirebaseConfig/FirebaseOperations';
 
 const auth = Firebase.auth();
 
 export default function HomeScreen({navigation, route}) {
   const { user } = useContext(AuthenticatedUserContext);
-  const [userInfo, userInfoSet] = useState(null);
   const [selectedId, setSelectedId] = useState(null);
-  const [isAdmin, isAdminSet] = useState(false)
   const [products, productsSet] = useState([]);
   let filters = {
     selectedItems: [],
@@ -22,44 +20,27 @@ export default function HomeScreen({navigation, route}) {
     maxPrice: 0,
     minPrice: 100,
   };
-  useEffect(() => {
-    console.log('executo1 ' , user !=null)
-    if(user && user.email && user.email  != ''){
-      console.log('executo3 ' , user.email)
+
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      getAllProducts().then(response => {
+        productsSet(response) 
+        
+      })
+      getAsyncUser().then((userResponse)=>{
+        console.log('got products')
+        setHeaderLayout(userResponse && userResponse.isAdmin)
+      }).catch(()=>{
+         setHeaderLayout(false);
+      })
       
-        GetUserInfo(user.email).then(userResponse =>{
-          userInfoSet(userResponse); 
-          console.log('got user')
-        })
-    }
-    getAllProducts().then(response => {
-      productsSet(response) 
-      console.log('got products')
-    })
-    
-    return () => {
-      console.log('executo2')
-    }
-  }, [user])
-  
-  useEffect(() => {
-    // if(route.params && route.params.filters){
-    //   filters =  {
-    //       selectedItems:route.params.filters.selectedItems,
-    //       searchText:route.params.filters.searchText,
-    //       maxPrice:route.params.filters.maxPrice,
-    //       minPrice:route.params.filters.minPrice,
-    //   };
-  
-    // }
+    });
 
-    
+    return unsubscribe;
+  }, [navigation]);
 
 
-  }, [])
-
-  React.useLayoutEffect(() => {
-
+  const setHeaderLayout = (isAdmin) => {
     navigation.setOptions({
       headerRight: () => ( 
         <TouchableOpacity onPress={() => navigation.navigate('FilterModalScreen', filters)}>
@@ -68,7 +49,7 @@ export default function HomeScreen({navigation, route}) {
           </Text>
         </TouchableOpacity> 
       ),
-      headerLeft: () => ( user && userInfo && userInfo.isAdmin   ?
+      headerLeft: () => ( isAdmin   ?
         <TouchableOpacity onPress={() => {
             navigation.navigate('EditProductScreen', { id: null })
           }
@@ -78,8 +59,9 @@ export default function HomeScreen({navigation, route}) {
           </Text>
         </TouchableOpacity> : <View />
       ),
-    });
-  }, [navigation]);
+    })
+  }
+
   const selectItem = (item) =>{
     setSelectedId(item.id);
     navigation.navigate('ItemDetailsScreen', {

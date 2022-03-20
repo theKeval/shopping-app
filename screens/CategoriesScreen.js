@@ -1,8 +1,9 @@
 import { StyleSheet, Text, View,FlatList,TouchableOpacity,Alert  } from 'react-native'
-import React, { useEffect,useState,useContext }  from 'react'
-import { createCategory,updateCategory,getAllCategories,GetUserInfo,removeCategory } from '../FirebaseConfig/FirebaseOperations';
+import React, { useState,useContext }  from 'react'
+import { createCategory,updateCategory,getAllCategories,getAsyncUser,removeCategory } from '../FirebaseConfig/FirebaseOperations';
 import { Ionicons} from '@expo/vector-icons';
 import MangoStyles from '../styles'
+import { NavigationContainer, useFocusEffect } from '@react-navigation/native'
 import { AuthenticatedUserContext } from '../navigation/AuthenticatedUserProvider';
 
 import { backgroundColor } from 'react-native/Libraries/Components/View/ReactNativeStyleAttributes';
@@ -12,7 +13,7 @@ const CategoriesScreen = ({navigation}) => {
     const [userInfo, userInfoSet] = useState(null);
 
     const [categories, categoriesSet] = useState([]);
-    const [userAdmin,userAdminSet] = useState(true)
+    const [isAdmin,isAdminSet] = useState(false)
     const [promptVisible,promptVisibleSet] = useState(false)
     const [promptText,promptTextSet] = useState('')
     const [selectedCategory,selectedCategorySet] = useState(null)
@@ -32,47 +33,56 @@ const CategoriesScreen = ({navigation}) => {
         console.log('deleteCategory',item)
     }
     const showAlert = () =>
-{  Alert.alert( "Delete Category?", "Do you want to delete '" + selectedCategory.name +"' category?",
-    [
-      {
-        text: "Cancel",onPress: () => {},style: "cancel",},
-      {
-        text: "Delete",
-        onPress: () => {removeCategory(selectedCategory.id);updateCategoryList();},
-        style: "cancel",
-      },
-    ],
-    {
-      cancelable: true,
-    }
-  )};
-
-  const updateCategoryList = ()=>{
-    getAllCategories().then(categoriesFound => {
-        categoriesSet(categoriesFound.sort((a,b) => {return a.name < b.name ? -1 : 1 })) 
-      }).catch()
-  }
-    useEffect(() => {
-        updateCategoryList();
-        if(user && user.email && user.email  != ''){
-            GetUserInfo(user.email).then(userResponse =>{
-                userInfoSet(userResponse); 
-            })
+      {  Alert.alert( "Delete Category?", "Do you want to delete '" + selectedCategory.name +"' category?",
+        [
+          {
+            text: "Cancel",onPress: () => {},style: "cancel",},
+          {
+            text: "Delete",
+            onPress: () => {removeCategory(selectedCategory.id);updateCategoryList();},
+            style: "cancel",
+          },
+        ],
+        {
+          cancelable: true,
         }
-        return () =>   {
-        }
-      }, [user])
-      React.useLayoutEffect(() => {
+      )};
+      React.useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+          updateCategoryList();
+          getUserPermissions();
+        });
 
+        // Return the function to unsubscribe from the event so it gets removed on unmount
+        return unsubscribe;
+      }, [navigation]);
+
+      const updateCategoryList = () => {
+        getAllCategories().then(categoriesFound => {
+          categoriesSet(categoriesFound.sort((a, b) => {
+            return a.name < b.name ? -1 : 1
+          }))
+        }).catch()
+      }
+
+      const getUserPermissions = async () =>{
+        console.log('Screen was focused');
+        try {
+          getAsyncUser().then((userResponse)=>{
+            console.log('userResponse',userResponse && userResponse.isAdmin)
+              setHeaderLayout(userResponse && userResponse.isAdmin)
+              isAdminSet(userResponse && userResponse.isAdmin)
+
+          })
+        } catch (error) {
+          console.log(error)
+          setHeaderLayout(false)
+
+        }
+      }
+      const setHeaderLayout = (isAdmin) => {
         navigation.setOptions({
-        //   headerRight: () => ( 
-        //     <TouchableOpacity onPress={() => navigation.navigate('FilterModalScreen', filters)}>
-        //       <Text style={styles.searchBtn}>
-        //         <Ionicons name='search' size={20} color='white' />
-        //       </Text>
-        //     </TouchableOpacity> 
-        //   ),
-          headerLeft: () => ( userInfo && userInfo.isAdmin   ?
+          headerLeft: () => ( isAdmin   ?
             <TouchableOpacity onPress={() => {
                 selectedCategorySet(null)
                 promptVisibleSet(true)
@@ -85,7 +95,7 @@ const CategoriesScreen = ({navigation}) => {
             </TouchableOpacity> : <View />
           ),
         });
-      }, [navigation]);
+      }
 
     return (
       
@@ -118,21 +128,23 @@ const CategoriesScreen = ({navigation}) => {
             renderItem={({cat,item,index}) => {
                 return (
                 <View style={[styles.item,{backgroundColor: index%2 ===0 ? 'lightgray': MangoStyles.mangoPaleOrange}]} key={item.id} >
-                    <TouchableOpacity onPress={() => {selectCategory(item)}} style={[styles.titleCont , { width : userInfo && userInfo.isAdmin? '60%' : '100%'}]}>
+                    <TouchableOpacity onPress={() => {selectCategory(item)}} style={[styles.titleCont , { width : isAdmin? '60%' : '100%'}]}>
                         <Text style={[styles.title]}>{item.name}</Text>      
                     </TouchableOpacity>
-                    
+                    {(isAdmin ? 
+                        <TouchableOpacity onPress={() => {editCategory(item)}} style={[styles.editBtn]}>
+                              <Text style={[styles.title]}>
+                                <Ionicons name='pencil' size={24} color='white' />
+                            </Text>
+                             </TouchableOpacity>   : <View/> ) }
+                    {(isAdmin ?        <TouchableOpacity onPress={() => {deleteCategory(item)}} style={[styles.deleteBtn]}>
+                            <Text style={[styles.title]}>
+                                <Ionicons name='trash' size={24} color='white' />
+                            </Text>
+                        </TouchableOpacity>
+                      : <View/> ) }
 
-                    { userInfo && userInfo.isAdmin ? (<TouchableOpacity onPress={() => {editCategory(item)}} style={[styles.editBtn]}>
-                         <Text style={[styles.title]}>
-                            <Ionicons name='pencil' size={24} color='white' />
-                        </Text>
-                    </TouchableOpacity>) : null}
-                    { userInfo && userInfo.isAdmin  && item.name !== 'Default' ? (<TouchableOpacity onPress={() => {deleteCategory(item)}} style={[styles.deleteBtn]}>
-                        <Text style={[styles.title]}>
-                            <Ionicons name='trash' size={24} color='white' />
-                        </Text>
-                    </TouchableOpacity>) : null }
+                    
                     
                 </View>
 
