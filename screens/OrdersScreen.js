@@ -19,8 +19,7 @@ const OrdersScreen = ({navigation}) => {
 
   const [userOrders, userOrdersSet] = useState([]);
   const [visible, setVisible] = useState(false);
-  const [isAdmin, isAdminSet] = useState(false);
-  const [userID, userIDSet] = useState(false);
+
   const [filterOrders, filterOrdersSet] = useState('all');
 
   const hideMenu = () => setVisible(false);
@@ -28,43 +27,32 @@ const OrdersScreen = ({navigation}) => {
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
 
-        try {
-            getAsyncUser().then((userResponse)=>{
-              if(userResponse){
-                isAdminSet(userResponse && userResponse.isAdmin)
-                userIDSet(userResponse.id)
-                
-                
-              }else if(user){
-                isAdminSet(user && user.isAdmin)
-                userIDSet(user.id)
+      try {
+        console.log('alaaaaaaaaaaaassl')
+        userOrdersSet([])
+        updateOrders('all')
+      } catch (error) {
+        console.log(error)
 
-              }
-              updateOrders('all')
-            })
-        } catch (error) {
-            console.log(error)
-            // setHeaderLayout(false)
+      }
 
-        }
-        
     });
 
     return unsubscribe;
   }, [navigation]);
 
-  const updateOrders = (filterOrders) => {
+  const updateOrders = async (filterOrders) => {
 
     if(user && user.isAdmin){
-      getAllOrders(filterOrders).then((orders)=>{
-        userOrdersSet(orders.sort((a,b) => { return a.date > b.date ? -1 : 1}).map(order => {
+      getAllOrders(filterOrders).then(async(orders)=>{
+        await userOrdersSet(orders.sort((a,b) => { return a.date > b.date ? -1 : 1}).map(order => {
           order.dateFormat = moment(order.date).format('DD/MM/YYYY hh:mm a').toString()
           return order;
         }))
       })
     }else{
-      getUserOrders(user.id,filterOrders).then((orders)=>{
-        userOrdersSet(orders.sort((a,b) => { return a.date > b.date ? -1 : 1}).map(order => {
+       getUserOrders(user.id,filterOrders).then(async(orders)=>{
+        await userOrdersSet(orders.sort((a,b) => { return a.date > b.date ? -1 : 1}).map(order => {
           order.dateFormat = moment(order.date).format('DD/MM/YYYY hh:mm a').toString()
           return order;
         }))

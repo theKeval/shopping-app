@@ -11,7 +11,6 @@ const ShoppingCartScreen = ({navigation}) => {
     const [userId, userIDSet] = useState(null);
     
     const removeItem = (index) =>{
-      console.log('userId111111111', userId)
         removeItemShoppingCart(index,userId).then((resultObj)=>{
            
 
