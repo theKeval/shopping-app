@@ -10,7 +10,7 @@ const OrderListitem = ({ item, onPress, backgroundColor }) => {
             <Text style={[styles.title]}>Order {item.title}</Text>
             <Text >{item.status.toUpperCase()}</Text>
             <Text >{item.dateFormat}</Text>
-            <Text style={[styles.price]}>{'$ ' + item.total.toString()}</Text>
+            <Text style={[styles.price]}>{'$ ' + parseFloat(item.total).toFixed(2)}</Text>
 
         </View>
     </TouchableOpacity>

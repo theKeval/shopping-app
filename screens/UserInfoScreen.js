@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, FlatList } from 'react-native'
 import React, {useState} from 'react'
 import { getUserOrders,getAsyncUser,removeAsyncUser } from '../FirebaseConfig/FirebaseOperations';
 import OrderListitem from '../components/OrderListitem';
+import moment from 'moment';
 
 const UserInfoScreen = ({navigation, route}) => {
     const [userInfo, userInfoSet] = useState(null);
@@ -12,7 +13,10 @@ const UserInfoScreen = ({navigation, route}) => {
             if(route.params && route.params.user ){
                 userInfoSet(route.params.user )
                 getUserOrders(route.params.user.id,'all').then(userOrdersResponse => {
-                    userOrdersSet(userOrdersResponse)
+                  userOrdersSet(userOrdersResponse.map(order => {
+                    order.dateFormat = moment(order.date).format('DD/MM/YYYY hh:mm a').toString()
+                    return order;
+                  }))
                 })
             }
 

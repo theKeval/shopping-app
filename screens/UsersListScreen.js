@@ -13,7 +13,7 @@ const UsersListScreen = ({navigation}) => {
     const getViewUsers = ()=> {
         getUsersFiltered(searchTerm).then(response => {
             if(response){
-                usersListSet(response)
+                usersListSet(response);
             }
         })
     }

@@ -20,7 +20,7 @@ const ShoppingCartScreen = ({navigation}) => {
               shoppingCartObjSet(null)
               alert("Your shopping cart is empty")
             }else{
-              resultObj.dateString = moment(resultObj.date).format('DD/MM/YYYY');
+              resultObj.dateString = moment(resultObj.date).format('DD/MM/YYYY hh:mm a');
               resultObj.taxes = parseFloat(parseFloat(resultObj.total) * 0.13);
               resultObj.shipping = parseFloat(parseFloat(resultObj.total) * 0.10);
               resultObj.net = parseFloat(parseFloat(resultObj.total) + resultObj.taxes + resultObj.shipping);
@@ -87,7 +87,7 @@ const findShoppingCart = (uid)=> {
     
       getShopListDoc(uid).then((order)=>{         
           if(order && order.id){
-              order.dateString = moment(order.date).format('DD/MM/YYYY');
+              order.dateString = moment(order.date).format('DD/MM/YYYY hh:mm a');
               order.taxes = parseFloat(parseFloat(order.total) * 0.13);
               order.shipping = parseFloat(parseFloat(order.total) * 0.10);
               order.net = parseFloat(parseFloat(order.total) + order.taxes + order.shipping);

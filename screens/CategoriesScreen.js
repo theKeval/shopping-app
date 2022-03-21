@@ -19,9 +19,7 @@ const CategoriesScreen = ({navigation}) => {
     const [selectedCategory,selectedCategorySet] = useState(null);
     
     const selectCategory = (item) =>{
-        // selectedCategorySet(item)
         navigation.navigate('HomeScreen', {catId:item.id});
-        console.log('selectCategory')
     }
     const editCategory = (item) =>{
         selectedCategorySet(item)
@@ -32,7 +30,6 @@ const CategoriesScreen = ({navigation}) => {
     const deleteCategory = (item) =>{
         selectedCategorySet(item)
         showAlert();
-        console.log('deleteCategory',item)
     }
     const showAlert = () =>
       {  Alert.alert( "Delete Category?", "Do you want to delete '" + selectedCategory.name +"' category?",
@@ -49,6 +46,22 @@ const CategoriesScreen = ({navigation}) => {
           cancelable: true,
         }
       )};
+      React.useLayoutEffect(() => {
+        navigation.setOptions({
+          headerLeft: () => ( user && isAdmin   ?
+            <TouchableOpacity onPress={() => {
+                selectedCategorySet(null)
+                promptVisibleSet(true)
+                promptTextSet('')
+              }
+            }>
+              <Text style={styles.searchBtn}>
+                <Ionicons name='add' size={24} color='white' />;
+              </Text>
+            </TouchableOpacity> : <View />
+          ),
+        });
+      })
       React.useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
           updateCategoryList();
@@ -71,33 +84,16 @@ const CategoriesScreen = ({navigation}) => {
 
         try {
           getAsyncUser().then((userResponse)=>{
-            console.log('userResponse && userResponse.isAdmin',userResponse && userResponse.isAdmin)
-              setHeaderLayout(userResponse && userResponse.isAdmin)
+            console.log('userResponse && userResponse.isAdmin',userResponse && userResponse.isAdmin, 'user',user)
               isAdminSet(userResponse && userResponse.isAdmin)
 
           })
         } catch (error) {
           console.log(error)
-          setHeaderLayout(false)
 
         }
       }
-      const setHeaderLayout = (isAdmin) => {
-        navigation.setOptions({
-          headerLeft: () => ( user && isAdmin   ?
-            <TouchableOpacity onPress={() => {
-                selectedCategorySet(null)
-                promptVisibleSet(true)
-                promptTextSet('')
-              }
-            }>
-              <Text style={styles.searchBtn}>
-                <Ionicons name='add' size={24} color='white' />;
-              </Text>
-            </TouchableOpacity> : <View />
-          ),
-        });
-      }
+
 
     return (
       
