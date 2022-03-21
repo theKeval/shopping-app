@@ -15,6 +15,10 @@ import LoginScreen from '../screens/LoginScreen';
 import SignupScreen from '../screens/SignupScreen';
 import CategoriesScreen from '../screens/CategoriesScreen';
 import ShoppingCartScreen from '../screens/ShoppingCartScreen';
+import { GetUserInfo,getAsyncUser,removeAsyncUser } from '../FirebaseConfig/FirebaseOperations';
+import UsersListScreen from '../screens/UsersListScreen';
+import UserInfoScreen from '../screens/UserInfoScreen';
+import StatisticsScreen from '../screens/StatisticsScreen';
 
 const headerStyleMango = {
   headerTitleAlign: 'center',
@@ -37,11 +41,23 @@ const HomeProdStack = () => {
         </Stack.Navigator>
   )
 }
-const TabNavigator = () => {
-  const { user } = useContext(AuthenticatedUserContext) ;
-  const [isAdmin, isAdminSet] = useState({});
+const TabNavigator = ({navigation}) => {
+  const { user, setUser , userId} = useContext(AuthenticatedUserContext) ;
+  const [isAdmin, isAdminSet] = useState(false);
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      console.log('stacje', userId)
 
-  
+        // getAsyncUser().then(response => {
+        //   isAdminSet(response && response.isAdmin)
+          
+        // }).catch(()=> {
+        //   isAdminSet(false)
+        // })
+    });
+      // Return the function to unsubscribe from the event so it gets removed on unmount
+      return unsubscribe;
+    }, [navigation]);
 
   return (    
       <Tab.Navigator 
@@ -57,6 +73,8 @@ const TabNavigator = () => {
               iconName = focused ? 'list' : 'list-outline';
             }else if (route.name === 'CategoriesScreen') {
               iconName = focused ? 'grid' : 'grid-outline';
+            }else if (route.name === 'StatisticsScreen') {
+              iconName = focused ? 'bar-chart' : 'bar-chart-outline';
             }else if (route.name === 'AccountScreen' ||  route.name === 'LoginScreen') {
               iconName = focused ? 'person' : 'person-outline';
             }
@@ -74,8 +92,10 @@ const TabNavigator = () => {
         })}>
 
           <Tab.Screen name="HomeProdStack" component={HomeProdStack}  options={{headerShown: false, title:'Products'}}/>
-          { user ? <Tab.Screen name="ShoppingCartScreen" component={ShoppingCartScreen}  options={{title : 'My shopping Cart'}} /> : <></>}
-          { user ? <Tab.Screen name="OrdersScreen" component={OrdersScreen}  options={{title : 'My Orders'}} /> : <></>}
+          { user ?<Tab.Screen name="ShoppingCartScreen" component={ShoppingCartScreen}  options={{title : 'My shopping Cart'}} /> : <></>}
+          { user ? <Tab.Screen name="OrdersScreen" component={OrdersScreen}  options={{title : 'Orders'}} /> : <></>}
+          { user ? <Tab.Screen name="StatisticsScreen" component={StatisticsScreen}  options={{title : 'Statistics'}} /> : <></>}
+          
           { user ?
           <Tab.Screen name="AccountScreen" component={AccountScreen} options={{title : 'Account'}} />
           : <Tab.Screen name='LoginScreen' component={LoginScreen} options={{title : 'Login' ,headerShown: false}}/>}
@@ -124,7 +144,11 @@ export default function HomeStack() {
       <Stack.Group screenOptions={{...headerStyleMango,headerTintColor: 'white'}}>
         <Stack.Screen name='Account Information' component={ChangeInfoScreen} />
       </Stack.Group>
-
+      {/* USERS GROUP*/}
+      <Stack.Group screenOptions={{...headerStyleMango,headerTintColor: 'white'}}>
+        <Stack.Screen name='UsersListScreen' component={UsersListScreen}  options={{title : 'Users'}}/>
+        <Stack.Screen name='UserInfoScreen' component={UserInfoScreen}  options={{title : 'User Info'}}/>
+      </Stack.Group>
     </Stack.Navigator>
   );
 

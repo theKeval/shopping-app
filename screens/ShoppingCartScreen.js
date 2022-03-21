@@ -36,12 +36,12 @@ const ShoppingCartScreen = ({navigation}) => {
     )};
     const setHeaderLayout = () => {
         navigation.setOptions({
-          headerRight: () => ( shoppingCartObj  && shoppingCartObj.userID ?
+          headerRight: () =>(
             <TouchableOpacity onPress={showAlert}>
               <Text style={styles.searchBtn}>
                 <Ionicons name='checkmark' size={24} color='white' />
               </Text>
-            </TouchableOpacity> : <View />
+            </TouchableOpacity> 
           ),
         });
       }

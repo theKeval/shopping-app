@@ -1,28 +1,31 @@
 import React, { useState, createContext,useEffect } from 'react';
 import { AsyncStorage } from '@react-native-async-storage/async-storage';
 export const AuthenticatedUserContext = createContext({});
+import { getAllProducts, GetUserInfo,getAsyncUser } from '../FirebaseConfig/FirebaseOperations';
 
 export const AuthenticatedUserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [userId, setUserID] = useState(null);
+  const [userObj, setUserObj] = useState(null);
   useEffect(() => {
     try {
-      const getUser = async ()=>{
-        const userIdValue = await AsyncStorage.getItem('USERID');
-        if (userIdValue !== null) {
+      // const getUser = async ()=>{
+      //   getAsyncUser().then(response => {
+      //     if (response !== null) {
 
-          setUserID(userIdValue)
-        }
+      //       setUserObj(response)
+      //     }
+      //   })
+
         
-      }
-      // getUser();
+      // }
+      //  getUser();
     } catch (error) {
 
     }
   })
 
   return (
-    <AuthenticatedUserContext.Provider value={{ user, setUser  }}>
+    <AuthenticatedUserContext.Provider value={{ user, setUser , userObj}}>
       {children}
     </AuthenticatedUserContext.Provider>
   );

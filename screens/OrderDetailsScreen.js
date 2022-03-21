@@ -4,6 +4,7 @@ import MangoStyles from '../styles';
 import { Ionicons} from '@expo/vector-icons';
 import moment from 'moment';
 import { updateOrderState,updateCategory,getAllCategories,getAsyncUser,removeCategory, getAllOrders } from '../FirebaseConfig/FirebaseOperations';
+import { CommonActions } from '@react-navigation/native';
 
 const OrderDetailsScreen =  ({ navigation, route })  => {
   const { screen } = useWindowDimensions();
@@ -16,7 +17,7 @@ const OrderDetailsScreen =  ({ navigation, route })  => {
         {
           text: "Cancel",onPress: () => {},style: "destructive",},
         {
-          text: "Place Order",
+          text: "Accept",
           onPress: () => {
             updateOrderState(orderDetailObj.id,newStatus)
             let neworderDetail = {...orderDetailObj}

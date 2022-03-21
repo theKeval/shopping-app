@@ -3,6 +3,7 @@ import { db } from './Config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import uuid from 'react-native-uuid';
 import moment from 'moment';
+
 const collectionNames = {
   users: "Users",
   productCategories: "ProductCategories",
@@ -154,7 +155,24 @@ export const getAllUsers = async () => {
     users.push(doc.data());
   });
   
-  console.log(users);
+  return users;
+}
+
+export const getUsersFiltered = async (filterTerm) => {
+  // console.log("getting all users");
+  var users = [];
+
+  const querySnapshot = await getDocs(collection(db, collectionNames.users));
+  querySnapshot.forEach((doc) => {
+    // console.log(doc.id, " => ", doc.data());
+    const userObj = doc.data();
+    if(userObj.name.indexOf(filterTerm)>-1 || userObj.email.indexOf(filterTerm)>-1 || userObj.phoneNumber.indexOf(filterTerm)>-1){
+
+      users.push(userObj);
+    }
+  });
+  
+  // console.log(users);
   return users;
 }
 // #endregion
@@ -245,7 +263,7 @@ export const getAllOrders = async (filterStatus) => {
     });
 
   
-  console.log(orders);
+  // console.log(orders);
   return orders;
 }
 
@@ -265,11 +283,11 @@ export const getNextConsecutive = async () => {
 
 export const getUserOrders = async (userID,filterStatus) => {
   var orders = [];
-  console.log(userID)
+  // console.log(userID)
   const querySnapshot = await getDocs(collection(db, collectionNames.orders));
   querySnapshot.forEach((doc) => {
       const itobj= doc.data()
-      console.log(itobj.status ,filterStatus )
+      // console.log(itobj.status ,filterStatus )
      if(itobj.userID === userID && itobj.status !== 'shopping' && (filterStatus === 'all' || (filterStatus !== 'all' && itobj.status === filterStatus))){
        orders.push(doc.data())
      }
@@ -287,7 +305,6 @@ export const getShopListDoc = async (userID) => {
   const querySnapshot = await getDocs(collection(db, collectionNames.orders));
   querySnapshot.forEach((doc,i) => {
     const itobj= doc.data()
-    console.log('itobj',itobj.userID === userID && itobj.status === 'shopping',userID)
     if(itobj.userID === userID && itobj.status === 'shopping'){
       shopListDoc = (itobj)
     }
@@ -312,9 +329,7 @@ export const removeOrder = (id) => {
   
 }
 export const addItemToShoppingCart = async ( item , quantity, userID) => {
-  console.log(userID,'userID')
   getShopListDoc(userID).then(async (obj) =>{
-    console.log(obj)
     
     const totalItem = parseFloat(item.price) * parseFloat(quantity)
     const newItem = {...item,quantity : parseInt(quantity), totalItem : totalItem}
@@ -328,6 +343,7 @@ export const addItemToShoppingCart = async ( item , quantity, userID) => {
           total: totalItem,
           items: [newItem]
         })
+        
       })
     }else{
       obj.items.push(newItem);
@@ -340,7 +356,6 @@ export const addItemToShoppingCart = async ( item , quantity, userID) => {
 }
 
 export const removeItemShoppingCart = ( index,userID) => {
-  console.log('removeItemShoppingCart',userID)
   getShopListDoc(userID).then((obj) =>{
     if(obj !== null){
       if(obj.items.length > 1){
@@ -362,6 +377,74 @@ export const updateOrderState = ( orderID,newStatus) => {
       order.status =newStatus;
       updateOrder(order.id,order);
     }
+    if(newStatus === 'completed'){
+      const date = moment(order.date).toString()
+      order.items.forEach(item => {
+        console.log(item)
+        Create(collectionNames.productsInOrder,item.id , {...item,date:date});
+      })
+
+    }
   })
+
+}
+// #endregion
+
+// #region sales related operations
+
+export const getCategoriesSold = async ( ) => {
+  let categories = {}
+
+  const querySnapshot = await getDocs(collection(db, collectionNames.productsInOrder));
+  querySnapshot.forEach((doc) => {
+    const itemObj = doc.data();
+    if(!categories[itemObj.categoryId] ){
+      categories[itemObj.categoryId] = {
+        id:itemObj.categoryId,
+        name:itemObj.categoryName,
+        total:0,
+        totalWeek:0,
+        totalMonth:0
+      }
+    }
+    categories[itemObj.categoryId].total = parseFloat(itemObj.totalItem) +  parseFloat(itemObj.totalItem)
+    if(Math.abs(moment().diff(moment(itemObj.date))) < 7){
+      categories[itemObj.categoryId].totalWeek = parseFloat(itemObj.totalItem) +  parseFloat(itemObj.totalItem)
+    }
+    if(Math.abs(moment().diff(moment(itemObj.date))) < 28){
+      categories[itemObj.categoryId].totalMonth = parseFloat(itemObj.totalItem) +  parseFloat(itemObj.totalItem)
+    }
+
+  });
+
+
+}
+
+export const getProductsSold = async ( ) => {
+  let product = {}
+
+  const querySnapshot = await getDocs(collection(db, collectionNames.productsInOrder));
+  querySnapshot.forEach((doc) => {
+    const itemObj = doc.data();
+    if(!product[itemObj.id] ){
+      product[itemObj.id] = {
+        id:itemObj.id,
+        name:itemObj.name,
+        total:0,
+        totalWeek:0,
+        totalMonth:0
+      }
+    }
+    product[itemObj.id].total = parseFloat(itemObj.totalItem) +  parseFloat(itemObj.totalItem)
+    if(Math.abs(moment().diff(moment(itemObj.date))) < 7){
+      product[itemObj.id].totalWeek = parseFloat(itemObj.totalItem) +  parseFloat(itemObj.totalItem)
+    }
+    if(Math.abs(moment().diff(moment(itemObj.date))) < 28){
+      product[itemObj.id].totalMonth = parseFloat(itemObj.totalItem) +  parseFloat(itemObj.totalItem)
+    }
+
+  });
+
+
 }
 // #endregion

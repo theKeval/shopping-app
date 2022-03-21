@@ -7,6 +7,7 @@ import { IconButton } from '../components';
 import { GetUserInfo,getAsyncUser,removeAsyncUser } from '../FirebaseConfig/FirebaseOperations';
 import { LogBox } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Ionicons, FontAwesome5, AntDesign, MaterialIcons } from '@expo/vector-icons';
 
 LogBox.ignoreLogs(['Setting a timer']);
 const auth = Firebase.auth();
@@ -59,6 +60,16 @@ const AccountScreen = ({navigation, route}) => {
           <IconButton name='logout' size={20} onPress={handleSignout} color='#fff' />
         </View>
       ),
+      headerLeft: () => 
+        (userInfo && userInfo.isAdmin ? 
+          <TouchableOpacity  onPress={() => {navigation.navigate('UsersListScreen')}}>
+            <Text style={styles.logoutBtn}>
+              <Ionicons name='people-sharp' size={20} color='white' />
+            </Text>
+          </TouchableOpacity> 
+
+          : <></>)
+      
     });
   })
 
@@ -151,7 +162,7 @@ const styles = StyleSheet.create({
   },
 
   logoutBtn: {
-    marginRight: 10,
-    padding: 5
+    marginHorizontal: 10,
+    padding:10
   }
 })

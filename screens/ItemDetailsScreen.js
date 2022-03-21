@@ -6,6 +6,7 @@ import { ButtonMain } from '../components';
 import { Ionicons,FontAwesome5,AntDesign,Entypo,Fontisto,MaterialIcons} from '@expo/vector-icons';
 import { AuthenticatedUserContext } from '../navigation/AuthenticatedUserProvider';
 import { GetUserInfo , getProduct,addItemToShoppingCart} from '../FirebaseConfig/FirebaseOperations';
+import { CommonActions } from '@react-navigation/native';
 
 const ItemDetailsScreen = ({ navigation, route }) => {
   const { user } = useContext(AuthenticatedUserContext) ;
@@ -50,6 +51,7 @@ const ItemDetailsScreen = ({ navigation, route }) => {
   })
   const onPressAdd = () => {
     addItemToShoppingCart(product,qty,userInfo.id)
+    navigation.dispatch(CommonActions.goBack());
   } 
 
 
