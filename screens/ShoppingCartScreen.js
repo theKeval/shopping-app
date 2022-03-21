@@ -68,8 +68,12 @@ const ShoppingCartScreen = ({navigation}) => {
 
             try {
               getAsyncUser().then((userResponse)=>{
-                userIDSet(userResponse.id)
-                findShoppingCart(userResponse.id);
+                console.log(userResponse)
+                if(userResponse){
+                  userIDSet(userResponse.id)
+                  findShoppingCart(userResponse.id);
+
+                }
               })
             } catch (error) {
                 console.log(error)    

@@ -1,11 +1,12 @@
 import { StyleSheet, View, FlatList,  Text,StatusBar,Button,TouchableOpacity } from 'react-native';
 import { Ionicons,FontAwesome5,AntDesign,Entypo,Fontisto,MaterialIcons} from '@expo/vector-icons';
-import React, {useState} from 'react'
+import React, {useState,useContext} from 'react'
 import MangoStyles from '../styles'
 import OrderListitem from '../components/OrderListitem'
 import { Menu, MenuItem, MenuDivider } from 'react-native-material-menu';
 import { getUserOrders,getAsyncUser, getAllOrders } from '../FirebaseConfig/FirebaseOperations';
 import moment from 'moment';
+import { AuthenticatedUserContext } from '../navigation/AuthenticatedUserProvider';
 
 
 const OrdersScreen = ({navigation}) => {
@@ -14,6 +15,8 @@ const OrdersScreen = ({navigation}) => {
       order : order
     })     
   }
+  const { user} = useContext(AuthenticatedUserContext) ;
+
   const [userOrders, userOrdersSet] = useState([]);
   const [visible, setVisible] = useState(false);
   const [isAdmin, isAdminSet] = useState(false);
@@ -27,9 +30,18 @@ const OrdersScreen = ({navigation}) => {
 
         try {
             getAsyncUser().then((userResponse)=>{
-              isAdminSet(userResponse && userResponse.isAdmin)
-              userIDSet(userResponse.id)
-              updateOrders(userResponse && userResponse.isAdmin, 'all')
+              console.log('useaaaaaaaaaaarResponse',userResponse)
+              if(userResponse){
+                isAdminSet(userResponse && userResponse.isAdmin)
+                userIDSet(userResponse.id)
+                updateOrders(userResponse && userResponse.isAdmin, 'all')
+                
+              }else if(user){
+                isAdminSet(user && user.isAdmin)
+                userIDSet(user.id)
+                updateOrders(user && user.isAdmin, 'all')
+
+              }
             })
         } catch (error) {
             console.log(error)
