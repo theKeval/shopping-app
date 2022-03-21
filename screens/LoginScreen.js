@@ -26,6 +26,10 @@ const LoginScreen = ({navigation}) => {
     navigation.navigate('Signup');
   }
 
+  const onPressAccInfoChange = () => {
+    auth.sendPasswordResetEmail(user.email)
+  }
+
   const handlePasswordVisibility = () => {
     if (rightIcon === 'eye') {
       setRightIcon('eye-off');
@@ -117,29 +121,30 @@ const LoginScreen = ({navigation}) => {
       </View>
       <View style={styles.buttonContainer}> 
 
-      <Toast
-
-            visible={loginError !== null}
-            position={Toast.positions.BOTTOM}
-            duration={Toast.durations.LONG}
-            shadow={false}
-            opacity={0.9}
-            backgroundColor={'red'}
-            animation={true}
-            hideOnPress={true}
-        >{loginError}</Toast> 
-      <TouchableOpacity
-            onPress={onLogin}
-            style={styles.button}
-          >
-            <Text style={styles.buttonText}>Login</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={onPressRegister}
-            style={[styles.button, styles.buttonOutline]}
-          >
-            <Text style={styles.buttonOutlineText}>Register</Text>
-          </TouchableOpacity>
+        <Toast
+          visible={loginError !== null}
+          position={Toast.positions.BOTTOM}
+          duration={Toast.durations.LONG}
+          shadow={false}
+          opacity={0.9}
+          backgroundColor={'red'}
+          animation={true}
+          hideOnPress={true}>
+          {loginError}
+        </Toast> 
+        <TouchableOpacity
+          onPress={onLogin}
+          style={styles.button}>
+          <Text style={styles.buttonText}>Login</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={onPressRegister}
+          style={[styles.button, styles.buttonOutline]}>
+          <Text style={styles.buttonOutlineText}>Register</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={onPressAccInfoChange} style={styles.passButton}>
+            <Text style={styles.buttonPassText}>Forgot your password?</Text>
+        </TouchableOpacity>
       </View>
 </View>
   )
@@ -199,6 +204,11 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         alignItems: 'center',
       },
+      passButton: {
+        width: '100%',
+        padding: 15,
+        alignItems: 'center',
+      },
       buttonOutline: {
         backgroundColor: 'white',
         marginTop: 5,
@@ -207,6 +217,11 @@ const styles = StyleSheet.create({
       },
       buttonText: {
         color: 'white',
+        fontWeight: '700',
+        fontSize: 16,
+      },
+      buttonPassText: {
+        color: MangoStyles.mangoOrangeYellow,
         fontWeight: '700',
         fontSize: 16,
       },
