@@ -19,7 +19,7 @@ const AccountScreen = ({navigation, route}) => {
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       GetUserInfo(user.email).then(response => {
-        console.log(response)
+        // console.log(response)
         if(response && response !== {}){
           setUserInfo(response)
         }
@@ -52,7 +52,7 @@ const AccountScreen = ({navigation, route}) => {
   }
 
   React.useLayoutEffect(() => {
-    console.log(userInfo)
+    // console.log(userInfo)
     navigation.setOptions({
       
       headerRight: () =>(

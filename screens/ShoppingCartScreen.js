@@ -12,8 +12,20 @@ const ShoppingCartScreen = ({navigation}) => {
     
     const removeItem = (index) =>{
       console.log('userId111111111', userId)
-        removeItemShoppingCart(index,userId).then(()=>{
-            findShoppingCart(userId);
+        removeItemShoppingCart(index,userId).then((resultObj)=>{
+          console.log('resulssssssssssssssssssssssssssssssstObj',resultObj)
+            
+
+            if(resultObj === null){
+              shoppingCartObjSet(null)
+              alert("Your shopping cart is empty")
+            }else{
+              resultObj.dateString = moment(resultObj.date).format('DD/MM/YYYY');
+              resultObj.taxes = parseFloat(parseFloat(resultObj.total) * 0.13);
+              resultObj.shipping = parseFloat(parseFloat(resultObj.total) * 0.10);
+              resultObj.net = parseFloat(parseFloat(resultObj.total) + resultObj.taxes + resultObj.shipping);
+              shoppingCartObjSet(resultObj)
+            }
         });
         
     }
@@ -68,6 +80,8 @@ const ShoppingCartScreen = ({navigation}) => {
     
         return unsubscribe;
       }, [navigation]);
+
+      
 const findShoppingCart = (uid)=> {
       shoppingCartObjSet(null)
     

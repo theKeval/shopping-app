@@ -18,7 +18,7 @@ const OrdersScreen = ({navigation}) => {
   const [visible, setVisible] = useState(false);
   const [isAdmin, isAdminSet] = useState(false);
   const [userID, userIDSet] = useState(false);
-  const [filterOrders, filterOrdersSet] = useState('all');
+  const [filterOrders, filterOrdersSet] = useState(false);
 
   const hideMenu = () => setVisible(false);
   React.useEffect(() => {
@@ -28,7 +28,7 @@ const OrdersScreen = ({navigation}) => {
             getAsyncUser().then((userResponse)=>{
               isAdminSet(userResponse && userResponse.isAdmin)
               userIDSet(userResponse.id)
-              updateOrders(userResponse && userResponse.isAdmin)
+              updateOrders(userResponse && userResponse.isAdmin, 'all')
             })
         } catch (error) {
             console.log(error)
@@ -41,9 +41,9 @@ const OrdersScreen = ({navigation}) => {
     return unsubscribe;
   }, [navigation]);
   const showMenu = () => setVisible(true);
-  const updateOrders = (isAdminFlag) => {
+  const updateOrders = (isAdminFlag,filterOrders) => {
 
-    if(isAdminFlag){
+    if(isAdminFlag || isAdmin){
       getAllOrders(filterOrders).then((orders)=>{
         userOrdersSet(orders.map(order => {
           order.dateFormat = moment(order.date).format('DD/MM/YYYY').toString()
@@ -73,18 +73,18 @@ const OrdersScreen = ({navigation}) => {
               style={{width: 200}}
             >
               <MenuItem style={[{backgroundColor : filterOrders === 'all' ? MangoStyles.mangoOrangeYellow : 'white'}]} 
-              textStyle={[{color : filterOrders === 'all' ? 'white' : 'black'}]} onPress={ () => {filterOrdersSet('all');updateOrders(isAdmin);hideMenu();}}>All</MenuItem>
+              textStyle={[{color : filterOrders === 'all' ? 'white' : 'black'}]} onPress={ () => {updateOrders(false,'all');filterOrdersSet('all'); hideMenu();}}>All</MenuItem>
               <MenuItem style={[{backgroundColor : filterOrders === 'pending' ? MangoStyles.mangoOrangeYellow : 'white'}]}
-                textStyle={[{color : filterOrders === 'pending' ? 'white' : 'black'}]} onPress={ () => {filterOrdersSet('pending');updateOrders(isAdmin);hideMenu();}}>Pending</MenuItem>
+                textStyle={[{color : filterOrders === 'pending' ? 'white' : 'black'}]} onPress={ () => {updateOrders(false,'pending');filterOrdersSet('pending'); hideMenu();}}>Pending</MenuItem>
               <MenuItem style={[{backgroundColor : filterOrders === 'ready-for-shipment' ? MangoStyles.mangoOrangeYellow : 'white'}]} 
               textStyle={[{color : filterOrders === 'ready-for-shipment' ? 'white' : 'black'}]}
-              onPress={ () => {filterOrdersSet('ready-for-shipment');updateOrders(isAdmin);hideMenu();}}>Ready for shippment</MenuItem>
+              onPress={ () => {updateOrders(false,'ready-for-shipment');filterOrdersSet('ready-for-shipment'); hideMenu();}}>Ready for shippment</MenuItem>
               <MenuItem style={[{backgroundColor : filterOrders === 'shipped' ? MangoStyles.mangoOrangeYellow : 'white'}]} 
               textStyle={[{color : filterOrders === 'shipped' ? 'white' : 'black'}]}
-              onPress={ () => {filterOrdersSet('shipped');updateOrders(isAdmin);hideMenu();}}>Shipped</MenuItem>
+              onPress={ () => {updateOrders(false,'shipped');filterOrdersSet('shipped'); hideMenu();}}>Shipped</MenuItem>
               <MenuItem style={[{backgroundColor : filterOrders === 'completed' ? MangoStyles.mangoOrangeYellow : 'white'}]} 
               textStyle={[{color : filterOrders === 'completed' ? 'white' : 'black'}]}
-              onPress={ () => {filterOrdersSet('completed');updateOrders(isAdmin);hideMenu();}}>Completed</MenuItem>
+              onPress={ () => {updateOrders(false,'completed');filterOrdersSet('completed'); hideMenu();}}>Completed</MenuItem>
             </Menu>
           </View>
       )},

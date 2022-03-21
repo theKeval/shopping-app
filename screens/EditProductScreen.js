@@ -118,12 +118,12 @@ const EditProductScreen = ({navigation,route}) => {
       </View>
       <View  style={styles.row}>
         <Text style={styles.label}>Product Category:</Text>
-      <View style={styles.field}>
-        <Picker selectedValue={productCategory} onValueChange={textValue => productCategorySet(textValue)} style={styles.field} >
-            <Picker.Item key={null} label={ 'No Category'} value={null} />
-                {renderCategoryList()}
-        </Picker>
-      </View>
+        <View style={styles.field}>
+          <Picker selectedValue={productCategory} onValueChange={textValue => productCategorySet(textValue)} style={styles.field} >
+              <Picker.Item key={null} label={ 'No Category'} value={null} />
+                  {renderCategoryList()}
+          </Picker>
+        </View>
 
       </View>
       <View  style={styles.row}>

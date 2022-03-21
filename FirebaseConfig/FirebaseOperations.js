@@ -264,7 +264,7 @@ export const getAllOrders = async (filterStatus) => {
 
   
   // console.log(orders);
-  return orders;
+  return orders.sort((a,b) => { return a.date > b.date ? -1 : 1});
 }
 
 export const getNextConsecutive = async () => {
@@ -274,7 +274,11 @@ export const getNextConsecutive = async () => {
   const querySnapshot = await getDocs(collection(db, collectionNames.orders));
   querySnapshot.forEach((doc) => {
     // console.log(doc.id, " => ", doc.data());
-    ordersTotal+=1;
+    const consecutive = parseInt(doc.data().title)
+    if(consecutive> ordersTotal){
+      ordersTotal=consecutive;
+    }
+    
   });
   
   
@@ -305,7 +309,7 @@ export const getShopListDoc = async (userID) => {
   const querySnapshot = await getDocs(collection(db, collectionNames.orders));
   querySnapshot.forEach((doc,i) => {
     const itobj= doc.data()
-    if(itobj.userID === userID && itobj.status === 'shopping'){
+    if(shopListDoc=== null && itobj.userID === userID && itobj.status === 'shopping' ){
       shopListDoc = (itobj)
     }
  });
@@ -357,21 +361,24 @@ export const addItemToShoppingCart = async ( item , quantity, userID) => {
 
 export const removeItemShoppingCart = async ( index,userID) => {
 
-console.log('uuuuuserID',userID)  
-getShopListDoc(userID).then((obj) =>{
+let resultObj;
+await getShopListDoc(userID).then((obj) =>{
     if(obj !== null){
       if(obj.items.length > 1){
         const objItem = obj.items[index]
         obj.total = parseFloat(obj.total) - (parseFloat(objItem.price) * parseFloat(objItem.quantity));
         obj.items.splice(index,1);
         updateOrder(obj.id,obj);
+        resultObj = obj;
       }else{
         removeOrder(obj.id);
-        alert("Your shopping cart is empty")
+        resultObj = null;
       }
 
     }
   })
+
+  return resultObj
 }
 
 export const updateOrderState = ( orderID,newStatus) => {
@@ -411,26 +418,26 @@ export const getCategoriesSold = async ( ) => {
       }
     }
     categories[itemObj.categoryId].total = parseFloat(itemObj.totalItem) +  parseFloat(itemObj.totalItem)
-    if(Math.abs(moment().diff(moment(itemObj.date))) < 7){
+    if(Math.abs(moment().diff(moment(itemObj.date), 'weeks')) < 1){
       categories[itemObj.categoryId].totalWeek = parseFloat(itemObj.totalItem) +  parseFloat(itemObj.totalItem)
     }
-    if(Math.abs(moment().diff(moment(itemObj.date))) < 28){
+    if(Math.abs(moment().diff(moment(itemObj.date), 'months')) < 1){
       categories[itemObj.categoryId].totalMonth = parseFloat(itemObj.totalItem) +  parseFloat(itemObj.totalItem)
     }
 
   });
 
-
+  return Object.values(categories);
 }
 
 export const getProductsSold = async ( ) => {
-  let product = {}
+  let products = {}
 
   const querySnapshot = await getDocs(collection(db, collectionNames.productsInOrder));
   querySnapshot.forEach((doc) => {
     const itemObj = doc.data();
-    if(!product[itemObj.id] ){
-      product[itemObj.id] = {
+    if(!products[itemObj.id] ){
+      products[itemObj.id] = {
         id:itemObj.id,
         name:itemObj.name,
         total:0,
@@ -438,16 +445,17 @@ export const getProductsSold = async ( ) => {
         totalMonth:0
       }
     }
-    product[itemObj.id].total = parseFloat(itemObj.totalItem) +  parseFloat(itemObj.totalItem)
-    if(Math.abs(moment().diff(moment(itemObj.date))) < 7){
-      product[itemObj.id].totalWeek = parseFloat(itemObj.totalItem) +  parseFloat(itemObj.totalItem)
+    products[itemObj.id].total = parseFloat(itemObj.total) +  parseFloat(itemObj.totalItem)
+    if(Math.abs(moment().diff(moment(itemObj.date), 'weeks')) < 1){
+      products[itemObj.id].totalWeek = parseFloat(itemObj.totalWeek) +  parseFloat(itemObj.totalItem)
     }
-    if(Math.abs(moment().diff(moment(itemObj.date))) < 28){
-      product[itemObj.id].totalMonth = parseFloat(itemObj.totalItem) +  parseFloat(itemObj.totalItem)
+    if(Math.abs(moment().diff(moment(itemObj.date), 'months')) < 1){
+      products[itemObj.id].totalMonth = parseFloat(itemObj.totalMonth) +  parseFloat(itemObj.totalItem)
     }
 
   });
 
+  return Object.values(products);
 
 }
 // #endregion
