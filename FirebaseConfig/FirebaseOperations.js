@@ -264,7 +264,7 @@ export const getAllOrders = async (filterStatus) => {
 
   
   // console.log(orders);
-  return orders;
+  return orders.sort((a,b) => { return a.date > b.date ? -1 : 1});
 }
 
 export const getNextConsecutive = async () => {
@@ -274,7 +274,11 @@ export const getNextConsecutive = async () => {
   const querySnapshot = await getDocs(collection(db, collectionNames.orders));
   querySnapshot.forEach((doc) => {
     // console.log(doc.id, " => ", doc.data());
-    ordersTotal+=1;
+    const consecutive = parseInt(doc.data().title)
+    if(consecutive> ordersTotal){
+      ordersTotal=consecutive;
+    }
+    
   });
   
   
@@ -305,7 +309,7 @@ export const getShopListDoc = async (userID) => {
   const querySnapshot = await getDocs(collection(db, collectionNames.orders));
   querySnapshot.forEach((doc,i) => {
     const itobj= doc.data()
-    if(itobj.userID === userID && itobj.status === 'shopping'){
+    if(shopListDoc=== null && itobj.userID === userID && itobj.status === 'shopping' ){
       shopListDoc = (itobj)
     }
  });
@@ -357,21 +361,24 @@ export const addItemToShoppingCart = async ( item , quantity, userID) => {
 
 export const removeItemShoppingCart = async ( index,userID) => {
 
-console.log('uuuuuserID',userID)  
-getShopListDoc(userID).then((obj) =>{
+let resultObj;
+await getShopListDoc(userID).then((obj) =>{
     if(obj !== null){
       if(obj.items.length > 1){
         const objItem = obj.items[index]
         obj.total = parseFloat(obj.total) - (parseFloat(objItem.price) * parseFloat(objItem.quantity));
         obj.items.splice(index,1);
         updateOrder(obj.id,obj);
+        resultObj = obj;
       }else{
         removeOrder(obj.id);
-        alert("Your shopping cart is empty")
+        resultObj = null;
       }
 
     }
   })
+
+  return resultObj
 }
 
 export const updateOrderState = ( orderID,newStatus) => {
