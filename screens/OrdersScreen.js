@@ -4,7 +4,8 @@ import React, {useState} from 'react'
 import MangoStyles from '../styles'
 import OrderListitem from '../components/OrderListitem'
 import { Menu, MenuItem, MenuDivider } from 'react-native-material-menu';
-import { createCategory,updateCategory,getAllCategories,getAsyncUser,removeCategory } from '../FirebaseConfig/FirebaseOperations';
+import { getUserOrders,updateCategory,getAllCategories,getAsyncUser,removeCategory, getAllOrders } from '../FirebaseConfig/FirebaseOperations';
+import moment from 'moment';
 
 
 const OrdersScreen = ({navigation}) => {
@@ -13,56 +14,52 @@ const OrdersScreen = ({navigation}) => {
       order : order
     })     
   }
+  const [userOrders, userOrdersSet] = useState([]);
   const [visible, setVisible] = useState(false);
+  const [isAdmin, isAdminSet] = useState(false);
+  const [userID, userIDSet] = useState(false);
   const [filterOrders, filterOrdersSet] = useState('all');
-  const DATA = [
-    {
-      id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-      title: 'Order 00001',
-      status: 'Pending',
-      date: new Date(),
-      total: 12.75,
-    },
-    {
-      id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-      title: 'Order 00002',
-      status: 'Pending',
-      date: new Date(),
-      total: 12.75,
-    },
-    {
-      id: 'bd7acbea-c2b1-46c2-aed5-3ad53abb28ba',
-      title: 'Order 00003',
-      status: 'Completed',
-      date: new Date(),
-      total: 12.75,
-    },
-  ];
+
   const hideMenu = () => setVisible(false);
-  // React.useEffect(() => {
-  //   const unsubscribe = navigation.addListener('focus', () => {
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
 
-  //       try {
-  //           getAsyncUser().then((userResponse)=>{
-  //           // console.log('userResponse',userResponse && userResponse.isAdmin)
-  //           getUserOrders(userResponse.id).then((order)=>{
+        try {
+            getAsyncUser().then((userResponse)=>{
+              isAdminSet(userResponse && userResponse.isAdmin)
+              userIDSet(userResponse.id)
+              updateOrders()
+            })
+        } catch (error) {
+            console.log(error)
+            // setHeaderLayout(false)
 
-  //            })
-  //               setHeaderLayout(userResponse && userResponse.isAdmin)
-  //               isAdminSet(userResponse && userResponse.isAdmin)
-
-  //           })
-  //       } catch (error) {
-  //           console.log(error)
-  //           setHeaderLayout(false)
-
-  //       }
+        }
         
-  //   });
+    });
 
-  //   return unsubscribe;
-  // }, [navigation]);
+    return unsubscribe;
+  }, [navigation]);
   const showMenu = () => setVisible(true);
+  const updateOrders = () => {
+
+    if(isAdmin){
+      getAllOrders(filterOrders).then((orders)=>{
+        userOrdersSet(orders.map(order => {
+          order.dateFormat = moment(order.date).format('DD/MM/YYYY')
+          return order;
+        }))
+      })
+    }else{
+      getUserOrders(userID,filterOrders).then((orders)=>{
+        userOrdersSet(orders.map(order => {
+          order.dateFormat = moment(order.date).format('DD/MM/YYYY')
+          return order;
+        }))
+      })
+    }
+
+  };
   React.useLayoutEffect(() => {
     navigation.setOptions({
       
@@ -73,14 +70,21 @@ const OrdersScreen = ({navigation}) => {
               visible={visible}
               anchor={<Text style={styles.searchBtn} onPress={showMenu}><Ionicons name='ellipsis-vertical' size={24} color='white' /></Text>}
               onRequestClose={hideMenu}
+              style={{width: 200}}
             >
               <MenuItem style={[{backgroundColor : filterOrders === 'all' ? MangoStyles.mangoOrangeYellow : 'white'}]} 
-              textStyle={[{color : filterOrders === 'all' ? 'white' : 'black'}]} onPress={ () => {filterOrdersSet('all');hideMenu();}}>All</MenuItem>
+              textStyle={[{color : filterOrders === 'all' ? 'white' : 'black'}]} onPress={ () => {filterOrdersSet('all');updateOrders();hideMenu();}}>All</MenuItem>
               <MenuItem style={[{backgroundColor : filterOrders === 'pending' ? MangoStyles.mangoOrangeYellow : 'white'}]}
-                textStyle={[{color : filterOrders === 'pending' ? 'white' : 'black'}]} onPress={ () => {filterOrdersSet('pending');hideMenu();}}>Pending</MenuItem>
+                textStyle={[{color : filterOrders === 'pending' ? 'white' : 'black'}]} onPress={ () => {filterOrdersSet('pending');updateOrders();hideMenu();}}>Pending</MenuItem>
+              <MenuItem style={[{backgroundColor : filterOrders === 'ready-for-shipment' ? MangoStyles.mangoOrangeYellow : 'white'}]} 
+              textStyle={[{color : filterOrders === 'ready-for-shipment' ? 'white' : 'black'}]}
+              onPress={ () => {filterOrdersSet('ready-for-shipment');updateOrders();hideMenu();}}>Ready for shippment</MenuItem>
+              <MenuItem style={[{backgroundColor : filterOrders === 'shipped' ? MangoStyles.mangoOrangeYellow : 'white'}]} 
+              textStyle={[{color : filterOrders === 'shipped' ? 'white' : 'black'}]}
+              onPress={ () => {filterOrdersSet('shipped');updateOrders();hideMenu();}}>Shipped</MenuItem>
               <MenuItem style={[{backgroundColor : filterOrders === 'completed' ? MangoStyles.mangoOrangeYellow : 'white'}]} 
               textStyle={[{color : filterOrders === 'completed' ? 'white' : 'black'}]}
-              onPress={ () => {filterOrdersSet('completed');hideMenu();}}>Completed</MenuItem>
+              onPress={ () => {filterOrdersSet('completed');updateOrders();hideMenu();}}>Completed</MenuItem>
             </Menu>
           </View>
       )},
@@ -93,7 +97,7 @@ const OrdersScreen = ({navigation}) => {
       
         <View style ={styles.container}>
           <FlatList
-            data={DATA}
+            data={userOrders}
             renderItem={renderItem}
             keyExtractor={item => item.id}
           />

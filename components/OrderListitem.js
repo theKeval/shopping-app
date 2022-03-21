@@ -1,13 +1,14 @@
 import { StyleSheet, Text, View,TouchableOpacity, Image } from 'react-native'
 import React from 'react'
+import moment from 'moment';
 
 const OrderListitem = ({ item, onPress, backgroundColor }) => {
   return (
     <TouchableOpacity onPress={onPress} style={[styles.item]}>
         <View style={styles.itemDesc}>
-            <Text style={[styles.title]}>{item.title}</Text>
-            <Text >{item.status}</Text>
-            <Text >{item.date.toString()}</Text>
+            <Text style={[styles.title]}>Order {item.title}</Text>
+            <Text >{item.status.toUpperCase()}</Text>
+            <Text >{item.dateFormat}</Text>
             <Text style={[styles.price]}>{'$ ' + item.total.toString()}</Text>
 
         </View>

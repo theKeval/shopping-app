@@ -1,6 +1,6 @@
-import { StyleSheet, Text, View ,FlatList,TouchableOpacity} from 'react-native'
+import { StyleSheet, Text, View ,FlatList,TouchableOpacity,Alert} from 'react-native'
 import React, {useState} from 'react'
-import { createCategory,removeItemShoppingCart,getShopListDoc,getAsyncUser,removeCategory } from '../FirebaseConfig/FirebaseOperations';
+import { updateOrderState,removeItemShoppingCart,getShopListDoc,getAsyncUser,removeCategory } from '../FirebaseConfig/FirebaseOperations';
 import moment from 'moment';
 import { Ionicons} from '@expo/vector-icons';
 import MangoStyles from '../styles'
@@ -15,6 +15,36 @@ const ShoppingCartScreen = ({navigation}) => {
         });
         
     }
+
+    const showAlert = () =>
+    {  Alert.alert( "Place order?", "Do you want to place to checkout?",
+      [
+        {
+          text: "Cancel",onPress: () => {},style: "destructive",},
+        {
+          text: "Place Order",
+          onPress: () => {
+            updateOrderState(shoppingCartObj.id,'pending')
+            navigation.navigate('OrdersScreen')
+          },
+          style: "default",
+        },
+      ],
+      {
+        cancelable: true,
+      }
+    )};
+    const setHeaderLayout = () => {
+        navigation.setOptions({
+          headerRight: () => ( shoppingCartObj  && shoppingCartObj.userID ?
+            <TouchableOpacity onPress={showAlert}>
+              <Text style={styles.searchBtn}>
+                <Ionicons name='checkmark' size={24} color='white' />
+              </Text>
+            </TouchableOpacity> : <View />
+          ),
+        });
+      }
     React.useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
 
@@ -42,7 +72,7 @@ const findShoppingCart = ()=> {
                 order.net = parseFloat(parseFloat(order.total) + order.taxes + order.shipping);
                 shoppingCartObjSet(order)
             }
-            
+            setHeaderLayout()
         }).catch(e => {
             shoppingCartObjSet(null)
         })
@@ -89,11 +119,11 @@ const findShoppingCart = ()=> {
                     renderItem={({x,item,index}) => {
                         return (
                             <View style={styles.listItem}>
-                                <View style={{width:'50%'}}>
+                                <View style={{width:'60%'}}>
                                     <Text style={styles.name}>{item.name} </Text>
                                     <Text style={styles.values}>${parseFloat(item.price).toFixed(2)}  (x{parseInt(item.quantity)}) </Text>
                                 </View>
-                                <View style={{width:'40%'}}>
+                                <View style={{width:'30%'}}>
                                     <Text style={styles.total}>${parseFloat(parseFloat(item.price) * parseInt(item.quantity)).toFixed(2)}  </Text>
                                 </View>
                                 <TouchableOpacity style={{width:'10%'}} onPress={() => {removeItem(index)}}>
@@ -157,7 +187,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
       },
       name:{
-        fontSize: 20,
+        fontSize: 18,
       },
     values:{
         fontSize: 16,
@@ -167,5 +197,9 @@ const styles = StyleSheet.create({
         fontSize: 25,
         textAlignVertical: 'center',
         textAlign:'right'
+    },
+    searchBtn:{
+        marginHorizontal: 10,
+        padding: 5
     }
 })

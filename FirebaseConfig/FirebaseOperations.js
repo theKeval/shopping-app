@@ -226,15 +226,20 @@ export const removeCategory = (id) => {
 
 // #region Orders related operations
 
-export const getAllOrders = async () => {
+export const getAllOrders = async (filterStatus) => {
   console.log("getting all Orders");
   var orders = [];
 
   const querySnapshot = await getDocs(collection(db, collectionNames.orders));
+  
   querySnapshot.forEach((doc) => {
-    // console.log(doc.id, " => ", doc.data());
-    orders.push(doc.data());
-  });
+    const itobj = doc.data()
+    if(itobj.status !== 'shopping' && (filterStatus === 'all' || (filterStatus !== 'all' && itobj.status === filterStatus))){
+      // console.log(doc.id, " => ", doc.data());
+      orders.push(itobj);
+    }
+    });
+
   
   console.log(orders);
   return orders;
@@ -254,19 +259,19 @@ export const getNextConsecutive = async () => {
   return ordersTotal.toString().padStart(6, '0');
 }
 
-export const getUserOrders = async (userID) => {
-  console.log("getting all Orders");
+export const getUserOrders = async (userID,filterStatus) => {
   var orders = [];
+  console.log(userID)
   const querySnapshot = await getDocs(collection(db, collectionNames.orders));
   querySnapshot.forEach((doc) => {
       const itobj= doc.data()
-
-     if(itobj.userID === userID && itobj.status !== 'shopping'){
+      console.log(itobj.status ,filterStatus )
+     if(itobj.userID === userID && itobj.status !== 'shopping' && (filterStatus === 'all' || (filterStatus !== 'all' && itobj.status === filterStatus))){
        orders.push(doc.data())
      }
   });
   
-  return orders;
+  return orders.sort((a,b) => { return a.date < b.date ? -1 : 1});
 }
 
 
@@ -330,9 +335,9 @@ export const addItemToShoppingCart = async ( item , quantity, userID) => {
   
 }
 
-export const removeItemShoppingCart = async ( index,userID) => {
+export const removeItemShoppingCart = ( index,userID) => {
   console.log('removeItemShoppingCart',userID)
-  getShopListDoc(userID).then(async (obj) =>{
+  getShopListDoc(userID).then((obj) =>{
     if(obj !== null){
       if(obj.items.length > 1){
         const objItem = obj.items[index]
@@ -343,6 +348,15 @@ export const removeItemShoppingCart = async ( index,userID) => {
         removeOrder(obj.id)
       }
 
+    }
+  })
+}
+
+export const updateOrderState = ( orderID,newStatus) => {
+  getOrder(orderID).then((order) =>{
+    if(order !== null){
+      order.status =newStatus;
+      updateOrder(order.id,order);
     }
   })
 }
