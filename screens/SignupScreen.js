@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useContext, useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Button as RNButton, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Button as RNButton, Image, TouchableOpacity, Alert} from 'react-native';
 import Logo from '../assets/mango_letter.png';
 import SmallLogo from '../assets/mango_plane.png';
 import MangoStyles from '../styles'
@@ -55,7 +55,16 @@ export default function SignupScreen({ navigation }) {
 
   const onHandleSignup = async () => {
     try {
-      if (email !== '' && password !== '') {
+      if (userName === ''){
+        Alert.alert("Please enter an user name");
+      }
+      else if(email === ''){
+        Alert.alert("Please enter a valid email address");
+      }
+      else if(password === ''){
+        Alert.alert("Please enter a password with at least 8 characters");
+      }
+      else if(email !== '' && password !== '') {
         var userCredential = await auth.createUserWithEmailAndPassword(email, password);
         console.log(`data from firebase: ${userCredential.user.email}, ${userCredential.user.uid}`);
         console.log(`filled up data: email=${email}, user=${userName}`);
