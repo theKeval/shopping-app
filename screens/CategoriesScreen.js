@@ -16,20 +16,19 @@ const CategoriesScreen = ({navigation,route}) => {
     const [promptText,promptTextSet] = useState('')
     const [selectedCategory,selectedCategorySet] = useState(null);
     
-    const selectCategory = (item) =>{
+    const selectCategory =  (item) =>{
         navigation.navigate('HomeScreen', {catId:item.id});
     }
-    const editCategory = (item) =>{
-        selectedCategorySet(item)
-        promptTextSet(item.name)
+    const editCategory = async(item) =>{
+      await selectedCategorySet(item)
+        await promptTextSet(item.name)
         promptVisibleSet(true)
-        console.log('editCategory')
     }
-    const deleteCategory = (item) =>{
-        selectedCategorySet(item)
-        showAlert();
+    const deleteCategory = async (item) =>{
+        await selectedCategorySet(item)
+        showAlert(item);
     }
-    const showAlert = () =>
+    const showAlert = (category) =>
       {  Alert.alert( "Delete Category?", "Do you want to delete this category?",
         [
           {
@@ -38,11 +37,12 @@ const CategoriesScreen = ({navigation,route}) => {
             text: "Delete",
             onPress: () => {
               try {
-                removeCategory(selectedCategory.id);
-                removeProductByCategory(selectedCategory.id)
+                removeCategory(category.id);
+                removeProductByCategory(category.id)
                 updateCategoryList()
               } catch (error) {
                 console.log(error)
+                updateCategoryList()
               }
 
             },
