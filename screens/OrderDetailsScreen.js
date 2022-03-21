@@ -3,8 +3,7 @@ import React,{useState,useContext} from 'react'
 import MangoStyles from '../styles';
 import { Ionicons} from '@expo/vector-icons';
 import moment from 'moment';
-import { updateOrderState,updateCategory,getAllCategories,getAsyncUser,removeCategory, getAllOrders } from '../FirebaseConfig/FirebaseOperations';
-import { CommonActions } from '@react-navigation/native';
+import { updateOrderState} from '../FirebaseConfig/FirebaseOperations';
 import { AuthenticatedUserContext } from '../navigation/AuthenticatedUserProvider';
 
 const OrderDetailsScreen =  ({ navigation, route })  => {

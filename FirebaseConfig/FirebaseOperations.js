@@ -210,6 +210,18 @@ export const removeProduct = (id) => {
   
 }
 
+export const removeProductByCategory = async(catId) => {
+  const querySnapshot = await getDocs(collection(db, collectionNames.products));
+  
+  querySnapshot.forEach((doc) => {
+    // console.log(doc.id, " => ", doc.data());
+    const product = doc.data();
+    if(product.categoryId === catId){
+      removeProduct(product.id)
+    }
+  });
+} 
+
 // #endregion
 
 
@@ -240,7 +252,8 @@ export const getCategory = (id) => {
   return Read(collectionNames.productCategories, id)
   
 }
-export const removeCategory = (id) => {
+export const removeCategory = async (id) => {
+   await removeProductByCategory(id)
   return Delete(collectionNames.productCategories, id)
   
 }

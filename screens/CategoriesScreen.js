@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View,FlatList,TouchableOpacity,Alert  } from 'react-native'
 import React, { useState,useContext }  from 'react'
-import { createCategory,updateCategory,getAllCategories,getAsyncUser,removeCategory, GetUserInfo } from '../FirebaseConfig/FirebaseOperations';
+import { createCategory,updateCategory,getAllCategories,removeCategory } from '../FirebaseConfig/FirebaseOperations';
 import { Ionicons} from '@expo/vector-icons';
 import MangoStyles from '../styles'
 import { NavigationContainer, useFocusEffect } from '@react-navigation/native'
@@ -10,10 +10,8 @@ import { backgroundColor } from 'react-native/Libraries/Components/View/ReactNat
 import Prompt from 'react-native-prompt-crossplatform';
 const CategoriesScreen = ({navigation,route}) => {
     const { user } = useContext(AuthenticatedUserContext);
-    const [userInfo, userInfoSet] = useState(null);
 
     const [categories, categoriesSet] = useState([]);
-    const [isAdmin,isAdminSet] = useState(false)
     const [promptVisible,promptVisibleSet] = useState(false)
     const [promptText,promptTextSet] = useState('')
     const [selectedCategory,selectedCategorySet] = useState(null);
@@ -32,13 +30,20 @@ const CategoriesScreen = ({navigation,route}) => {
         showAlert();
     }
     const showAlert = () =>
-      {  Alert.alert( "Delete Category?", "Do you want to delete '" + selectedCategory.name +"' category?",
+      {  Alert.alert( "Delete Category?", "Do you want to delete this category?",
         [
           {
             text: "Cancel",onPress: () => {},style: "cancel",},
           {
             text: "Delete",
-            onPress: () => {removeCategory(selectedCategory.id);updateCategoryList();},
+            onPress: () => {
+              try {
+                removeCategory(selectedCategory.id); updateCategoryList();
+              } catch (error) {
+                
+              }
+
+            },
             style: "cancel",
           },
         ],

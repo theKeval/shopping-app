@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View ,FlatList,TouchableOpacity,Alert} from 'react-native'
 import React, {useState} from 'react'
-import { updateOrderState,removeItemShoppingCart,getShopListDoc,getAsyncUser,removeCategory } from '../FirebaseConfig/FirebaseOperations';
+import { updateOrderState,removeItemShoppingCart,getShopListDoc,getAsyncUser } from '../FirebaseConfig/FirebaseOperations';
 import moment from 'moment';
 import { Ionicons} from '@expo/vector-icons';
 import MangoStyles from '../styles'
@@ -29,7 +29,7 @@ const ShoppingCartScreen = ({navigation}) => {
     }
 
     const showAlert = () =>
-    {  Alert.alert( "Place order?", "Do you want to place to checkout?",
+    {  Alert.alert( "Place order?", "Do you want to checkout?",
       [
         {
           text: "Cancel",onPress: () => {},style: "destructive",},
@@ -67,7 +67,6 @@ const ShoppingCartScreen = ({navigation}) => {
 
             try {
               getAsyncUser().then((userResponse)=>{
-                console.log(userResponse)
                 if(userResponse){
                   userIDSet(userResponse.id)
                   findShoppingCart(userResponse.id);

@@ -3,7 +3,6 @@ import { Ionicons,FontAwesome5,AntDesign,Entypo,Fontisto,MaterialIcons} from '@e
 import React,{useState,useEffect} from 'react'
 import { Picker } from '@react-native-picker/picker';
 import { CommonActions } from '@react-navigation/native';
-import { ButtonMain } from '../components';
 import MangoStyles from '../styles';
 import { backgroundColor } from 'react-native/Libraries/Components/View/ReactNativeStyleAttributes';
 // import SelectBox from 'react-native-multi-selectbox'
@@ -54,7 +53,7 @@ const EditProductScreen = ({navigation,route}) => {
 
     const deteleProduct = () => {
       removeProduct(productId);
-      navigation.navigate('')
+      navigation.navigate('HomeScreen')
     }
     const saveProduct = () => {
         if(!productName || productName === ''){

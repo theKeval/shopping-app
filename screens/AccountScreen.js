@@ -18,7 +18,6 @@ const AccountScreen = ({navigation, route}) => {
 
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      console.log(user.isAdmin)
       GetUserInfo(user.email).then(response => {
         if(response && response !== {}){
           setUserInfo(response)
@@ -60,15 +59,6 @@ const AccountScreen = ({navigation, route}) => {
           <IconButton name='logout' size={20} onPress={handleSignout} color='#fff' />
         </View>
       ),
-      headerLeft: () => 
-        (userInfo && userInfo.isAdmin ? 
-          <TouchableOpacity  onPress={() => {navigation.navigate('UsersListScreen')}}>
-            <Text style={styles.logoutBtn}>
-              <Ionicons name='people-sharp' size={20} color='white' />
-            </Text>
-          </TouchableOpacity> 
-
-          : <></>)
       
     });
   })

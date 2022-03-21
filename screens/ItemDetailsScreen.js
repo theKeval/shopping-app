@@ -2,7 +2,6 @@ import { StyleSheet, Text, View , Image,TouchableOpacity, Alert} from 'react-nat
 import React, {useState,useContext,useEffect} from 'react'
 import Logo from '../assets/mango_letter.png';
 import MangoStyles from '../styles'
-import { ButtonMain } from '../components';
 import { Ionicons,FontAwesome5,AntDesign,Entypo,Fontisto,MaterialIcons} from '@expo/vector-icons';
 import { AuthenticatedUserContext } from '../navigation/AuthenticatedUserProvider';
 import { GetUserInfo , getProduct,addItemToShoppingCart,getAsyncUser} from '../FirebaseConfig/FirebaseOperations';
@@ -17,9 +16,7 @@ const ItemDetailsScreen = ({ navigation, route }) => {
 
   useEffect(() => {
       
-      getAsyncUser().then(userResponse =>{
-          userInfoSet(userResponse); 
-        })
+
     getProduct(productId).then(productFound => {
       productSet({...productFound})
     }).catch()
@@ -33,7 +30,7 @@ const ItemDetailsScreen = ({ navigation, route }) => {
     navigation.setOptions({
       title : product.name,
       
-      headerRight: () => userInfo && userInfo.isAdmin ? (
+      headerRight: () => user && user.isAdmin ? (
         <TouchableOpacity onPress={() => {
             navigation.navigate('EditProductScreen', { 
               id: productId
@@ -49,7 +46,7 @@ const ItemDetailsScreen = ({ navigation, route }) => {
   })
   const onPressAdd = () => {
     Alert.alert("Item added to your shopping list!");
-    addItemToShoppingCart(product,qty,userInfo.id)
+    addItemToShoppingCart(product,qty,user.id)
     navigation.dispatch(CommonActions.goBack());
   } 
 
@@ -74,26 +71,29 @@ const ItemDetailsScreen = ({ navigation, route }) => {
         <Text style={styles.price}>$ {parseFloat(product.price).toString()}</Text>
       </View>
 
-      {user ? 
+      {user && !user.isAdmin  ? 
         <View>
           <View>
             <Text style={styles.label}>Quantity</Text>
 
           </View>
           <View style={styles.twoColumns}>
-            <ButtonMain width='20%' title='-' backgroundColor={MangoStyles.mangoNegativeAction} onPress={()=> { qtySet(qty > 1 ? parseInt(qty) - 1 : 1) }}></ButtonMain>
+          <TouchableOpacity style={[{paddingVertical:5, width:'15%',backgroundColor:MangoStyles.mangoNegativeAction}]} onPress={()=> { qtySet(qty > 1 ? parseInt(qty) - 1 : 1) }}>
+             <Text style={[{color:'white',textAlign:'center',fontSize:30,textAlignVertical:'center'}]}>-</Text>
+          </TouchableOpacity>
             <Text style={styles.qtyLabel}>{qty}</Text>
-            <ButtonMain width='20%' title='+' backgroundColor={MangoStyles.mangoPositiveAction} onPress={()=> { qtySet(parseInt(qty) + 1) }}></ButtonMain>
-
+          <TouchableOpacity style={[{paddingVertical:5, width:'15%',backgroundColor:MangoStyles.mangoPositiveAction}]}  onPress={()=> { qtySet(parseInt(qty) + 1) }}>
+             <Text style={[{color:'white',textAlign:'center',fontSize:30,textAlignVertical:'center'}]}>+</Text>
+          </TouchableOpacity>
           </View>
           <View style={styles.twoColumns}>
             <Text style={styles.label}>Total</Text>
             <Text style={styles.price}>$ {(parseFloat(product.price)* qty).toFixed(2).toString()}</Text>
           </View>
-          <View style={styles.btnAdd2Cart}>
-            <ButtonMain  onPress={onPressAdd} title='Add Item'></ButtonMain>
-          </View> 
 
+          <TouchableOpacity style={styles.button} onPress={onPressAdd}>
+             <Text style={styles.buttonText}>Add Item</Text>
+          </TouchableOpacity>
         </View> 
 
       : <View />}
@@ -147,5 +147,21 @@ const styles = StyleSheet.create({
   searchBtn: {
     marginHorizontal: 10,
     padding: 5
-  }
+  },
+  
+  button: {
+    marginTop:10,
+    padding:10,
+    width: '100%',
+    alignItems: 'center',
+    backgroundColor: MangoStyles.mangoOrangeYellow,
+    borderRadius: 8
+  },
+
+  buttonText: {
+    fontSize:20,
+    color: 'white',
+    fontWeight:'700'
+  },
+
 })

@@ -7,7 +7,11 @@ import moment from 'moment';
 const UserInfoScreen = ({navigation, route}) => {
     const [userInfo, userInfoSet] = useState(null);
     const [userOrders, userOrdersSet] = useState([]);
-
+    const selectOrder = (order) => {
+      navigation.navigate('OrderDetailsScreen', {
+        order : order
+      })     
+    }
     React.useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
             if(route.params && route.params.user ){
@@ -25,7 +29,7 @@ const UserInfoScreen = ({navigation, route}) => {
     }, [navigation]);
 
     const renderItem = ({ item }) => (
-      <OrderListitem item={item}></OrderListitem>
+      <OrderListitem item={item}  onPress={() => {selectOrder(item)}}></OrderListitem>
     );
 
   return (
@@ -46,8 +50,18 @@ const UserInfoScreen = ({navigation, route}) => {
         <Text style={styles.label}>Phone</Text>
         <Text style={styles.content}>{userInfo? userInfo.phoneNumber:""}</Text>
       </View>
-      <View style ={styles.container}>
-
+      <View >
+          <View style={[styles.row,{} ]}>
+              <Text style={styles.label}>User Orders: </Text>
+          </View>
+          <View
+              style={{
+                  borderBottomColor: 'black',
+                  borderBottomWidth: 1,
+                  width:'100%',
+                  marginBottom: 10
+              }}
+              />
       <FlatList 
         data={userOrders}
         renderItem={renderItem}

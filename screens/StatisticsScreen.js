@@ -20,7 +20,6 @@ const screenWidth = Dimensions.get('window').width;
 const StatisticsScreen = ({navigation, route}) => {
 
   const [statistics, statisticsSet] = useState([]);
-  const [statisticsProd, statisticsProdSet] = useState([]);
   const [isLoading, isLoadingSet] = useState([]);
   const [filterType, filterTypeSet] = useState('categories');
   const [filterSpan, filterSpanSet] = useState('total');
@@ -50,8 +49,7 @@ const StatisticsScreen = ({navigation, route}) => {
         try {
           getSales().then(async (response)=>{
              await statisticsSet(response);
-             setChartData('categories' , 'total' ,response)
-             console.log(response)
+             setChartData(filterType , filterSpan ,response)
           })
         } catch (error) {
             console.log(error)    

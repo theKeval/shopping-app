@@ -62,8 +62,8 @@ const TabNavigator = ({navigation}) => {
               iconName = focused ? 'cart' : 'cart-outline';
             } else if (route.name === 'OrdersScreen') {
               iconName = focused ? 'list' : 'list-outline';
-            }else if (route.name === 'CategoriesScreen') {
-              iconName = focused ? 'grid' : 'grid-outline';
+            }else if (route.name === 'UsersListScreen') {
+              iconName = focused ? 'people-sharp' : 'people-outline';
             }else if (route.name === 'StatisticsScreen') {
               iconName = focused ? 'bar-chart' : 'bar-chart-outline';
             }else if (route.name === 'AccountScreen' ||  route.name === 'LoginScreen') {
@@ -85,6 +85,7 @@ const TabNavigator = ({navigation}) => {
           <Tab.Screen name="HomeProdStack" component={HomeProdStack}  options={{headerShown: false, title:'Products'}}/>
           { user && !user.isAdmin ?<Tab.Screen name="ShoppingCartScreen" component={ShoppingCartScreen}  options={{title : 'My Cart'}} /> : <></>}
           { user ? <Tab.Screen name="OrdersScreen" component={OrdersScreen}  options={{title : 'Orders'}} /> : <></>}
+          { user && user.isAdmin ? <Tab.Screen name="UsersListScreen" component={UsersListScreen}  options={{title : 'Users'}} /> : <></>}
           { user && user.isAdmin ? <Tab.Screen name="StatisticsScreen" component={StatisticsScreen}  options={{title : 'Statistics'}} /> : <></>}
           
           { user ?
@@ -137,7 +138,6 @@ export default function HomeStack() {
       </Stack.Group>
       {/* USERS GROUP*/}
       <Stack.Group screenOptions={{...headerStyleMango,headerTintColor: 'white'}}>
-        <Stack.Screen name='UsersListScreen' component={UsersListScreen}  options={{title : 'Users'}}/>
         <Stack.Screen name='UserInfoScreen' component={UserInfoScreen}  options={{title : 'User Info'}}/>
       </Stack.Group>
     </Stack.Navigator>
