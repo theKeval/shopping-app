@@ -1,11 +1,22 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, Dimensions } from 'react-native'
 import React , {useState} from 'react'
 import MangoStyles from '../styles';
 import { Picker } from '@react-native-picker/picker';
 
+// import {
+//   LineChart,
+//   BarChart,
+//   PieChart,
+//   ProgressChart,
+//   ContributionGraph,
+//   StackedBarChart
+// } from "react-native-chart-kit";
+
+import { BarChart, Grid } from 'react-native-svg-charts';
 
 import { getCategoriesSold,getProductsSold } from '../FirebaseConfig/FirebaseOperations';
 
+const screenWidth = Dimensions.get('window').width;
 
 const StatisticsScreen = ({navigation, route}) => {
 
@@ -21,11 +32,13 @@ const StatisticsScreen = ({navigation, route}) => {
         try {
           getCategoriesSold().then((response)=>{
             statisticsCatSet(response);
+            console.log("setting chart data for categories sold");
             setChartData(filterType,filterSpan)
           })
           getProductsSold().then((response)=>{
             statisticsProdSet(response);
-            
+            console.log("setting chart data for products sold");
+            setChartData(filterType, filterSpan)
           })
         } catch (error) {
             console.log(error)    
@@ -55,9 +68,31 @@ const StatisticsScreen = ({navigation, route}) => {
       data = data.map(cat => cat.total)
     }
     
+    console.log(data.toString());
     selectedValuesSet(data)
     seledtedLabelsSet(labels)
   }
+
+  const fill = 'rgb(134, 65, 244)'
+  const data = [50, 10, 40, 95, -4, -24, null, 85, undefined, 0, 35, 53, -53, 24, 50, -20, -80]
+
+  const chartConfig = {
+    backgroundGradientFrom: '#fff',
+    backgroundGradientFromOpacity: 0,
+    backgroundGradientTo: '#fff',
+    backgroundGradientToOpacity: 0.5,
+
+    fillShadowGradient: "#DF5353",
+    fillShadowGradientOpacity: 1,
+    color: (opacity = 1) => `#023047`,
+    labelColor: (opacity = 1) => `#333`,
+    strokeWidth: 2,
+
+    barPercentage: 0.5,
+    useShadowColorFromDataset: false,
+    decimalPlaces: 0,
+  };
+
   return (
     <View  style={styles.container}>
       <View  style={styles.row}>
@@ -79,6 +114,25 @@ const StatisticsScreen = ({navigation, route}) => {
             </Picker>
           </View>      
       </View>
+
+      <BarChart style={{ height: 200 }} data={data} svg={{ fill }} contentInset={{ top: 30, bottom: 30 }} >
+        <Grid />
+      </BarChart>
+
+      {/* from react-native-chart-kit
+      <BarChart
+        data={{
+          labels: seledtedLabels,
+          datasets: [
+            {
+              data: selectedValues
+            },
+          ],
+        }}
+        width={screenWidth}
+        height={220} 
+        chartConfig={chartConfig}
+        showBarTops={false} /> */}
 
     </View>
   )
