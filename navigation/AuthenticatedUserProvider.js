@@ -5,7 +5,6 @@ import { getAllProducts, GetUserInfo,getAsyncUser } from '../FirebaseConfig/Fire
 
 export const AuthenticatedUserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [userObj, setUserObj] = useState(null);
   useEffect(() => {
     try {
       // const getUser = async ()=>{
@@ -25,7 +24,7 @@ export const AuthenticatedUserProvider = ({ children }) => {
   })
 
   return (
-    <AuthenticatedUserContext.Provider value={{ user, setUser , userObj}}>
+    <AuthenticatedUserContext.Provider value={{ user, setUser }}>
       {children}
     </AuthenticatedUserContext.Provider>
   );

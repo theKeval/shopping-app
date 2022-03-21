@@ -5,6 +5,7 @@ import { View, ActivityIndicator } from 'react-native';
 import Firebase from '../FirebaseConfig/Config';
 import { AuthenticatedUserContext } from './AuthenticatedUserProvider';
 import HomeStack from './HomeStack';
+import { GetUserInfo, removeAsyncUser, saveAsyncUser } from '../FirebaseConfig/FirebaseOperations';
 
 const auth = Firebase.auth();
 
@@ -19,14 +20,21 @@ export default function RootNavigator() {
     const unsubscribeAuth = auth.onAuthStateChanged(async authenticatedUser => {
       try {
         await (authenticatedUser ? setUser(authenticatedUser) : setUser(null));
-        console.log("RootNavigator: authStateChanged");
+        if(authenticatedUser){
+          GetUserInfo(authenticatedUser.email).then(userInfo =>{
+            console.log("RootNavigator: authStateChanged",authenticatedUser.email);
+            setUser({...authenticatedUser, ...userInfo})
+          })
+        }{
+          removeAsyncUser();
+        }
         // console.log(authenticatedUser);
         setIsLoading(false);
       } catch (error) {
         console.log(error);
       }
     });
-
+    console.log("unsubscribeAuth");
     // unsubscribe auth listener on unmount
     return unsubscribeAuth;
   }, []);

@@ -13,8 +13,7 @@ const ShoppingCartScreen = ({navigation}) => {
     const removeItem = (index) =>{
       console.log('userId111111111', userId)
         removeItemShoppingCart(index,userId).then((resultObj)=>{
-          console.log('resulssssssssssssssssssssssssssssssstObj',resultObj)
-            
+           
 
             if(resultObj === null){
               shoppingCartObjSet(null)

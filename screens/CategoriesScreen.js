@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View,FlatList,TouchableOpacity,Alert  } from 'react-native'
 import React, { useState,useContext }  from 'react'
-import { createCategory,updateCategory,getAllCategories,getAsyncUser,removeCategory } from '../FirebaseConfig/FirebaseOperations';
+import { createCategory,updateCategory,getAllCategories,getAsyncUser,removeCategory, GetUserInfo } from '../FirebaseConfig/FirebaseOperations';
 import { Ionicons} from '@expo/vector-icons';
 import MangoStyles from '../styles'
 import { NavigationContainer, useFocusEffect } from '@react-navigation/native'
@@ -8,7 +8,7 @@ import { AuthenticatedUserContext } from '../navigation/AuthenticatedUserProvide
 
 import { backgroundColor } from 'react-native/Libraries/Components/View/ReactNativeStyleAttributes';
 import Prompt from 'react-native-prompt-crossplatform';
-const CategoriesScreen = ({navigation}) => {
+const CategoriesScreen = ({navigation,route}) => {
     const { user } = useContext(AuthenticatedUserContext);
     const [userInfo, userInfoSet] = useState(null);
 
@@ -64,6 +64,7 @@ const CategoriesScreen = ({navigation}) => {
       })
       React.useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
+          console.log(user)
           updateCategoryList();
           getUserPermissions();
         });
@@ -83,11 +84,19 @@ const CategoriesScreen = ({navigation}) => {
       const getUserPermissions = async () => {
 
         try {
-          getAsyncUser().then((userResponse)=>{
-            console.log('userResponse && userResponse.isAdmin',userResponse && userResponse.isAdmin, 'user',user)
-              isAdminSet(userResponse && userResponse.isAdmin)
+          if(route.params && route.params.email && !user ){
+            GetUserInfo(route.params.email).then((userResponse)=>{
+              console.log('reouteeeeee   eeerad userResponse && userResponse.isAdmin',userResponse && userResponse.isAdmin, 'user',user)
+                isAdminSet(userResponse && userResponse.isAdmin)
+  
+            })
+          }else{
+            getAsyncUser().then((userResponse)=>{
+                isAdminSet(userResponse && userResponse.isAdmin)
+  
+            })
 
-          })
+          }
         } catch (error) {
           console.log(error)
 

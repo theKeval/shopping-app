@@ -69,7 +69,7 @@ export default function SignupScreen({ navigation }) {
         console.log(`data from firebase: ${userCredential.user.email}, ${userCredential.user.uid}`);
         console.log(`filled up data: email=${email}, user=${userName}`);
         Signup(userCredential.user.email, createUserObj(userCredential.user));
-        navigation.navigate('HomeScreen');
+        navigation.navigate('CategoriesScreen');
       }
       else {
         setSignupError('Enter valid email address and password to signup!')

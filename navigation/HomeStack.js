@@ -42,11 +42,9 @@ const HomeProdStack = () => {
   )
 }
 const TabNavigator = ({navigation}) => {
-  const { user, setUser , userId} = useContext(AuthenticatedUserContext) ;
-  const [isAdmin, isAdminSet] = useState(false);
+  const { user, setUser} = useContext(AuthenticatedUserContext) ;
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      console.log('stacje', userId)
 
         // getAsyncUser().then(response => {
         //   isAdminSet(response && response.isAdmin)
@@ -92,9 +90,9 @@ const TabNavigator = ({navigation}) => {
         })}>
 
           <Tab.Screen name="HomeProdStack" component={HomeProdStack}  options={{headerShown: false, title:'Products'}}/>
-          { user ?<Tab.Screen name="ShoppingCartScreen" component={ShoppingCartScreen}  options={{title : 'My Cart'}} /> : <></>}
+          { user && !user.isAdmin ?<Tab.Screen name="ShoppingCartScreen" component={ShoppingCartScreen}  options={{title : 'My Cart'}} /> : <></>}
           { user ? <Tab.Screen name="OrdersScreen" component={OrdersScreen}  options={{title : 'Orders'}} /> : <></>}
-          { user ? <Tab.Screen name="StatisticsScreen" component={StatisticsScreen}  options={{title : 'Statistics'}} /> : <></>}
+          { user && user.isAdmin ? <Tab.Screen name="StatisticsScreen" component={StatisticsScreen}  options={{title : 'Statistics'}} /> : <></>}
           
           { user ?
           <Tab.Screen name="AccountScreen" component={AccountScreen} options={{title : 'Account'}} />

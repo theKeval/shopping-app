@@ -166,7 +166,7 @@ export const getUsersFiltered = async (filterTerm) => {
   querySnapshot.forEach((doc) => {
     // console.log(doc.id, " => ", doc.data());
     const userObj = doc.data();
-    if(userObj.name.indexOf(filterTerm)>-1 || userObj.email.indexOf(filterTerm)>-1 || userObj.phoneNumber.indexOf(filterTerm)>-1){
+    if(userObj.name.toLowerCase().indexOf(filterTerm.toLowerCase())>-1 || userObj.email.toLowerCase().indexOf(filterTerm.toLowerCase())>-1 || userObj.phoneNumber.toLowerCase().indexOf(filterTerm.toLowerCase())>-1){
 
       users.push(userObj);
     }

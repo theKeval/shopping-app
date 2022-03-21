@@ -18,8 +18,8 @@ const AccountScreen = ({navigation, route}) => {
 
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
+      console.log(user.isAdmin)
       GetUserInfo(user.email).then(response => {
-        // console.log(response)
         if(response && response !== {}){
           setUserInfo(response)
         }

@@ -83,7 +83,7 @@ export default function HomeScreen({navigation, route}) {
       productsSet(response.filter(prod => { 
         if(searchTerm !== ''){
           return prod.categoryId === catId && 
-          (prod.name.indexOf(searchTerm) > -1 || prod.description.indexOf(searchTerm) > -1)
+          (prod.name.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1 || prod.description.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1)
         }else{
           return prod.categoryId === catId
         }
