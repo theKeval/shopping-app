@@ -8,8 +8,9 @@ import { GetUserInfo } from '../FirebaseConfig/FirebaseOperations';
 import { LogBox } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons, FontAwesome5, AntDesign, MaterialIcons } from '@expo/vector-icons';
-
 LogBox.ignoreLogs(['Setting a timer']);
+LogBox.ignoreAllLogs();
+
 const auth = Firebase.auth();
 
 const AccountScreen = ({navigation, route}) => {

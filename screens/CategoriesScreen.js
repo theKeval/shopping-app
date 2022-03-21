@@ -36,9 +36,11 @@ const CategoriesScreen = ({navigation,route}) => {
             text: "Cancel",onPress: () => {},style: "cancel",},
           {
             text: "Delete",
-            onPress: () => {
+            onPress: async () => {
               try {
-                removeCategory(selectedCategory.id); updateCategoryList();
+                await removeCategory(selectedCategory.id);
+                
+                updateCategoryList()
               } catch (error) {
                 
               }
@@ -104,7 +106,6 @@ const CategoriesScreen = ({navigation,route}) => {
                         if(selectedCategory && selectedCategory.name){
                             updateCategory(selectedCategory.id,{'name': promptText,'id':selectedCategory.id})
                         }else{
-                            console.log({'name': promptText})
                             createCategory({'name': promptText})
                         }
                         promptVisibleSet(false);
