@@ -4,7 +4,7 @@ import MangoStyles from '../styles'
 import Firebase from '../FirebaseConfig/Config'
 import { AuthenticatedUserContext } from '../navigation/AuthenticatedUserProvider';
 import { IconButton } from '../components';
-import { GetUserInfo,getAsyncUser,removeAsyncUser } from '../FirebaseConfig/FirebaseOperations';
+import { GetUserInfo } from '../FirebaseConfig/FirebaseOperations';
 import { LogBox } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons, FontAwesome5, AntDesign, MaterialIcons } from '@expo/vector-icons';

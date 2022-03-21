@@ -48,7 +48,7 @@ const CategoriesScreen = ({navigation,route}) => {
       )};
       React.useLayoutEffect(() => {
         navigation.setOptions({
-          headerLeft: () => ( user && isAdmin   ?
+          headerLeft: () => ( user && user.isAdmin   ?
             <TouchableOpacity onPress={() => {
                 selectedCategorySet(null)
                 promptVisibleSet(true)
@@ -56,7 +56,7 @@ const CategoriesScreen = ({navigation,route}) => {
               }
             }>
               <Text style={styles.searchBtn}>
-                <Ionicons name='add' size={24} color='white' />;
+                <Ionicons name='add' size={24} color='white' />
               </Text>
             </TouchableOpacity> : <View />
           ),
@@ -64,9 +64,7 @@ const CategoriesScreen = ({navigation,route}) => {
       })
       React.useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
-          console.log(user)
           updateCategoryList();
-          getUserPermissions();
         });
 
         // Return the function to unsubscribe from the event so it gets removed on unmount
@@ -81,27 +79,6 @@ const CategoriesScreen = ({navigation,route}) => {
         }).catch()
       }
 
-      const getUserPermissions = async () => {
-
-        try {
-          if(route.params && route.params.email && !user ){
-            GetUserInfo(route.params.email).then((userResponse)=>{
-              console.log('reouteeeeee   eeerad userResponse && userResponse.isAdmin',userResponse && userResponse.isAdmin, 'user',user)
-                isAdminSet(userResponse && userResponse.isAdmin)
-  
-            })
-          }else{
-            getAsyncUser().then((userResponse)=>{
-                isAdminSet(userResponse && userResponse.isAdmin)
-  
-            })
-
-          }
-        } catch (error) {
-          console.log(error)
-
-        }
-      }
 
 
     return (
@@ -135,16 +112,16 @@ const CategoriesScreen = ({navigation,route}) => {
             renderItem={({cat,item,index}) => {
                 return (
                 <View style={[styles.item,{backgroundColor: index%2 ===0 ? 'lightgray': MangoStyles.mangoPaleOrange}]} key={item.id} >
-                    <TouchableOpacity onPress={() => {selectCategory(item)}} style={[styles.titleCont , { width : user && isAdmin? '60%' : '100%'}]}>
+                    <TouchableOpacity onPress={() => {selectCategory(item)}} style={[styles.titleCont , { width : user &&  user.isAdmin? '60%' : '100%'}]}>
                         <Text style={[styles.title]}>{item.name}</Text>      
                     </TouchableOpacity>
-                    {(user && isAdmin ? 
+                    {(user &&  user.isAdmin ? 
                         <TouchableOpacity onPress={() => {editCategory(item)}} style={[styles.editBtn]}>
                               <Text style={[styles.title]}>
                                 <Ionicons name='pencil' size={24} color='white' />
                             </Text>
                              </TouchableOpacity>   : <View/> ) }
-                    {(user && isAdmin ?        <TouchableOpacity onPress={() => {deleteCategory(item)}} style={[styles.deleteBtn]}>
+                    {(user &&  user.isAdmin ?        <TouchableOpacity onPress={() => {deleteCategory(item)}} style={[styles.deleteBtn]}>
                             <Text style={[styles.title]}>
                                 <Ionicons name='trash' size={24} color='white' />
                             </Text>

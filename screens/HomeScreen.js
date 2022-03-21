@@ -6,7 +6,7 @@ import Prompt from 'react-native-prompt-crossplatform';
 import Firebase from '../FirebaseConfig/Config'
 import { AuthenticatedUserContext } from '../navigation/AuthenticatedUserProvider';
 import ProductListItem from '../components/ProductListItem';
-import { getAllProducts, GetUserInfo,getAsyncUser } from '../FirebaseConfig/FirebaseOperations';
+import { getAllProducts, getAsyncUser } from '../FirebaseConfig/FirebaseOperations';
 import { Menu, MenuItem, MenuDivider } from 'react-native-material-menu';
 
 const auth = Firebase.auth();
@@ -19,7 +19,6 @@ export default function HomeScreen({navigation, route}) {
   const [promptVisible,promptVisibleSet] = useState(false)
   const [promptText,promptTextSet] = useState('')
   const [searchTerm,searchTermSet] = useState('')
-  const [isAdmin,isAdminSet] = useState(false);
   const [visible, setVisible] = useState(false);
 
   const hideMenu = () => setVisible(false);
@@ -42,7 +41,7 @@ export default function HomeScreen({navigation, route}) {
               onPress={ () => {promptVisibleSet(true);hideMenu()}}>
                 <Ionicons name='search' size={20} color='black' /> Search
               </MenuItem>
-              {user && isAdmin ? <MenuItem style={[{backgroundColor : 'white', }]}  textStyle={[{color :  'black',  }]} 
+              {user && user.isAdmin ? <MenuItem style={[{backgroundColor : 'white', }]}  textStyle={[{color :  'black',  }]} 
               onPress={ () => { navigation.navigate('EditProductScreen', { id: null });hideMenu()}}>
                 <Ionicons name='add-circle-outline' size={20} color='black' /> Add Item 
               </MenuItem> : null}
@@ -53,16 +52,6 @@ export default function HomeScreen({navigation, route}) {
   })
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      try {
-        getAsyncUser().then((userResponse)=>{
-            isAdminSet(userResponse && userResponse.isAdmin)
-
-        })
-      } catch (error) {
-        console.log(error)
-        setHeaderLayout(false)
-
-      }
       try {
         if(route.params && route.params.catId){
           categoryIdSet(route.params.catId)

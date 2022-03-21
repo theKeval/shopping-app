@@ -15,7 +15,6 @@ import LoginScreen from '../screens/LoginScreen';
 import SignupScreen from '../screens/SignupScreen';
 import CategoriesScreen from '../screens/CategoriesScreen';
 import ShoppingCartScreen from '../screens/ShoppingCartScreen';
-import { GetUserInfo,getAsyncUser,removeAsyncUser } from '../FirebaseConfig/FirebaseOperations';
 import UsersListScreen from '../screens/UsersListScreen';
 import UserInfoScreen from '../screens/UserInfoScreen';
 import StatisticsScreen from '../screens/StatisticsScreen';
@@ -46,12 +45,6 @@ const TabNavigator = ({navigation}) => {
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
 
-        // getAsyncUser().then(response => {
-        //   isAdminSet(response && response.isAdmin)
-          
-        // }).catch(()=> {
-        //   isAdminSet(false)
-        // })
     });
       // Return the function to unsubscribe from the event so it gets removed on unmount
       return unsubscribe;

@@ -21,7 +21,7 @@ const OrdersScreen = ({navigation}) => {
   const [visible, setVisible] = useState(false);
   const [isAdmin, isAdminSet] = useState(false);
   const [userID, userIDSet] = useState(false);
-  const [filterOrders, filterOrdersSet] = useState(false);
+  const [filterOrders, filterOrdersSet] = useState('all');
 
   const hideMenu = () => setVisible(false);
   const showMenu = () => setVisible(true);
@@ -30,18 +30,17 @@ const OrdersScreen = ({navigation}) => {
 
         try {
             getAsyncUser().then((userResponse)=>{
-              console.log('useaaaaaaaaaaarResponse',userResponse)
               if(userResponse){
                 isAdminSet(userResponse && userResponse.isAdmin)
                 userIDSet(userResponse.id)
-                updateOrders(userResponse && userResponse.isAdmin, 'all')
+                
                 
               }else if(user){
                 isAdminSet(user && user.isAdmin)
                 userIDSet(user.id)
-                updateOrders(user && user.isAdmin, 'all')
 
               }
+              updateOrders('all')
             })
         } catch (error) {
             console.log(error)
@@ -54,18 +53,18 @@ const OrdersScreen = ({navigation}) => {
     return unsubscribe;
   }, [navigation]);
 
-  const updateOrders = (isAdminFlag,filterOrders) => {
+  const updateOrders = (filterOrders) => {
 
-    if(isAdminFlag || isAdmin){
+    if(user && user.isAdmin){
       getAllOrders(filterOrders).then((orders)=>{
-        userOrdersSet(orders.map(order => {
+        userOrdersSet(orders.sort((a,b) => { return a.date > b.date ? -1 : 1}).map(order => {
           order.dateFormat = moment(order.date).format('DD/MM/YYYY hh:mm a').toString()
           return order;
         }))
       })
     }else{
-      getUserOrders(userID,filterOrders).then((orders)=>{
-        userOrdersSet(orders.map(order => {
+      getUserOrders(user.id,filterOrders).then((orders)=>{
+        userOrdersSet(orders.sort((a,b) => { return a.date > b.date ? -1 : 1}).map(order => {
           order.dateFormat = moment(order.date).format('DD/MM/YYYY hh:mm a').toString()
           return order;
         }))
@@ -86,18 +85,18 @@ const OrdersScreen = ({navigation}) => {
               style={{width: 200}}
             >
               <MenuItem style={[{backgroundColor : filterOrders === 'all' ? MangoStyles.mangoOrangeYellow : 'white'}]} 
-              textStyle={[{color : filterOrders === 'all' ? 'white' : 'black'}]} onPress={ () => {updateOrders(false,'all');filterOrdersSet('all'); hideMenu();}}>All</MenuItem>
+              textStyle={[{color : filterOrders === 'all' ? 'white' : 'black'}]} onPress={ () => {updateOrders('all');filterOrdersSet('all'); hideMenu();}}>All</MenuItem>
               <MenuItem style={[{backgroundColor : filterOrders === 'pending' ? MangoStyles.mangoOrangeYellow : 'white'}]}
-                textStyle={[{color : filterOrders === 'pending' ? 'white' : 'black'}]} onPress={ () => {updateOrders(false,'pending');filterOrdersSet('pending'); hideMenu();}}>Pending</MenuItem>
+                textStyle={[{color : filterOrders === 'pending' ? 'white' : 'black'}]} onPress={ () => {updateOrders('pending');filterOrdersSet('pending'); hideMenu();}}>Pending</MenuItem>
               <MenuItem style={[{backgroundColor : filterOrders === 'ready-for-shipment' ? MangoStyles.mangoOrangeYellow : 'white'}]} 
               textStyle={[{color : filterOrders === 'ready-for-shipment' ? 'white' : 'black'}]}
-              onPress={ () => {updateOrders(false,'ready-for-shipment');filterOrdersSet('ready-for-shipment'); hideMenu();}}>Ready for shippment</MenuItem>
+              onPress={ () => {updateOrders('ready-for-shipment');filterOrdersSet('ready-for-shipment'); hideMenu();}}>Ready for shippment</MenuItem>
               <MenuItem style={[{backgroundColor : filterOrders === 'shipped' ? MangoStyles.mangoOrangeYellow : 'white'}]} 
               textStyle={[{color : filterOrders === 'shipped' ? 'white' : 'black'}]}
-              onPress={ () => {updateOrders(false,'shipped');filterOrdersSet('shipped'); hideMenu();}}>Shipped</MenuItem>
+              onPress={ () => {updateOrders('shipped');filterOrdersSet('shipped'); hideMenu();}}>Shipped</MenuItem>
               <MenuItem style={[{backgroundColor : filterOrders === 'completed' ? MangoStyles.mangoOrangeYellow : 'white'}]} 
               textStyle={[{color : filterOrders === 'completed' ? 'white' : 'black'}]}
-              onPress={ () => {updateOrders(false,'completed');filterOrdersSet('completed'); hideMenu();}}>Completed</MenuItem>
+              onPress={ () => {updateOrders('completed');filterOrdersSet('completed'); hideMenu();}}>Completed</MenuItem>
             </Menu>
           </View>
       )},
