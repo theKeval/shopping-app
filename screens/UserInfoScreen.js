@@ -1,6 +1,7 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, FlatList } from 'react-native'
 import React, {useState} from 'react'
 import { getUserOrders,getAsyncUser,removeAsyncUser } from '../FirebaseConfig/FirebaseOperations';
+import OrderListitem from '../components/OrderListitem';
 
 const UserInfoScreen = ({navigation, route}) => {
     const [userInfo, userInfoSet] = useState(null);
@@ -18,6 +19,10 @@ const UserInfoScreen = ({navigation, route}) => {
         })
         return unsubscribe;
     }, [navigation]);
+
+    const renderItem = ({ item }) => (
+      <OrderListitem item={item}></OrderListitem>
+    );
 
   return (
     <View style={styles.container}>
@@ -37,8 +42,16 @@ const UserInfoScreen = ({navigation, route}) => {
         <Text style={styles.label}>Phone</Text>
         <Text style={styles.content}>{userInfo? userInfo.phoneNumber:""}</Text>
       </View>
+      <View style ={styles.container}>
+
+      <FlatList 
+        data={userOrders}
+        renderItem={renderItem}
+        keyExtractor={item => item.id}
+      />
+      </View>
     </View>
-  )
+  )  
 }
 
 export default UserInfoScreen
