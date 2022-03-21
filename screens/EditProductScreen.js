@@ -54,7 +54,7 @@ const EditProductScreen = ({navigation,route}) => {
 
     const deteleProduct = () => {
       removeProduct(productId);
-      navigation.navigate('HomeScreen')
+      navigation.navigate('')
     }
     const saveProduct = () => {
         if(!productName || productName === ''){

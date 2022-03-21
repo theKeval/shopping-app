@@ -109,6 +109,15 @@ const OrderDetailsScreen =  ({ navigation, route })  => {
               <Text style={styles.label}>Total: </Text>
               <Text style={styles.value}>${parseFloat(orderDetailObj.net).toFixed(2)}</Text>
           </View>
+
+          {isAdmin && orderDetailObj && orderDetailObj.status !== 'completed' && orderDetailObj.status !== 'canceled'? 
+              <TouchableOpacity
+                  onPress={() => {changeOrderState('canceled')}}
+                  style={[styles.button, styles.buttonOutline]}>
+      
+                  <Text style={styles.buttonOutlineText}>Cancel Order</Text>
+              </TouchableOpacity>
+          :<></>}
           <View style={[styles.row,{marginTop: 10} ]}>
               <Text style={styles.label}>Your Items: </Text>
           </View>
@@ -203,5 +212,24 @@ const styles = StyleSheet.create({
   searchBtn:{
       marginHorizontal: 10,
       padding: 5
-  }
+  },
+  buttonOutline: {
+    backgroundColor: 'white',
+    marginTop: 5,
+    borderColor: MangoStyles.mangoNegativeAction,
+    borderWidth: 2,
+  },
+  buttonOutlineText: {
+    color: MangoStyles.mangoNegativeAction,
+    fontWeight: '700',
+    fontSize: 18,
+  },
+  button: {
+    backgroundColor: MangoStyles.mangoOrangeYellow,
+    width: '100%',
+    padding: 10,
+    borderRadius: 10,
+    alignItems: 'center',
+    margin: 5
+  },
 })
