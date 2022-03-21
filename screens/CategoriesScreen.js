@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View,FlatList,TouchableOpacity,Alert  } from 'react-native'
 import React, { useState,useContext }  from 'react'
-import { createCategory,updateCategory,getAllCategories,removeCategory } from '../FirebaseConfig/FirebaseOperations';
+import { createCategory,updateCategory,getAllCategories,removeCategory,removeProductByCategory } from '../FirebaseConfig/FirebaseOperations';
 import { Ionicons} from '@expo/vector-icons';
 import MangoStyles from '../styles'
 import { NavigationContainer, useFocusEffect } from '@react-navigation/native'
@@ -36,13 +36,13 @@ const CategoriesScreen = ({navigation,route}) => {
             text: "Cancel",onPress: () => {},style: "cancel",},
           {
             text: "Delete",
-            onPress: async () => {
+            onPress: () => {
               try {
-                await removeCategory(selectedCategory.id);
-                
+                removeCategory(selectedCategory.id);
+                removeProductByCategory(selectedCategory.id)
                 updateCategoryList()
               } catch (error) {
-                
+                console.log(error)
               }
 
             },

@@ -252,13 +252,7 @@ export const getCategory = (id) => {
   return Read(collectionNames.productCategories, id)
   
 }
-export const removeCategory = async (id) => {
-  try {
-    
-    await removeProductByCategory(id)
-  } catch (error) {
-    console.log(error)
-  }
+export const removeCategory = (id) => {
   return Delete(collectionNames.productCategories, id)
   
 }
