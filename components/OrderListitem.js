@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View,TouchableOpacity, Image } from 'react-native'
 import React from 'react'
 import moment from 'moment';
+import { backgroundColor } from 'react-native/Libraries/Components/View/ReactNativeStyleAttributes';
 
 const OrderListitem = ({ item, onPress, backgroundColor }) => {
   return (
@@ -21,8 +22,11 @@ const styles = StyleSheet.create({
 
   item:{
       flexDirection : 'row',
-      paddingHorizontal: 5,
-      paddingVertical:10
+      paddingHorizontal: 10,
+      paddingVertical:4,
+      backgroundColor: 'white',
+      margin: 3,
+      borderRadius: 8
   },
   itemDesc:{
       padding: 5,
