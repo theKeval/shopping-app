@@ -6,12 +6,15 @@ import { backgroundColor } from 'react-native/Libraries/Components/View/ReactNat
 const OrderListitem = ({ item, onPress, backgroundColor }) => {
   return (
     <TouchableOpacity onPress={onPress} style={[styles.item]}>
-        <View style={styles.itemDesc}>
+        <View style={styles.itemDescLeft}>
             <Text style={[styles.title]}>Order {item.title}</Text>
-            <Text >{item.status.toUpperCase()}</Text>
             <Text >{item.dateFormat}</Text>
-            <Text style={[styles.price]}>{'$ ' + parseFloat(item.total).toFixed(2)}</Text>
 
+        </View>
+        <View style={styles.itemDescRight}>
+
+            <Text style={[styles.status]}>{item.status.toUpperCase()}</Text>
+            <Text style={[styles.price]}>{'$ ' + parseFloat(item.total).toFixed(2)}</Text>
         </View>
     </TouchableOpacity>
   )
@@ -28,13 +31,18 @@ const styles = StyleSheet.create({
       margin: 3,
       borderRadius: 8
   },
-  itemDesc:{
+  itemDescLeft:{
       padding: 5,
-      width: '100%',
+      width: '50%',
+      // alignItems: 'center' 
+  },
+  itemDescRight:{
+      padding: 5,
+      width: '50%',
       // alignItems: 'center' 
   },
   title : {
-      fontSize: 20,
+      fontSize: 22,
       fontWeight: "700"
   },
   lastRow : {
@@ -45,9 +53,13 @@ const styles = StyleSheet.create({
       flexDirection: 'column',
   },  
   price : {
-      fontSize: 20,
+      fontSize: 25,
       flexDirection: 'column',
       textAlign: 'right'
   },
+  status:{
+      fontStyle:'italic',
+    textAlign: 'right'
+  }
 })
 export default OrderListitem

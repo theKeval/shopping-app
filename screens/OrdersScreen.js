@@ -85,6 +85,10 @@ const OrdersScreen = ({navigation}) => {
               <MenuItem style={[{backgroundColor : filterOrders === 'completed' ? MangoStyles.mangoOrangeYellow : 'white'}]} 
               textStyle={[{color : filterOrders === 'completed' ? 'white' : 'black'}]}
               onPress={ () => {updateOrders('completed');filterOrdersSet('completed'); hideMenu();}}>Completed</MenuItem>
+              <MenuItem style={[{backgroundColor : filterOrders === 'canceled' ? MangoStyles.mangoOrangeYellow : 'white'}]} 
+              textStyle={[{color : filterOrders === 'canceled' ? 'white' : 'black'}]}
+              onPress={ () => {updateOrders('canceled');filterOrdersSet('canceled'); hideMenu();}}>Canceled
+              </MenuItem>
             </Menu>
           </View>
       )},

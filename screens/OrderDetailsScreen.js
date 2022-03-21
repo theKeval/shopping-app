@@ -1,14 +1,16 @@
 import { StyleSheet, Text, View,FlatList,TouchableOpacity,useWindowDimensions,Alert  } from 'react-native'
-import React,{useState} from 'react'
+import React,{useState,useContext} from 'react'
 import MangoStyles from '../styles';
 import { Ionicons} from '@expo/vector-icons';
 import moment from 'moment';
 import { updateOrderState,updateCategory,getAllCategories,getAsyncUser,removeCategory, getAllOrders } from '../FirebaseConfig/FirebaseOperations';
 import { CommonActions } from '@react-navigation/native';
+import { AuthenticatedUserContext } from '../navigation/AuthenticatedUserProvider';
 
 const OrderDetailsScreen =  ({ navigation, route })  => {
-  const { screen } = useWindowDimensions();
   const [orderDetailObj, orderDetailObjSet] = useState(null);
+  const { user} = useContext(AuthenticatedUserContext) ;
+
   const [isAdmin, isAdminSet] = useState(false);
   const changeOrderState = (newStatus)=>{
     
@@ -32,8 +34,8 @@ const OrderDetailsScreen =  ({ navigation, route })  => {
       })
   }
     React.useEffect(()=>{
-      getAsyncUser().then((userResponse)=>{
-        isAdminSet(userResponse.isAdmin)
+      
+        isAdminSet(user && user.isAdmin)
         if(orderDetailObj === null){
 
           let order = route.params.order
@@ -43,7 +45,6 @@ const OrderDetailsScreen =  ({ navigation, route })  => {
           order.net = parseFloat(parseFloat(order.total) + order.taxes + order.shipping);
           orderDetailObjSet(order)
         }
-      })
     })
     React.useLayoutEffect(() => {
         
