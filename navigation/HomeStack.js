@@ -1,4 +1,4 @@
-import React , {useContext} from 'react';
+import React , {useContext,useState} from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from '../screens/HomeScreen';
 import MangoStyles from '../styles'
@@ -9,7 +9,6 @@ import ItemDetailsScreen from '../screens/ItemDetailsScreen';
 import OrdersScreen from '../screens/OrdersScreen';
 import AccountScreen from '../screens/AccountScreen';
 import ChangeInfoScreen from '../screens/ChangeInfoScreen';
-import ChangePassScreen from '../screens/ChangePassScreen';
 import OrderDetailsScreen from '../screens/OrderDetailsScreen';
 import EditProductScreen from '../screens/EditProductScreen';
 import LoginScreen from '../screens/LoginScreen';
@@ -40,7 +39,7 @@ const HomeProdStack = () => {
 }
 const TabNavigator = () => {
   const { user } = useContext(AuthenticatedUserContext) ;
-
+  const [isAdmin, isAdminSet] = useState({});
 
   
 
@@ -124,7 +123,6 @@ export default function HomeStack() {
       {/* INFO GROUP*/}
       <Stack.Group screenOptions={{...headerStyleMango,headerTintColor: 'white'}}>
         <Stack.Screen name='Account Information' component={ChangeInfoScreen} />
-        <Stack.Screen name='Password information' component={ChangePassScreen} />
       </Stack.Group>
 
     </Stack.Navigator>

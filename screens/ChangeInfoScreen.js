@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Button as RNButton, Image, TouchableOpacity } from 'react-native';
 import MangoStyles from '../styles';
 import { Ionicons, FontAwesome5, AntDesign, MaterialIcons } from '@expo/vector-icons';
+import { updateUserInfo,getAsyncUser, saveAsyncUser } from '../FirebaseConfig/FirebaseOperations';
 
 import { InputField, ErrorMessage } from '../components';
 import Firebase from '../FirebaseConfig/Config';
@@ -13,14 +14,53 @@ export default function ChangeInfoScreen({ navigation }) {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [address, setAddress] = useState('');
   const [signupError, setSignupError] = useState('');
+  const [userObject,userObjectSet ] =  useState(null);
 
   const onPressChange = () => {
-    navigation.navigate('AccountScreen');
+    if(userName === ''){
+      setSignupError('error')
+    }else if (phoneNumber === '') {
+        setSignupError('error')
+    }else if (address === '') {
+        setSignupError('error')
+    }else{
+      setSignupError(null)
+      let tempUserObj = {...userObject}
+      
+      tempUserObj.name = userName;
+      tempUserObj.phoneNumber =phoneNumber ;
+      tempUserObj.address = address;
+      updateUserInfo(tempUserObj.email,tempUserObj)
+      saveAsyncUser(tempUserObj)
+      navigation.navigate('AccountScreen');
+    }
+
   }
 
   const onPressCancel = () => {
     navigation.navigate('AccountScreen');
   }
+
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+
+        try {
+            getAsyncUser().then((userResponse)=>{
+              setUserName(userResponse.name)
+              setPhoneNumber(userResponse.phoneNumber)
+              setAddress(userResponse.address)
+              userObjectSet(userResponse)
+            })
+        } catch (error) {
+            console.log(error)
+            // setHeaderLayout(false)
+
+        }
+        
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   return (
 
@@ -85,17 +125,17 @@ export default function ChangeInfoScreen({ navigation }) {
 
         <TouchableOpacity
             onPress={onPressChange}
-            style={[styles.button, styles.buttonOutline]}>
+            style={[styles.button]}>
 
-              <Text style={styles.buttonOutlineText}>Confirm</Text>
+              <Text style={styles.buttonText}>Confirm</Text>
 
         </TouchableOpacity>
 
         <TouchableOpacity
             onPress={onPressCancel}
-            style={styles.button}>
+            style={[styles.button, styles.buttonOutline]}>
 
-            <Text style={styles.buttonText}>Cancel changes</Text>
+            <Text style={styles.buttonOutlineText}>Cancel changes</Text>
         </TouchableOpacity>
 
       </View>

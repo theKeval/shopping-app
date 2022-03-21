@@ -4,7 +4,7 @@ import React, {useState} from 'react'
 import MangoStyles from '../styles'
 import OrderListitem from '../components/OrderListitem'
 import { Menu, MenuItem, MenuDivider } from 'react-native-material-menu';
-import { getUserOrders,updateCategory,getAllCategories,getAsyncUser,removeCategory, getAllOrders } from '../FirebaseConfig/FirebaseOperations';
+import { getUserOrders,getAsyncUser, getAllOrders } from '../FirebaseConfig/FirebaseOperations';
 import moment from 'moment';
 
 

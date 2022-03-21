@@ -15,17 +15,20 @@ const AccountScreen = ({navigation, route}) => {
   const { user } = useContext(AuthenticatedUserContext);
   const [userInfo, setUserInfo] = useState({});
 
-  useEffect(() => {
-    GetUserInfo(user.email).then(response => {
-      if(response && response !== {}){
-        setUserInfo(response)
-      }
-    })
-  
-    return () => {
-    }
-  }, [user])
-  
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      GetUserInfo(user.email).then(response => {
+        console.log(response)
+        if(response && response !== {}){
+          setUserInfo(response)
+        }
+      })
+    });
+
+    // Return the function to unsubscribe from the event so it gets removed on unmount
+    return unsubscribe;
+  }, [navigation]);
+
 
   const handleSignout = async () => {
     try {
@@ -41,9 +44,10 @@ const AccountScreen = ({navigation, route}) => {
   const onPressInfoChange = () => {
     navigation.navigate('Account Information');
   }
-
+  
+  
   const onPressAccInfoChange = () => {
-    navigation.navigate('Password information');
+    auth.sendPasswordResetEmail(user.email)
   }
 
   React.useLayoutEffect(() => {

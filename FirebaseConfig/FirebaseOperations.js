@@ -140,6 +140,10 @@ export const GetUserInfo = async (emailAddress) => {
   // console.log("getting user: " + emailAddress);
   return Read(collectionNames.users, emailAddress);
 }
+
+export const updateUserInfo = (id, user) => {
+  Update(user, false,collectionNames.users, id);
+}
 export const getAllUsers = async () => {
   // console.log("getting all users");
   var users = [];
