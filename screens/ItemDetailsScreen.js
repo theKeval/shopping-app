@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View , Image,TouchableOpacity} from 'react-native'
+import { StyleSheet, Text, View , Image,TouchableOpacity, Alert} from 'react-native'
 import React, {useState,useContext,useEffect} from 'react'
 import Logo from '../assets/mango_letter.png';
 import MangoStyles from '../styles'
@@ -50,6 +50,7 @@ const ItemDetailsScreen = ({ navigation, route }) => {
     });
   })
   const onPressAdd = () => {
+    Alert.alert("Item added to your shopping list!");
     addItemToShoppingCart(product,qty,userInfo.id)
     navigation.dispatch(CommonActions.goBack());
   } 

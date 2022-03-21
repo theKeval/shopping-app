@@ -51,8 +51,10 @@ const LoginScreen = ({navigation}) => {
     try {
       if (email === '') {
         setLoginError('Please type an email address')
+        Alert.alert("Please type an email address")
       } else if  (password === ''){
-        setLoginError('Please type your passowrd')
+        setLoginError('Please type your password')
+        Alert.alert("Please type your password")
       } else {
         await auth.signInWithEmailAndPassword(email, password);
         GetUserInfo(email)
