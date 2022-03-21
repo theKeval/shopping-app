@@ -87,7 +87,7 @@ export const Delete = (collectionName, documentName) => {
       // Handling Promises
       .then(() => {
         // MARK: Success
-        alert("Deleted Successfully!")
+        // alert("Deleted Successfully!")
       })
       .catch((error) => {
         // MARK: Failure
@@ -355,8 +355,10 @@ export const addItemToShoppingCart = async ( item , quantity, userID) => {
   
 }
 
-export const removeItemShoppingCart = ( index,userID) => {
-  getShopListDoc(userID).then((obj) =>{
+export const removeItemShoppingCart = async ( index,userID) => {
+
+console.log('uuuuuserID',userID)  
+getShopListDoc(userID).then((obj) =>{
     if(obj !== null){
       if(obj.items.length > 1){
         const objItem = obj.items[index]
@@ -364,7 +366,8 @@ export const removeItemShoppingCart = ( index,userID) => {
         obj.items.splice(index,1);
         updateOrder(obj.id,obj);
       }else{
-        removeOrder(obj.id)
+        removeOrder(obj.id);
+        alert("Your shopping cart is empty")
       }
 
     }

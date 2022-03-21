@@ -26,7 +26,7 @@ export default function HomeScreen({navigation, route}) {
       if(route.params && route.params.catId){
         categoryIdSet(route.params.catId)
       }
-      getViewProducts()
+      getViewProducts(route.params && route.params.catId ? route.params.catId : '' , '')
       navigation.setOptions({
         headerRight: () => ( 
           <TouchableOpacity onPress={() => {promptVisibleSet(true)}}>
@@ -57,15 +57,14 @@ export default function HomeScreen({navigation, route}) {
     return unsubscribe;
   }, [navigation]);
 
-  const getViewProducts = () => {
+  const getViewProducts = (catId,searchTerm) => {
     getAllProducts().then(response => {
-      console.log('categoryId',categoryId)
       productsSet(response.filter(prod => { 
         if(searchTerm !== ''){
-          return prod.categoryId === route.params.catId && 
+          return prod.categoryId === catId && 
           (prod.name.indexOf(searchTerm) > -1 || prod.description.indexOf(searchTerm) > -1)
         }else{
-          return prod.categoryId === route.params.catId
+          return prod.categoryId === catId
         }
       })) 
       
@@ -91,7 +90,7 @@ export default function HomeScreen({navigation, route}) {
               isVisible={promptVisible}
               onChangeText={(text) => {promptTextSet(text)}}
               onCancel={() => {promptVisibleSet(false)}}
-              onSubmit={() => {searchTermSet(promptText);promptTextSet('');promptVisibleSet(false);getViewProducts()}}
+              onSubmit={() => {searchTermSet(promptText);getViewProducts(categoryId,promptText);promptTextSet('');promptVisibleSet(false);}}
             />
           <FlatList
             data={products}

@@ -5,7 +5,7 @@ import MangoStyles from '../styles'
 import { ButtonMain } from '../components';
 import { Ionicons,FontAwesome5,AntDesign,Entypo,Fontisto,MaterialIcons} from '@expo/vector-icons';
 import { AuthenticatedUserContext } from '../navigation/AuthenticatedUserProvider';
-import { GetUserInfo , getProduct,addItemToShoppingCart} from '../FirebaseConfig/FirebaseOperations';
+import { GetUserInfo , getProduct,addItemToShoppingCart,getAsyncUser} from '../FirebaseConfig/FirebaseOperations';
 import { CommonActions } from '@react-navigation/native';
 
 const ItemDetailsScreen = ({ navigation, route }) => {
@@ -16,12 +16,10 @@ const ItemDetailsScreen = ({ navigation, route }) => {
   const productId =  route.params && route.params.id !== null ?  route.params.id : null;
 
   useEffect(() => {
-    if(user && user.email && user.email  != ''){
       
-        GetUserInfo(user.email).then(userResponse =>{
+      getAsyncUser().then(userResponse =>{
           userInfoSet(userResponse); 
         })
-    }
     getProduct(productId).then(productFound => {
       productSet({...productFound})
     }).catch()
@@ -90,7 +88,7 @@ const ItemDetailsScreen = ({ navigation, route }) => {
           </View>
           <View style={styles.twoColumns}>
             <Text style={styles.label}>Total</Text>
-            <Text style={styles.price}>$ {(parseFloat(product.price)* qty).toString()}</Text>
+            <Text style={styles.price}>$ {(parseFloat(product.price)* qty).toFixed(2).toString()}</Text>
           </View>
           <View style={styles.btnAdd2Cart}>
             <ButtonMain  onPress={onPressAdd} title='Add Item'></ButtonMain>

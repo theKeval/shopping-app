@@ -8,7 +8,6 @@ import useWindowDimensions from 'react-native/Libraries/Utilities/useWindowDimen
 import {  GetUserInfo, saveAsyncUser } from '../FirebaseConfig/FirebaseOperations';
 import { InputField, ErrorMessage } from '../components';
 import Firebase from '../FirebaseConfig/Config';
-import Toast from 'react-native-root-toast';
 const auth = Firebase.auth();
 
 const LoginScreen = ({navigation}) => {
@@ -130,17 +129,7 @@ const LoginScreen = ({navigation}) => {
       </View>
       <View style={styles.buttonContainer}> 
 
-        <Toast
-          visible={loginError !== null}
-          position={Toast.positions.BOTTOM}
-          duration={Toast.durations.LONG}
-          shadow={false}
-          opacity={0.9}
-          backgroundColor={'red'}
-          animation={true}
-          hideOnPress={true}>
-          {loginError}
-        </Toast> 
+ 
         <TouchableOpacity
           onPress={onLogin}
           style={styles.button}>

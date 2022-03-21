@@ -8,10 +8,12 @@ import MangoStyles from '../styles'
 
 const ShoppingCartScreen = ({navigation}) => {
     const [shoppingCartObj, shoppingCartObjSet] = useState(null);
+    const [userId, userIDSet] = useState(null);
     
     const removeItem = (index) =>{
-        removeItemShoppingCart(index,shoppingCartObj.userID).then(()=>{
-            findShoppingCart();
+      console.log('userId111111111', userId)
+        removeItemShoppingCart(index,userId).then(()=>{
+            findShoppingCart(userId);
         });
         
     }
@@ -24,6 +26,7 @@ const ShoppingCartScreen = ({navigation}) => {
         {
           text: "Place Order",
           onPress: () => {
+            console.log(shoppingCartObj.id)
             updateOrderState(shoppingCartObj.id,'pending')
             navigation.navigate('OrdersScreen')
           },
@@ -34,49 +37,52 @@ const ShoppingCartScreen = ({navigation}) => {
         cancelable: true,
       }
     )};
-    const setHeaderLayout = () => {
-        navigation.setOptions({
-          headerRight: () =>(
-            <TouchableOpacity onPress={showAlert}>
-              <Text style={styles.searchBtn}>
-                <Ionicons name='checkmark' size={24} color='white' />
-              </Text>
-            </TouchableOpacity> 
-          ),
-        });
-      }
+
+
+
+      
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+        headerRight: () =>shoppingCartObj ? (
+          <TouchableOpacity onPress={showAlert}>
+            <Text style={styles.searchBtn}>
+              <Ionicons name='checkmark' size={24} color='white' />
+            </Text>
+          </TouchableOpacity> 
+        ) : <></>,
+    })
+  })
     React.useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
 
             try {
-                findShoppingCart();
+              getAsyncUser().then((userResponse)=>{
+                userIDSet(userResponse.id)
+                findShoppingCart(userResponse.id);
+              })
             } catch (error) {
-                console.log(error)
-                setHeaderLayout(false)
-    
+                console.log(error)    
             }
             
         });
     
         return unsubscribe;
       }, [navigation]);
-const findShoppingCart = ()=> {
-    getAsyncUser().then((userResponse)=>{
-        getShopListDoc(userResponse.id).then((order)=>{
-            if(!order){
-                shoppingCartObjSet(null)
-            }else{
-                order.dateString = moment(order.date).format('DD/MM/YYYY');
-                order.taxes = parseFloat(parseFloat(order.total) * 0.13);
-                order.shipping = parseFloat(parseFloat(order.total) * 0.10);
-                order.net = parseFloat(parseFloat(order.total) + order.taxes + order.shipping);
-                shoppingCartObjSet(order)
-            }
-            setHeaderLayout()
+const findShoppingCart = (uid)=> {
+      shoppingCartObjSet(null)
+    
+      getShopListDoc(uid).then((order)=>{         
+          if(order && order.id){
+              order.dateString = moment(order.date).format('DD/MM/YYYY');
+              order.taxes = parseFloat(parseFloat(order.total) * 0.13);
+              order.shipping = parseFloat(parseFloat(order.total) * 0.10);
+              order.net = parseFloat(parseFloat(order.total) + order.taxes + order.shipping);
+              shoppingCartObjSet(order)
+          }
         }).catch(e => {
+          console.log(e)
             shoppingCartObjSet(null)
         })
-    })
 }
   return (
     <View style ={styles.container}>

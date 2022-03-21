@@ -46,14 +46,14 @@ const OrdersScreen = ({navigation}) => {
     if(isAdminFlag){
       getAllOrders(filterOrders).then((orders)=>{
         userOrdersSet(orders.map(order => {
-          order.dateFormat = moment(order.date).format('DD/MM/YYYY')
+          order.dateFormat = moment(order.date).format('DD/MM/YYYY').toString()
           return order;
         }))
       })
     }else{
       getUserOrders(userID,filterOrders).then((orders)=>{
         userOrdersSet(orders.map(order => {
-          order.dateFormat = moment(order.date).format('DD/MM/YYYY')
+          order.dateFormat = moment(order.date).format('DD/MM/YYYY').toString()
           return order;
         }))
       })
