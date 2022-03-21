@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
 
     item:{
         flexDirection : 'row',
-        paddingHorizontal: 2,
+        paddingHorizontal: 10,
         paddingVertical:10,
         backgroundColor: 'white',
         margin: 2,
