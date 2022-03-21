@@ -282,7 +282,7 @@ export const getNextConsecutive = async () => {
   });
   
   
-  return ordersTotal.toString().padStart(6, '0');
+  return (ordersTotal+1).toString().padStart(6, '0');
 }
 
 export const getUserOrders = async (userID,filterStatus) => {
