@@ -3,42 +3,55 @@ import React , {useState} from 'react'
 import MangoStyles from '../styles';
 import { Picker } from '@react-native-picker/picker';
 
-// import {
-//   LineChart,
-//   BarChart,
-//   PieChart,
-//   ProgressChart,
-//   ContributionGraph,
-//   StackedBarChart
-// } from "react-native-chart-kit";
+import {
+  LineChart,
+  BarChart,
+  PieChart,
+  ProgressChart,
+  ContributionGraph,
+  StackedBarChart
+} from "react-native-chart-kit";
 
-import { BarChart, Grid } from 'react-native-svg-charts';
 
-import { getCategoriesSold,getProductsSold } from '../FirebaseConfig/FirebaseOperations';
+import { getSales } from '../FirebaseConfig/FirebaseOperations';
 
 const screenWidth = Dimensions.get('window').width;
 
 const StatisticsScreen = ({navigation, route}) => {
 
-  const [statisticsCat, statisticsCatSet] = useState(null);
-  const [statisticsProd, statisticsProdSet] = useState(null);
-  const [seledtedLabels, seledtedLabelsSet] = useState([]);
-  const [selectedValues, selectedValuesSet] = useState([]);
+  const [statistics, statisticsSet] = useState([]);
+  const [statisticsProd, statisticsProdSet] = useState([]);
+  const [isLoading, isLoadingSet] = useState([]);
   const [filterType, filterTypeSet] = useState('categories');
-  const [filterSpan, filterSpanSet] = useState('all');
+  const [filterSpan, filterSpanSet] = useState('total');
+  var colorArray = ['#FF6633', '#FF33FF',  '#00B3E6', 
+   '#3366E6', '#999966', '#99FF99', '#B34D4D',
+  '#80B300', '#809900', '#E6B3B3', '#6680B3', '#66991A', 
+  '#FF99E6', '#CCFF1A', '#FF1A66', '#E6331A', '#33FFCC',
+  '#66994D', '#B366CC', '#4D8000', '#B33300', '#CC80CC', 
+  '#66664D', '#991AFF', '#E666FF', '#4DB3FF', '#1AB399',
+  '#E666B3', '#33991A', '#CC9999', '#B3B31A', '#00E680', 
+  '#4D8066', '#809980', '#E6FF80', '#1AFF33', '#999933',
+  '#FF3380', '#CCCC00', '#66E64D', '#4D80CC', '#9900B3', 
+  '#E64D66', '#4DB380', '#FF4D4D', '#99E6E6', '#6666FF','#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6', 
+  '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D',
+  '#80B300', '#809900', '#E6B3B3', '#6680B3', '#66991A', 
+  '#FF99E6', '#CCFF1A', '#FF1A66', '#E6331A', '#33FFCC',
+  '#66994D', '#B366CC', '#4D8000', '#B33300', '#CC80CC', 
+  '#66664D', '#991AFF', '#E666FF', '#4DB3FF', '#1AB399',
+  '#E666B3', '#33991A', '#CC9999', '#B3B31A', '#00E680', 
+  '#4D8066', '#809980', '#E6FF80', '#1AFF33', '#999933',
+  '#FF3380', '#CCCC00', '#66E64D', '#4D80CC', '#9900B3', 
+  '#E64D66', '#4DB380', '#FF4D4D', '#99E6E6', '#6666FF'];
+  const [chartData, chartDataSet] = useState([])
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
 
         try {
-          getCategoriesSold().then((response)=>{
-            statisticsCatSet(response);
-            console.log("setting chart data for categories sold");
-            setChartData(filterType,filterSpan)
-          })
-          getProductsSold().then((response)=>{
-            statisticsProdSet(response);
-            console.log("setting chart data for products sold");
-            setChartData(filterType, filterSpan)
+          getSales().then(async (response)=>{
+             await statisticsSet(response);
+             setChartData('categories' , 'total' ,response)
+             console.log(response)
           })
         } catch (error) {
             console.log(error)    
@@ -49,49 +62,23 @@ const StatisticsScreen = ({navigation, route}) => {
     return unsubscribe;
   }, [navigation]);
 
-  const setChartData = (type,span) => {
-    let labels = [], data = [];
-    if(type === 'categories'){
-      labels = statisticsCat.map(cat => cat.name)
-      data = statisticsCat;
-      
-    }else{
-      labels = statisticsProd.map(prod => prod.name)
-      data = statisticsProd;
-    }
-
-    if(span=='lastMonth'){
-      data = data.map(cat => cat.totalMonth)
-    }else if('lastWeek'){
-      data = data.map(cat => cat.totalWeek)
-    }else{
-      data = data.map(cat => cat.total)
-    }
+  const setChartData = async (type,span , data) => {
+    isLoadingSet(true)
     
-    console.log(data.toString());
-    selectedValuesSet(data)
-    seledtedLabelsSet(labels)
+    const result = ([ ...(data ? data[type] : statistics[type])]).map((item,index) => {
+      return {
+        name: item.name,
+        sales: parseInt(item[span]),
+        color: colorArray[index],
+        legendFontColor: colorArray[index],
+        legendFontSize: 15
+       }
+     });
+     
+
+     chartDataSet(result)
+     isLoadingSet(false)
   }
-
-  const fill = 'rgb(134, 65, 244)'
-  const data = [50, 10, 40, 95, -4, -24, null, 85, undefined, 0, 35, 53, -53, 24, 50, -20, -80]
-
-  const chartConfig = {
-    backgroundGradientFrom: '#fff',
-    backgroundGradientFromOpacity: 0,
-    backgroundGradientTo: '#fff',
-    backgroundGradientToOpacity: 0.5,
-
-    fillShadowGradient: "#DF5353",
-    fillShadowGradientOpacity: 1,
-    color: (opacity = 1) => `#023047`,
-    labelColor: (opacity = 1) => `#333`,
-    strokeWidth: 2,
-
-    barPercentage: 0.5,
-    useShadowColorFromDataset: false,
-    decimalPlaces: 0,
-  };
 
   return (
     <View  style={styles.container}>
@@ -99,11 +86,13 @@ const StatisticsScreen = ({navigation, route}) => {
           <Text style={styles.label}>Time Span:</Text>
           <View style={styles.field}>
             <Picker selectedValue={filterSpan} onValueChange={(value)=>{filterSpanSet(value);setChartData(filterType,value)}} >
-                <Picker.Item key={'all'} label={ 'All time'} value={'all'} />
-                <Picker.Item key={'lastWeek'} label={ 'Last Week'} value={'lastWeek'} />
-                <Picker.Item key={'lastMonth'} label={ 'Last Month'} value={'lastMonth'} />
+                <Picker.Item key={'total'} label={ 'All time'} value={'total'} />
+                <Picker.Item key={'totalWeek'} label={ 'Last Week'} value={'totalWeek'} />
+                <Picker.Item key={'totalMonth'} label={ 'Last Month'} value={'totalMonth'} />
             </Picker>
           </View>      
+
+
       </View>
       <View  style={[styles.row, {marginBottom:20}]}>
           <Text style={styles.label}>Data type:</Text>
@@ -114,25 +103,30 @@ const StatisticsScreen = ({navigation, route}) => {
             </Picker>
           </View>      
       </View>
+<View style={[{height:'100%',marginTop: 10,flexDirection:'row'}]}>
+{!isLoading && chartData && chartData.length> 0 ? 
+<PieChart
+  data={chartData}
+  width={Dimensions.get("window").width -20}
+  height={Dimensions.get("window").height *0.3}
+  chartConfig={{
 
-      <BarChart style={{ height: 200 }} data={data} svg={{ fill }} contentInset={{ top: 30, bottom: 30 }} >
-        <Grid />
-      </BarChart>
+    decimalPlaces: 2, // optional, defaults to 2dp
+    color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+    labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+    style: {
+      
+    },
 
-      {/* from react-native-chart-kit
-      <BarChart
-        data={{
-          labels: seledtedLabels,
-          datasets: [
-            {
-              data: selectedValues
-            },
-          ],
-        }}
-        width={screenWidth}
-        height={220} 
-        chartConfig={chartConfig}
-        showBarTops={false} /> */}
+  }}
+  accessor={"sales"}
+  backgroundColor={"transparent"}
+  
+/>
+
+: <></>}
+      
+</View>
 
     </View>
   )

@@ -402,36 +402,11 @@ export const updateOrderState = ( orderID,newStatus) => {
 
 // #region sales related operations
 
-export const getCategoriesSold = async ( ) => {
-  let categories = {}
 
-  const querySnapshot = await getDocs(collection(db, collectionNames.productsInOrder));
-  querySnapshot.forEach((doc) => {
-    const itemObj = doc.data();
-    if(!categories[itemObj.categoryId] ){
-      categories[itemObj.categoryId] = {
-        id:itemObj.categoryId,
-        name:itemObj.categoryName,
-        total:0,
-        totalWeek:0,
-        totalMonth:0
-      }
-    }
-    categories[itemObj.categoryId].total = parseFloat(itemObj.totalItem) +  parseFloat(itemObj.totalItem)
-    if(Math.abs(moment().diff(moment(itemObj.date), 'weeks')) < 1){
-      categories[itemObj.categoryId].totalWeek = parseFloat(itemObj.totalItem) +  parseFloat(itemObj.totalItem)
-    }
-    if(Math.abs(moment().diff(moment(itemObj.date), 'months')) < 1){
-      categories[itemObj.categoryId].totalMonth = parseFloat(itemObj.totalItem) +  parseFloat(itemObj.totalItem)
-    }
 
-  });
-
-  return Object.values(categories);
-}
-
-export const getProductsSold = async ( ) => {
+export const getSales = async ( ) => {
   let products = {}
+  let categories = {}
 
   const querySnapshot = await getDocs(collection(db, collectionNames.productsInOrder));
   querySnapshot.forEach((doc) => {
@@ -445,17 +420,34 @@ export const getProductsSold = async ( ) => {
         totalMonth:0
       }
     }
-    products[itemObj.id].total = parseFloat(itemObj.total) +  parseFloat(itemObj.totalItem)
+    products[itemObj.id].total = parseFloat( products[itemObj.id].total) +  parseFloat(itemObj.totalItem)
     if(Math.abs(moment().diff(moment(itemObj.date), 'weeks')) < 1){
-      products[itemObj.id].totalWeek = parseFloat(itemObj.totalWeek) +  parseFloat(itemObj.totalItem)
+      products[itemObj.id].totalWeek = parseFloat( products[itemObj.id].totalWeek) +  parseFloat(itemObj.totalItem)
     }
     if(Math.abs(moment().diff(moment(itemObj.date), 'months')) < 1){
-      products[itemObj.id].totalMonth = parseFloat(itemObj.totalMonth) +  parseFloat(itemObj.totalItem)
+      products[itemObj.id].totalMonth = parseFloat( products[itemObj.id].totalMonth) +  parseFloat(itemObj.totalItem)
     }
 
+
+    if(!categories[itemObj.categoryId] ){
+      categories[itemObj.categoryId] = {
+        id:itemObj.categoryId,
+        name:itemObj.categoryName,
+        total:0,
+        totalWeek:0,
+        totalMonth:0
+      }
+    }
+    categories[itemObj.categoryId].total = parseFloat(categories[itemObj.categoryId].total) +  parseFloat(itemObj.totalItem)
+    if(Math.abs(moment().diff(moment(itemObj.date), 'weeks')) < 1){
+      categories[itemObj.categoryId].totalWeek = parseFloat(categories[itemObj.categoryId].totalWeek) +  parseFloat(itemObj.totalItem)
+    }
+    if(Math.abs(moment().diff(moment(itemObj.date), 'months')) < 1){
+      categories[itemObj.categoryId].totalMonth = parseFloat(categories[itemObj.categoryId].totalMonth) +  parseFloat(itemObj.totalItem)
+    }
   });
 
-  return Object.values(products);
+  return {products : Object.values(products) , categories: Object.values(categories)};
 
 }
 // #endregion
