@@ -1,4 +1,4 @@
-import { StyleSheet, Text, Button, KeyboardAvoidingView, TextInput, TouchableOpacity, View, Image } from 'react-native'
+import { StyleSheet, Text, Button, KeyboardAvoidingView, TextInput, TouchableOpacity, View, Image, Alert } from 'react-native'
 import React, { useEffect,useState } from 'react';
 import { Ionicons,FontAwesome5,AntDesign,Entypo} from '@expo/vector-icons';
 import Logo from '../assets/mango_letter.png';
@@ -22,13 +22,20 @@ const LoginScreen = ({navigation}) => {
 
   // const onChangeEmail = textValue => emailSetText(textValue);
   // const onChangePass = textValue => passwordSetText(textValue);
+
   const onPressRegister = () => {
     navigation.navigate('Signup');
   }
 
   const onPressAccInfoChange = () => {
-    auth.sendPasswordResetEmail(user.email)
+    if (email === ''){
+      Alert.alert("Please type your email first")}
+      else {
+        Alert.alert("An instruction has been sent to your email")
+        auth.sendPasswordResetEmail(email)
+      }
   }
+    
 
   const handlePasswordVisibility = () => {
     if (rightIcon === 'eye') {
