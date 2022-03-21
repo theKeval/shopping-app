@@ -21,6 +21,7 @@ const OrdersScreen = ({navigation}) => {
   const [filterOrders, filterOrdersSet] = useState(false);
 
   const hideMenu = () => setVisible(false);
+  const showMenu = () => setVisible(true);
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
 
@@ -40,7 +41,7 @@ const OrdersScreen = ({navigation}) => {
 
     return unsubscribe;
   }, [navigation]);
-  const showMenu = () => setVisible(true);
+
   const updateOrders = (isAdminFlag,filterOrders) => {
 
     if(isAdminFlag || isAdmin){

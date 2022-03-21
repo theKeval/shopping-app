@@ -71,7 +71,7 @@ const CategoriesScreen = ({navigation}) => {
 
         try {
           getAsyncUser().then((userResponse)=>{
-            // console.log('userResponse',userResponse && userResponse.isAdmin)
+            console.log('userResponse && userResponse.isAdmin',userResponse && userResponse.isAdmin)
               setHeaderLayout(userResponse && userResponse.isAdmin)
               isAdminSet(userResponse && userResponse.isAdmin)
 
@@ -84,7 +84,7 @@ const CategoriesScreen = ({navigation}) => {
       }
       const setHeaderLayout = (isAdmin) => {
         navigation.setOptions({
-          headerLeft: () => ( isAdmin   ?
+          headerLeft: () => ( user && isAdmin   ?
             <TouchableOpacity onPress={() => {
                 selectedCategorySet(null)
                 promptVisibleSet(true)
@@ -130,16 +130,16 @@ const CategoriesScreen = ({navigation}) => {
             renderItem={({cat,item,index}) => {
                 return (
                 <View style={[styles.item,{backgroundColor: index%2 ===0 ? 'lightgray': MangoStyles.mangoPaleOrange}]} key={item.id} >
-                    <TouchableOpacity onPress={() => {selectCategory(item)}} style={[styles.titleCont , { width : isAdmin? '60%' : '100%'}]}>
+                    <TouchableOpacity onPress={() => {selectCategory(item)}} style={[styles.titleCont , { width : user && isAdmin? '60%' : '100%'}]}>
                         <Text style={[styles.title]}>{item.name}</Text>      
                     </TouchableOpacity>
-                    {(isAdmin ? 
+                    {(user && isAdmin ? 
                         <TouchableOpacity onPress={() => {editCategory(item)}} style={[styles.editBtn]}>
                               <Text style={[styles.title]}>
                                 <Ionicons name='pencil' size={24} color='white' />
                             </Text>
                              </TouchableOpacity>   : <View/> ) }
-                    {(isAdmin ?        <TouchableOpacity onPress={() => {deleteCategory(item)}} style={[styles.deleteBtn]}>
+                    {(user && isAdmin ?        <TouchableOpacity onPress={() => {deleteCategory(item)}} style={[styles.deleteBtn]}>
                             <Text style={[styles.title]}>
                                 <Ionicons name='trash' size={24} color='white' />
                             </Text>

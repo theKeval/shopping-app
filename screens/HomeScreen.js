@@ -19,38 +19,59 @@ export default function HomeScreen({navigation, route}) {
   const [promptVisible,promptVisibleSet] = useState(false)
   const [promptText,promptTextSet] = useState('')
   const [searchTerm,searchTermSet] = useState('')
+  const [isAdmin,isAdminSet] = useState(false);
+  const [visible, setVisible] = useState(false);
 
+  const hideMenu = () => setVisible(false);
+  const showMenu = () => setVisible(true);
+
+  React.useLayoutEffect(() => {
+    
+    navigation.setOptions({
+      
+      headerRight: () => {
+        return (
+          <View style={{ height: '100%', alignItems: 'center', justifyContent: 'center' }}>
+            <Menu
+              visible={visible}
+              anchor={<Text style={styles.searchBtn} onPress={showMenu}><Ionicons name='ellipsis-vertical' size={24} color='white' /></Text>}
+              onRequestClose={hideMenu}
+              style={{width: 200}}
+            >
+              <MenuItem style={[{backgroundColor : 'white'}]}  textStyle={[{color :  'black' }]} 
+              onPress={ () => {promptVisibleSet(true);hideMenu()}}>
+                <Ionicons name='search' size={20} color='black' /> Search
+              </MenuItem>
+              {user && isAdmin ? <MenuItem style={[{backgroundColor : 'white', }]}  textStyle={[{color :  'black',  }]} 
+              onPress={ () => { navigation.navigate('EditProductScreen', { id: null });hideMenu()}}>
+                <Ionicons name='add-circle-outline' size={20} color='black' /> Add Item 
+              </MenuItem> : null}
+            </Menu>
+          </View>
+      )},
+    })
+  })
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      
-      if(route.params && route.params.catId){
-        categoryIdSet(route.params.catId)
+      try {
+        getAsyncUser().then((userResponse)=>{
+            isAdminSet(userResponse && userResponse.isAdmin)
+
+        })
+      } catch (error) {
+        console.log(error)
+        setHeaderLayout(false)
+
       }
-      getViewProducts(route.params && route.params.catId ? route.params.catId : '' , '')
-      navigation.setOptions({
-        headerRight: () => ( 
-          <TouchableOpacity onPress={() => {promptVisibleSet(true)}}>
-            <Text style={styles.searchBtn}>
-              <Ionicons name='search' size={20} color='white' />
-            </Text>
-          </TouchableOpacity> 
-        ),
-        // headerLeft: () => ( isAdmin   ?
-        //   <TouchableOpacity onPress={() => {
-        //       navigation.navigate('EditProductScreen', { id: null })
-        //     }
-        //   }>
-        //     <Text style={styles.searchBtn}>
-        //       <Ionicons name='add-circle-outline' size={24} color='white' />;
-        //     </Text>
-        //   </TouchableOpacity> : <View />
-        // ),
-      })
-      // getAsyncUser().then((userResponse)=>{
-      //   setHeaderLayout(userResponse && userResponse.isAdmin)
-      // }).catch(()=>{
-      //    setHeaderLayout(false);
-      // })
+      try {
+        if(route.params && route.params.catId){
+          categoryIdSet(route.params.catId)
+        }
+        getViewProducts(route.params && route.params.catId ? route.params.catId : '' , '')
+      } catch (error) {
+        console.log(error)
+      }
+
       
     });
 
