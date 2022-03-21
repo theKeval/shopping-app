@@ -3,14 +3,7 @@ import { db } from './Config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import uuid from 'react-native-uuid';
 import moment from 'moment';
-import {
-  LineChart,
-  BarChart,
-  PieChart,
-  ProgressChart,
-  ContributionGraph,
-  StackedBarChart
-} from "react-native-chart-kit";
+
 const collectionNames = {
   users: "Users",
   productCategories: "ProductCategories",
