@@ -92,7 +92,7 @@ const TabNavigator = ({navigation}) => {
         })}>
 
           <Tab.Screen name="HomeProdStack" component={HomeProdStack}  options={{headerShown: false, title:'Products'}}/>
-          { user ?<Tab.Screen name="ShoppingCartScreen" component={ShoppingCartScreen}  options={{title : 'Cart'}} /> : <></>}
+          { user ?<Tab.Screen name="ShoppingCartScreen" component={ShoppingCartScreen}  options={{title : 'My Cart'}} /> : <></>}
           { user ? <Tab.Screen name="OrdersScreen" component={OrdersScreen}  options={{title : 'Orders'}} /> : <></>}
           { user ? <Tab.Screen name="StatisticsScreen" component={StatisticsScreen}  options={{title : 'Statistics'}} /> : <></>}
           
