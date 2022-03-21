@@ -3,7 +3,14 @@ import { db } from './Config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import uuid from 'react-native-uuid';
 import moment from 'moment';
-
+import {
+  LineChart,
+  BarChart,
+  PieChart,
+  ProgressChart,
+  ContributionGraph,
+  StackedBarChart
+} from "react-native-chart-kit";
 const collectionNames = {
   users: "Users",
   productCategories: "ProductCategories",
@@ -418,26 +425,26 @@ export const getCategoriesSold = async ( ) => {
       }
     }
     categories[itemObj.categoryId].total = parseFloat(itemObj.totalItem) +  parseFloat(itemObj.totalItem)
-    if(Math.abs(moment().diff(moment(itemObj.date))) < 7){
+    if(Math.abs(moment().diff(moment(itemObj.date), 'weeks')) < 1){
       categories[itemObj.categoryId].totalWeek = parseFloat(itemObj.totalItem) +  parseFloat(itemObj.totalItem)
     }
-    if(Math.abs(moment().diff(moment(itemObj.date))) < 28){
+    if(Math.abs(moment().diff(moment(itemObj.date), 'months')) < 1){
       categories[itemObj.categoryId].totalMonth = parseFloat(itemObj.totalItem) +  parseFloat(itemObj.totalItem)
     }
 
   });
 
-
+  return Object.values(categories);
 }
 
 export const getProductsSold = async ( ) => {
-  let product = {}
+  let products = {}
 
   const querySnapshot = await getDocs(collection(db, collectionNames.productsInOrder));
   querySnapshot.forEach((doc) => {
     const itemObj = doc.data();
-    if(!product[itemObj.id] ){
-      product[itemObj.id] = {
+    if(!products[itemObj.id] ){
+      products[itemObj.id] = {
         id:itemObj.id,
         name:itemObj.name,
         total:0,
@@ -445,16 +452,17 @@ export const getProductsSold = async ( ) => {
         totalMonth:0
       }
     }
-    product[itemObj.id].total = parseFloat(itemObj.totalItem) +  parseFloat(itemObj.totalItem)
-    if(Math.abs(moment().diff(moment(itemObj.date))) < 7){
-      product[itemObj.id].totalWeek = parseFloat(itemObj.totalItem) +  parseFloat(itemObj.totalItem)
+    products[itemObj.id].total = parseFloat(itemObj.total) +  parseFloat(itemObj.totalItem)
+    if(Math.abs(moment().diff(moment(itemObj.date), 'weeks')) < 1){
+      products[itemObj.id].totalWeek = parseFloat(itemObj.totalWeek) +  parseFloat(itemObj.totalItem)
     }
-    if(Math.abs(moment().diff(moment(itemObj.date))) < 28){
-      product[itemObj.id].totalMonth = parseFloat(itemObj.totalItem) +  parseFloat(itemObj.totalItem)
+    if(Math.abs(moment().diff(moment(itemObj.date), 'months')) < 1){
+      products[itemObj.id].totalMonth = parseFloat(itemObj.totalMonth) +  parseFloat(itemObj.totalItem)
     }
 
   });
 
+  return Object.values(products);
 
 }
 // #endregion
